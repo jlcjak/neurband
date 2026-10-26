@@ -84,7 +84,7 @@ static void led_update(void)
 /* ------------------------------------------------------------------ status */
 static void status_publish(void)
 {
-	char link[48], s[200];
+	char link[48], s[STATUS_BUF_LEN];
 	static const char *const mux_name[] = {[ADS_MUX_NORMAL] = "normal", [ADS_MUX_SHORT] = "short",
 					       [ADS_MUX_TEST] = "test"};
 
@@ -194,7 +194,8 @@ static void handle(char *line)
 	} else {
 		err = -EINVAL;
 	}
-	snprintk(last, sizeof(last), "%s:%s", err ? "err" : "ok", line);
+	/* "err:" + at most 19 chars of the command: the label is cut on purpose */
+	snprintk(last, sizeof(last), "%s:%.*s", err ? "err" : "ok", (int)sizeof(last) - 5, line);
 	if (err) {
 		LOG_WRN("command '%s' failed (%d)", line, err);
 	}

@@ -7,7 +7,7 @@ from first principles to record data good enough to train gesture models, and ch
 ![neurband on the wrist](docs/media/hero_arm_wide.jpg)
 
 > **Status: design complete, not yet built.** Schematics, both PCBs (DRC-clean), mechanics, firmware
-> (compiles, untested on hardware), recorder and analysis code are done; everything below that says
+> (builds and links, untested on hardware), recorder and analysis code are done; everything below that says
 > "simulated" or "estimated" has not been measured on a real board yet. See [what's next](#status-and-next-steps).
 
 | | |
@@ -120,7 +120,7 @@ grounded instrument while the pads touch skin. This is a research prototype, not
 ## Status and next steps
 
 - [x] Rev C schematic, main board (DRC 0), flex (DRC 0), mechanics, fit checks on 145/160/180 mm wrists
-- [x] Firmware compiles; host recorder and analysis pipeline tested on synthetic data
+- [x] Firmware builds and links for the nRF52832 (Zephyr 4.4.2, 0 warnings, 30 % flash / 94 % RAM); host recorder and analysis pipeline tested on synthetic data
 - [ ] Build two boards; bench gates: shorted-input noise, mains residual, radio-on noise, bias-loop stability
 - [ ] Antenna tuning (π network on the board), BLE throughput on a real link
 - [ ] First week of recordings with the protocol in `docs/science/data_and_models.md`

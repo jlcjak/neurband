@@ -58,7 +58,8 @@
 
 /* IMU: ST LSM6DSL on TWI0 (SA0 low -> 0x6A, CS high = I2C mode). IMU pins live only here:
  * I2C_SDA P0.03, I2C_SCL P0.04 (kept off the near-radio pins P0.22-P0.24 bank), IMU_INT (INT1) P0.24. The app drives its registers directly;
- * CONFIG_SENSOR stays off so Zephyr's own lsm6dsl driver is not built. */
+ * CONFIG_LSM6DSL=n (prj.conf) keeps Zephyr's own lsm6dsl driver out. CONFIG_SENSOR itself is on:
+ * the LFRC calibration selects it for the die temperature sensor (TEMP_NRF5). */
 &i2c0 {
 	compatible = "nordic,nrf-twi";
 	status = "okay";

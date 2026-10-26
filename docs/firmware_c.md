@@ -13,12 +13,13 @@ Code: `firmware_c/` (Zephyr / nRF Connect SDK) and `host/neurband_ble.py` (Pytho
 Hardware source of truth: `boards/neurband_c/gen_c_sch.py`. ADS1298 register choices cite
 TI SBAS459K (`docs/datasheets/ads1298.txt`) section numbers in `firmware_c/src/ads1298.c`.
 
-**Status:** the firmware has **not been linked or run on hardware**. It configures (Kconfig and
-devicetree) and every source compiles with 0 errors and 0 warnings against upstream Zephyr
-v4.4.2 (`nrf52dk/nrf52832`, open-source LL controller), using host clang in a throwaway
-checkout. No ARM linker was available, so it was never linked: flash size, RAM fit
-(static estimate ~60 of 64 KB) and NCS/SoftDevice Controller builds are unverified. The DSP
-(`dsp.c`) was compiled on the PC and matches a numpy reference. The host parser has unit tests.
+**Status:** the firmware **builds and links** for `nrf52dk/nrf52832` with upstream Zephyr
+v4.4.2 and Zephyr SDK 1.0.1 (arm-zephyr-eabi GCC 14.3.0, open-source LL controller). It
+gives 0 warnings with `CONFIG_COMPILER_WARNINGS_AS_ERRORS=y` and produces
+`build/zephyr/zephyr.hex`. Flash 159,556 B (30%), static RAM 61,396 B (94% of 64 KB). See
+[Verified build](#verified-build-2026-10-26) below. It has **not been run on hardware**, and
+NCS/SoftDevice Controller and Zephyr 3.7 builds are untested. The DSP (`dsp.c`) was
+compiled on the PC and matches a numpy reference. The host parser has unit tests.
 
 ## Build and flash
 
@@ -50,6 +51,70 @@ west flash --runner openocd                 # any CMSIS-DAP probe via OpenOCD
 
 On NCS, `CMakeLists.txt` detects the SoftDevice Controller and adds `sdc.conf` (10 LL TX
 buffers, 7.5 ms event length, event extension).
+
+### Verified build (2026-10-26)
+
+Upstream Zephyr **v4.4.2**, Zephyr SDK **1.0.1** minimal plus only the `arm-zephyr-eabi`
+toolchain (GCC 14.3.0, binutils 2.43.1), west 1.5.0, CMake 4.4.3, Python 3.14, Linux x86_64.
+Only three modules are fetched: `cmsis_6`, `hal_nordic`, `segger` (RTT). Everything lives in
+`~/zephyr-work` (~1.9 GB) and needs no root:
+
+```sh
+mkdir -p ~/zephyr-work && cd ~/zephyr-work
+python3 -m venv .venv && . .venv/bin/activate && pip install west
+west init -m https://github.com/zephyrproject-rtos/zephyr --mr v4.4.2 --clone-opt=--depth=1 zp
+cd zp
+west config manifest.project-filter -- '-.*,+cmsis_6,+hal_nordic,+segger'
+west update --narrow -o=--depth=1
+pip install -r zephyr/scripts/requirements-base.txt
+
+cd ~/zephyr-work      # SDK: minimal bundle + ARM toolchain (~170 MB download)
+B=https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v1.0.1
+curl -LO $B/zephyr-sdk-1.0.1_linux-x86_64_minimal.tar.xz
+curl -LO $B/toolchain_gnu_linux-x86_64_arm-zephyr-eabi.tar.xz
+tar xf zephyr-sdk-1.0.1_linux-x86_64_minimal.tar.xz
+mkdir -p zephyr-sdk-1.0.1/gnu    # SDK 1.0 expects toolchains under gnu/
+tar xf toolchain_gnu_linux-x86_64_arm-zephyr-eabi.tar.xz -C zephyr-sdk-1.0.1/gnu
+cd zephyr-sdk-1.0.1 && ./setup.sh -t arm-zephyr-eabi -c
+```
+
+`setup.sh` aborts if `wget` is missing, even when the toolchain is already unpacked. Without
+wget, run `cmake -P cmake/zephyr_sdk_export.cmake` in the SDK directory instead. That is all
+`-c` does: it registers the SDK in `~/.cmake/packages`. Build:
+
+```sh
+cd ~/zephyr-work/zp && . ../.venv/bin/activate
+west build -p always -b nrf52dk/nrf52832 -d ~/neurband/firmware_c/build ~/neurband/firmware_c
+#   optional: append  -- -DCONFIG_COMPILER_WARNINGS_AS_ERRORS=y   (passes, 0 warnings)
+# -> ~/neurband/firmware_c/build/zephyr/zephyr.hex (also .elf/.bin); ~20 s pristine on a desktop
+```
+
+"Could NOT find Dtc" during configure is harmless. dtc is only an optional devicetree lint,
+and it ships in the SDK host tools, which are not installed here.
+
+Checked in the generated `build/zephyr/zephyr.dts` and `.config`: `&reg`
+`regulator-initial-mode = <0>` (LDO), `CLOCK_CONTROL_NRF_K32SRC_RC=y` with calibration,
+`_500PPM=y`, SPIM2 at `SPI_NRFX_SPIM`, TWI0 at `I2C_NRFX_TWI`, `LSM6DSL` not set.
+`CONFIG_SENSOR=y` is expected: the LFRC calibration selects it for the TEMP sensor.
+
+| region | used | size | |
+|---|---|---|---|
+| FLASH | 159,556 B | 512 KB | 30.4% |
+| RAM (static) | 61,396 B | 64 KB | 93.7%, ~4.1 KB free |
+
+RAM is all static (`HEAP_MEM_POOL_SIZE=0`). The figure includes every thread stack (each
+gets an extra 128 B MPU/FPU guard). Biggest items:
+
+- DSP state `ch[8]`: 5.3 KB.
+- Packet queue `pkt_q` (`PKTQ_N` 20): 4.9 KB.
+- BT host/LL buffers (HCI RX 3.1 KB, LL RX PDUs 2.3 KB, conn TX 2.1 KB, ATT 2.1 KB, ACL TX 2.0 KB).
+- Frame ring: 2.0 KB.
+- Stacks: main, ISR and app_wq 2 KB each; proc 1.5 KB; BT RX 1.2 KB; tx 1.25 KB; acq and imu 1 KB each.
+- RTT: 1.2 KB.
+
+If a later change no longer fits, shrink `PKTQ_N` first. `-fstack-usage` shows the deepest
+app frame is `status_publish`, 472 B on the 2 KB app work queue. Runtime stack high-water
+marks still need `CONFIG_THREAD_ANALYZER` on hardware.
 
 **Cheap probe (~$4-12):** a Raspberry Pi Pico (or Pico 2 / Debug Probe) running
 [debugprobe](https://github.com/raspberrypi/debugprobe) is a CMSIS-DAP v2 probe. Wire GP2 → SWDCLK
@@ -402,11 +467,12 @@ current-limited supply on the battery pads, SWD attached if needed.
 
 ## Known limitations / to verify
 
-- **Not linked or run.** All sources compile against Zephyr v4.4.2, but nothing has been
-  linked. Not verified: Zephyr 3.7/NCS builds (version guards for `SPI_DT_SPEC_GET`,
-  advertising options, `bt_conn_info` intervals and DC/DC are reasoned, not tested), the
-  SoftDevice Controller options in `sdc.conf`, flash/RAM fit (static RAM estimate ~60 of
-  64 KB: shrink `PKTQ_N` first if it does not fit) and real CPU load.
+- **Built, not run.** Links on Zephyr v4.4.2 with 4.1 KB of static RAM to spare. Not verified:
+  - Zephyr 3.7/NCS builds. The version guards for `SPI_DT_SPEC_GET`, advertising options,
+    `bt_conn_info` intervals and DC/DC are reasoned, not tested.
+  - The SoftDevice Controller options in `sdc.conf`.
+  - Runtime stack margins.
+  - Real CPU load.
 - **SPI pad byte.** Commands are sent as 2-byte transfers (opcode + 0x00) to avoid nRF52832
   PAN 58. The ADS1298 is assumed to ignore the 0x00 pad, as it does for DIN held low.
   Check on the scope or logic analyser.

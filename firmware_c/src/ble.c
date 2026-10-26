@@ -28,7 +28,7 @@ static K_MUTEX_DEFINE(conn_mtx);
 static bool data_notify, status_notify;
 static uint16_t ci, dle_tx;
 static uint8_t phy_tx;
-static char status[200];
+static char status[STATUS_BUF_LEN];
 static K_MUTEX_DEFINE(status_mtx);
 
 static ssize_t ctrl_write(struct bt_conn *c, const struct bt_gatt_attr *attr, const void *buf,
@@ -47,12 +47,13 @@ static ssize_t ctrl_write(struct bt_conn *c, const struct bt_gatt_attr *attr, co
 static ssize_t status_read(struct bt_conn *c, const struct bt_gatt_attr *attr, void *buf,
 			   uint16_t len, uint16_t offset)
 {
-	char tmp[sizeof(status)];
+	ssize_t r;
 
+	/* copy straight out under the lock: no status-sized buffer on the BT RX stack */
 	k_mutex_lock(&status_mtx, K_FOREVER);
-	strcpy(tmp, status);
+	r = bt_gatt_attr_read(c, attr, buf, len, offset, status, strlen(status));
 	k_mutex_unlock(&status_mtx);
-	return bt_gatt_attr_read(c, attr, buf, len, offset, tmp, strlen(tmp));
+	return r;
 }
 
 static void data_ccc(const struct bt_gatt_attr *attr, uint16_t value)

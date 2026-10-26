@@ -5,6 +5,9 @@
 #include <stdint.h>
 
 #define FW_VERSION "c0.1"
+/* Status string buffer incl. NUL. A typical status is ~200 chars, the worst case ~246
+ * (all counters at 10 digits, "last=err:..."); notify needs <= MTU-3 = 244, read has no limit. */
+#define STATUS_BUF_LEN 256
 
 enum stream_fmt { FMT_I16 = 0, FMT_I24 = 1 };
 
