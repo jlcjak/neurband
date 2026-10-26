@@ -1,0 +1,54 @@
+{
+  "units": "mm",
+  "coordinate_convention": "STEP X = footprint local X; STEP Y = minus footprint local Y; STEP Z = height above component-side PCB surface. Footprint placement rotation is applied by KiCad; do not separately duplicate it in model rotation.",
+  "models": [
+    {
+      "part": "ESP32-S3-MINI-1-N8",
+      "step": "ESP32-S3-MINI-1-N8.step",
+      "freecad": "ESP32-S3-MINI-1-N8.FCStd",
+      "kicad_scale_xyz": [1, 1, 1],
+      "kicad_offset_xyz_mm": [0, 0, 0],
+      "kicad_rotation_xyz_deg": [0, 0, 0],
+      "cad_envelope_min_xyz_mm": [-7.7, -10.25, 0],
+      "cad_envelope_max_xyz_mm": [7.7, 10.25, 2.4],
+      "antenna_cad_y_range_mm": [5.20, 10.25],
+      "source": "../esp_footprint_review.md: Espressif datasheet Fig. 10-1 and Fig. 11-1; nominal 15.4 x 20.5 x 2.4 mm and 5.05 mm antenna region",
+      "approximations": [
+        "Green rectangular substrate is illustratively 0.8 mm thick; this thickness is not a sourced controlled dimension.",
+        "Silver solid rectangular shield covers the non-antenna region to the nominal 2.4 mm overall height; exact shield inset, stamping, seam and corner radii are not represented.",
+        "No antenna copper pattern, electrical pins, internal components or functional geometry is invented. Antenna region is visibly exposed substrate."
+      ]
+    },
+    {
+      "part": "HCTL HC-FPC-05-09-40RLTAG",
+      "step": "HCTL_HC-FPC-05-09-40RLTAG.step",
+      "freecad": "HCTL_HC-FPC-05-09-40RLTAG.FCStd",
+      "kicad_scale_xyz": [1, 1, 1],
+      "kicad_offset_xyz_mm": [0, 0, 0],
+      "kicad_rotation_xyz_deg": [0, 0, 0],
+      "cad_envelope_min_xyz_mm": [-11, -3.05, 0],
+      "cad_envelope_max_xyz_mm": [11, 0.45, 1],
+      "opening_outward_cad_unit_vector": [0, -1, 0],
+      "opening_front_cad_y_mm": -3.05,
+      "opening_width_mm": 20.57,
+      "opening_z_range_mm": [0.19, 0.54],
+      "source": "../HC-FPC-05-09-40RLTAG.geometry.json and ../HC-FPC-05-09-NRLTAG_vendor_page1.png: manufacturer Rev A drawing, 40-contact row",
+      "approximations": [
+        "Closed state only: 22.0 x 3.5 x 1.0 mm nominal envelope; 3.5 mm depth is a reference dimension, height tolerance is +/-0.1 mm. Open actuator reference height 1.55 mm is not modeled.",
+        "Natural LCP housing is a simplified rectangular shell with a visibly open front slot, black rear-flip actuator is simplified without hinge mechanism.",
+        "Entry width uses drawing C=20.57 mm; entry depth uses cross-section 1.30 mm; floor uses cross-section 0.19 mm. Slot height 0.35 mm is illustrative clearance for the specified 0.30 mm cable, not a controlled vendor opening-height claim.",
+        "Actuator width 21.10 mm and rectangular cover subdivision are visual approximations, not a functional articulation model.",
+        "Contacts, retention tabs, mold reliefs, hinges and cable are intentionally omitted; no functional contact geometry is invented."
+      ]
+    }
+  ],
+  "generation": {
+    "macro": "build_models.FCMacro",
+    "command": "QT_QPA_PLATFORM=offscreen /usr/bin/freecad boards/neurband_main/layout/models/build_models.FCMacro",
+    "log": "build_models.log",
+    "shape_validity": "All four constituent shapes returned shape.isValid()=True during generation.",
+    "export": "FCStd documents saved; colored STEP exported with ImportGui.export using ViewObject.ShapeColor.",
+    "gui_diagnostics": "Offscreen Qt reported QOpenGLWidget unsupported and No valid GL context found. Export completed successfully; no image render or visual inspection of the exported STEP is claimed. No renderer workaround used.",
+    "checks_not_run": "No ERC, DRC, tests, or canonical PCB changes."
+  }
+}

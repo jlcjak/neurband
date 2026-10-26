@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Electrode pod shell",
+  "source": "pod_shell.step",
+  "qty": 36,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "gray"
+  },
+  "features": {
+    "volume_cm3": 0.58,
+    "area_cm2": 7.46,
+    "size_x_mm": 34.01,
+    "size_y_mm": 7.01,
+    "size_z_mm": 4.26
+  }
+}

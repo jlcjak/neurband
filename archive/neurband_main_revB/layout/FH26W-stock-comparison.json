@@ -1,0 +1,34 @@
+{
+  "stock_file": "/usr/share/kicad/footprints/Connector_FFC-FPC.pretty/Hirose_FH26-39S-0.3SHW_2Rows-39Pins-1MP_P0.60mm_Horizontal.kicad_mod",
+  "sha256": "86269c7a746e4240631ad42ac82f4e1829c925c40759ea6fb7fe12edcd88e694",
+  "signal_pads": 39,
+  "mount_pads": 2,
+  "copper_land_deviations": [],
+  "odd_centre_span_mm": 11.4,
+  "even_centre_span_mm": 10.8,
+  "outer_row_to_row_gap_mm": 2.15,
+  "bottom_example_origin_mm": [
+    22,
+    2.1
+  ],
+  "bottom_mapping": "globalX=22+localY; globalY=2.1+localX",
+  "bottom_example_pads": {
+    "1": [
+      16.3,
+      0.7
+    ],
+    "2": [
+      16.6,
+      3.575
+    ],
+    "38": [
+      27.4,
+      3.575
+    ],
+    "39": [
+      27.7,
+      0.7
+    ]
+  },
+  "scope": "Copper comparison against visually inspected official drawing sheet1 and Hirose catalog dimension table; not DRC or manufacture approval"
+}

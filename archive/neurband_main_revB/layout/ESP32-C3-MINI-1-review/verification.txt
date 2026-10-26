@@ -1,0 +1,4 @@
+PASS: all 61 pad centers and XY sizes match independent Fig 11-1 formulas.
+PASS: unique pad numbers = symbol numbers = 1..53; nine islands share pad 49.
+PASS: keepout enumerates all 32 copper layers and forbids tracks, vias, pads, pours and footprints.
+PASS: antenna clearance polygon X +/-21.6; Y -26..-5.6 mm.

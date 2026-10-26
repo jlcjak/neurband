@@ -1,0 +1,17 @@
+{
+  "kind": "pcb",
+  "name": "Main board",
+  "source": "neurband_main.kicad_pcb",
+  "qty": 5,
+  "options": {
+    "layers": 4,
+    "thickness_mm": 1.6,
+    "color": "black",
+    "finish": "enig"
+  },
+  "features": {
+    "width_mm": 54.0,
+    "height_mm": 34.0,
+    "min_drill_mm": 0.3
+  }
+}

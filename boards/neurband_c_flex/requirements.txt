@@ -1,0 +1,4 @@
+numpy==2.5.4
+pyclipper==1.4.0
+shapely==2.1.2
+kicad-library-generators @ git+https://gitlab.com/kicad/libraries/kicad-library-tools.git@36d1ed208379d7c4127661ac384118cc6837392b

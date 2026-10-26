@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C flush button cap",
+  "source": "button_cap.step",
+  "qty": 4,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "gray"
+  },
+  "features": {
+    "volume_cm3": 0.059,
+    "area_cm2": 1.08,
+    "size_x_mm": 6.02,
+    "size_y_mm": 6.01,
+    "size_z_mm": 4.52
+  }
+}

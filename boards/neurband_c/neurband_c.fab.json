@@ -1,0 +1,17 @@
+{
+  "kind": "pcb",
+  "name": "neurband rev C main board",
+  "source": "neurband_c.kicad_pcb",
+  "qty": 5,
+  "options": {
+    "layers": 4,
+    "thickness_mm": 1.0,
+    "color": "black",
+    "finish": "enig"
+  },
+  "features": {
+    "width_mm": 28.7,
+    "height_mm": 27.0,
+    "min_drill_mm": 0.3
+  }
+}

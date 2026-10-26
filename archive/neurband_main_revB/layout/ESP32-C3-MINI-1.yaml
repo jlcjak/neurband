@@ -1,0 +1,27 @@
+# Review parameter manifest; not a new footprint generator. Units: mm.
+# Existing stock ESP32-C6-MINI-1 land geometry reused after C3 comparison.
+name: ESP32-C3-MINI-1
+source: docs/datasheets/esp32-c3-mini-1.pdf
+source_version: '2.2'
+figures: ['3-1', '10-1', '11-1']
+origin: center_of_ground_array
+coordinates: {view: top, x: right, y: down, antenna: negative_y}
+body: {xmin: -6.6, xmax: 6.6, ymin: -11.0, ymax: 5.6, height: 2.4}
+antenna: {xmin: -6.6, xmax: 6.6, ymin: -11.0, ymax: -5.6}
+intended_board_edge_y: -5.6
+left: {pins: [1, 11], x: -5.9, first_y: -4.0, pitch_y: 0.8, size: [0.8, 0.4]}
+bottom: {pins: [12, 24], first_x: -4.8, pitch_x: 0.8, y: 4.9, size_xy: [0.4, 0.8]}
+right: {pins: [25, 35], x: 5.9, first_y: 4.0, pitch_y: -0.8, size: [0.8, 0.4]}
+top: {pins: [36, 48], first_x: 4.8, pitch_x: -0.8, y: -4.9, size_xy: [0.4, 0.8]}
+ground_array: {pin: 49, centers_x: [-1.975, 0, 1.975], centers_y: [-1.975, 0, 1.975], size: [1.45, 1.45], envelope: [5.4, 5.4], upper_left_chamfer_ratio: 0.41}
+ground_corners:
+  50: [5.95, -4.95]
+  51: [5.95, 4.95]
+  52: [-5.95, 4.95]
+  53: [-5.95, -4.95]
+corner_size: [0.7, 0.7]
+keepout: {xmin: -21.6, xmax: 21.6, ymin: -26, ymax: -5.6, copper_layers: all_32, tracks: forbidden, vias: forbidden, pads: forbidden, pours: forbidden, footprints: forbidden}
+physical_pad_count: 61
+unique_pin_count: 53
+model: '${KIPRJMOD}/layout/models/ESP32-C3-MINI-1.step'
+model_transform: {offset: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1]}

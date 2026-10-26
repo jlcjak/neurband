@@ -1,0 +1,154 @@
+/*
+ * neurband rev C on the nrf52dk/nrf52832 board definition. Same SoC (nRF52832-QFAA, 32 MHz
+ * crystal); everything the DK wires differently is remapped or disabled here.
+ * Pin source of truth: boards/neurband_c/gen_c_sch.py (GPIO = {...}).
+ *
+ * HFXO: the nRF52832 has no internal load capacitors. Y1 (8 pF CL) uses the external 12 pF
+ * pair on the board, so nothing is set here. The BLE controller starts the HFXO for every
+ * radio event. There is no 32.768 kHz crystal: prj.conf selects the calibrated LFRC.
+ */
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/adc/nrf-saadc.h>
+
+/ {
+	chosen {
+		/delete-property/ zephyr,console;
+		/delete-property/ zephyr,shell-uart;
+		/delete-property/ zephyr,uart-mcumgr;
+		/delete-property/ zephyr,bt-mon-uart;
+		/delete-property/ zephyr,bt-c2h-uart;
+	};
+
+	/* The DK LEDs/buttons/PWM LED sit on our START, PWDN, LED, BUTTON and CHG_N pins. */
+	aliases {
+		/delete-property/ led0;
+		/delete-property/ led1;
+		/delete-property/ led2;
+		/delete-property/ led3;
+		/delete-property/ pwm-led0;
+		/delete-property/ sw0;
+		/delete-property/ sw1;
+		/delete-property/ sw2;
+		/delete-property/ sw3;
+		/delete-property/ mcuboot-button0;
+		/delete-property/ mcuboot-led0;
+	};
+	/delete-node/ leds;
+	/delete-node/ pwmleds;
+	/delete-node/ buttons;
+
+	zephyr,user {
+		led-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;		/* D1 from +3V3 via 1k into the pin */
+		button-gpios = <&gpio0 16 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;	/* SW1 to GND */
+		chg-gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;	/* TP4054 CHRG, open drain */
+		io-channels = <&adc 0>;					/* VBAT/2 on AIN0 */
+	};
+};
+
+#ifdef NRF5X_REG_MODE_LDO
+/* Zephyr >= 4.0: no DCC inductor on rev C, keep the main regulator in LDO mode. */
+&reg {
+	regulator-initial-mode = <NRF5X_REG_MODE_LDO>;
+};
+#endif
+
+&uart0 {
+	status = "disabled";
+};
+
+/* IMU: ST LSM6DSL on TWI0 (SA0 low -> 0x6A, CS high = I2C mode). IMU pins live only here:
+ * I2C_SDA P0.03, I2C_SCL P0.04 (kept off the near-radio pins P0.22-P0.24 bank), IMU_INT (INT1) P0.24. The app drives its registers directly;
+ * CONFIG_SENSOR stays off so Zephyr's own lsm6dsl driver is not built. */
+&i2c0 {
+	compatible = "nordic,nrf-twi";
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	pinctrl-0 = <&i2c0_nb_default>;
+	pinctrl-1 = <&i2c0_nb_sleep>;
+	pinctrl-names = "default", "sleep";
+
+	lsm6dsl: lsm6dsl@6a {
+		compatible = "st,lsm6dsl";
+		reg = <0x6a>;
+		irq-gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&spi1 {
+	status = "disabled";
+};
+
+&pwm0 {
+	status = "disabled";
+};
+
+&pinctrl {
+	i2c0_nb_default: i2c0_nb_default {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 3)>,
+				<NRF_PSEL(TWIM_SCL, 0, 4)>;
+		};
+	};
+
+	i2c0_nb_sleep: i2c0_nb_sleep {
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 3)>,
+				<NRF_PSEL(TWIM_SCL, 0, 4)>;
+			low-power-enable;
+		};
+	};
+
+	spi2_nb_default: spi2_nb_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 7)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 8)>,
+				<NRF_PSEL(SPIM_MISO, 0, 11)>;
+		};
+	};
+
+	spi2_nb_sleep: spi2_nb_sleep {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 7)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 8)>,
+				<NRF_PSEL(SPIM_MISO, 0, 11)>;
+			low-power-enable;
+		};
+	};
+};
+
+/* SPIM2 (EasyDMA), mode 1. Register access runs at 1 MHz, frame reads at 8 MHz (ads1298.c). */
+&spi2 {
+	compatible = "nordic,nrf-spim";
+	status = "okay";
+	pinctrl-0 = <&spi2_nb_default>;
+	pinctrl-1 = <&spi2_nb_sleep>;
+	pinctrl-names = "default", "sleep";
+	cs-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+
+	ads1298: adc@0 {
+		compatible = "ti,ads1298";
+		reg = <0>;
+		spi-max-frequency = <8000000>;
+		drdy-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+		start-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+		pwdn-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+	};
+};
+
+/* Battery: VBAT/2 (1M/1M + 100 nF) on P0.02/AIN0. Gain 1/6 with the 0.6 V reference = 3.6 V
+ * full scale; the 100 nF holds the node during the 40 us acquisition. */
+&adc {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1_6";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
+		zephyr,input-positive = <NRF_SAADC_AIN0>;
+		zephyr,resolution = <12>;
+		zephyr,oversampling = <4>;
+	};
+};

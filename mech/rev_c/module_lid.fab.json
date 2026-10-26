@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C module lid (crowned shell)",
+  "source": "module_lid.step",
+  "qty": 3,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "gray"
+  },
+  "features": {
+    "volume_cm3": 1.849,
+    "area_cm2": 37.39,
+    "size_x_mm": 34.5,
+    "size_y_mm": 32.1,
+    "size_z_mm": 10.99
+  }
+}

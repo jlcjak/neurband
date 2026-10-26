@@ -1,0 +1,7 @@
+ModuleSubstrate: shape.isValid()=True
+SimplifiedMetalShield: shape.isValid()=True
+ESP32-S3-MINI-1-N8: envelope XYZ mm (-7.7, 7.7, -10.25, 10.25, 0.0, 2.4)
+NaturalLCPHousing: shape.isValid()=True
+ClosedRearFlipActuator: shape.isValid()=True
+HCTL_HC-FPC-05-09-40RLTAG: envelope XYZ mm (-11.0, 11.0, -3.05, 0.44999999999999996, 0.0, 1.0)
+SUCCESS: both FCStd and colored STEP assets exported with ImportGui.export.

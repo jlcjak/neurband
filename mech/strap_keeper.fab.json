@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Strap keeper loop",
+  "source": "strap_keeper.step",
+  "qty": 4,
+  "options": {
+    "process": "fdm",
+    "material": "tpu",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 0.38,
+    "area_cm2": 7.6,
+    "size_x_mm": 23.4,
+    "size_y_mm": 6.0,
+    "size_z_mm": 5.4
+  }
+}

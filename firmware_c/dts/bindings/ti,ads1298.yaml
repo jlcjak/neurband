@@ -1,0 +1,21 @@
+description: |
+  TI ADS1298 8-channel 24-bit biopotential AFE on SPI (mode 1). The driver is part of the
+  neurband application (src/ads1298.c); this binding only describes the pins.
+
+compatible: "ti,ads1298"
+
+include: spi-device.yaml
+
+properties:
+  drdy-gpios:
+    type: phandle-array
+    required: true
+    description: DRDY output of the ADS1298 (active low, falls when a frame is ready).
+  start-gpios:
+    type: phandle-array
+    required: true
+    description: START input (active high, conversions run while high).
+  pwdn-gpios:
+    type: phandle-array
+    required: true
+    description: PWDN and RESET inputs (tied together on rev C), active low = power-down.

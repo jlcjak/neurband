@@ -1,0 +1,9 @@
+(version 1)
+(rule "Flex minimum copper clearance"
+  (constraint clearance (min 0.1mm)))
+(rule "Flex minimum trace width"
+  (constraint track_width (min 0.1mm)))
+(rule "Flex copper to cut edge"
+  (constraint edge_clearance (min 0.3mm)))
+(rule "Flex copper to drilled holes"
+  (constraint hole_clearance (min 0.2mm)))

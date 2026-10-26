@@ -1,0 +1,122 @@
+"""Import the six assembly STEP models and measure their physical solids.
+
+Run with QT_QPA_PLATFORM=offscreen timeout 90 /usr/bin/freecad <macro>.
+Only physical Part features contribute; STEP assembly datum planes are unbounded.
+Bounds are reduced by explicit min/max, independently of App.BoundBox.add.
+These are visual model extents, not certified component clearance limits.
+"""
+import FreeCAD as App
+import ImportGui
+import json
+import math
+import os
+import traceback
+from pathlib import Path
+
+root = Path(os.environ.get('NEURBAND_ROOT', os.path.expanduser('~/neurband'))) / 'boards/neurband_c'
+lib = Path(os.environ.get('KICAD_ROOT', os.path.expanduser('~/.backplane-bend/kicad/10.99.0-bp.4'))) / 'share/kicad/3dmodels'
+build = root / 'layout/build'
+models = {
+    'J1': root / 'layout/models/XUNPU_FPC-05F-20PH20.step',
+    'SW1': lib / 'Button_Switch_SMD.3dshapes/SW_SPST_TS-1088-xR020.step',
+    'D1': lib / 'LED_SMD.3dshapes/LED_0603_1608Metric.step',
+    'U1': root / 'layout/models/NRF52832_QFAA.step',
+    'U2': lib / 'Package_QFP.3dshapes/TQFP-64_10x10mm_P0.5mm.step',
+    'U5': lib / 'Package_LGA.3dshapes/LGA-14_3x2.5mm_P0.5mm_LayoutBorder3x4y.step',
+}
+lines = [
+    'Actual FreeCAD STEP imports; dimensions in mm from model PCB origin.',
+    'Visual extents only: not vendor-certified dimensions or tolerance/clearance envelopes.',
+    'J1 is a drawing-backed closed visual model; lands are included; no open-latch/cable envelope.',
+    'U1 is a simplified 6x6x0.9 body/lead envelope plus 0.005 visual dot; reserve 1.0 mm mechanically.',
+    'Diagnosis: imported App::Plane YZ datums have Faces and XLength=0, so the old Faces/XLength filter admitted their +/-1e100 Y/Z bounds.',
+]
+
+
+def limits(box):
+    return (box.XMin, box.XMax, box.YMin, box.YMax, box.ZMin, box.ZMax)
+
+
+def describe(box):
+    return 'X %.12g..%.12g Y %.12g..%.12g Z %.12g..%.12g' % limits(box)
+
+
+def physical_bounds(box):
+    values = limits(box)
+    # OCC uses +/-1e100 for void/unbounded boxes: those are finite floats,
+    # but cannot represent physical component geometry in this assembly.
+    return (all(math.isfinite(v) and abs(v) < 1e6 for v in values)
+            and all(values[i] < values[i + 1] for i in (0, 2, 4)))
+
+
+try:
+    out = {}
+    for name, path in models.items():
+        doc = App.newDocument('Measure' + name)
+        try:
+            ImportGui.insert(str(path), doc.Name)
+            doc.recompute()
+            lines.append('\n%s source=%s' % (name, path))
+            measured = []
+            legacy = App.BoundBox()
+            for obj in doc.Objects:
+                prefix = '%s type=%s label=%r' % (obj.Name, obj.TypeId, obj.Label)
+                if not hasattr(obj, 'Shape'):
+                    lines.append(prefix + ': excluded: no Shape (container/metadata).')
+                    continue
+                shape = obj.Shape
+                lines.append(prefix + ': null=%s valid=%s faces=%d solids=%d; %s'
+                             % (shape.isNull(), shape.isValid(), len(shape.Faces),
+                                len(shape.Solids), describe(shape.BoundBox)))
+                if not obj.isDerivedFrom('Part::Feature'):
+                    reason = ('duplicate assembly container; physical children measured separately'
+                              if obj.TypeId == 'App::Part'
+                              else 'datum/reference geometry, not a physical solid feature')
+                    lines.append('  excluded: ' + reason + '.')
+                    continue
+                if shape.isNull() or not shape.Faces or not shape.Solids:
+                    raise RuntimeError('%s/%s: physical feature has no solid geometry' % (name, obj.Name))
+                if not shape.isValid():
+                    raise RuntimeError('%s/%s: invalid physical shape' % (name, obj.Name))
+                for index, solid in enumerate(shape.Solids):
+                    box = solid.BoundBox
+                    lines.append('  solid %d valid=%s; %s' % (index, solid.isValid(), describe(box)))
+                    if not solid.isValid() or not physical_bounds(box):
+                        raise RuntimeError('%s/%s solid %d: invalid or nonphysical bounds' % (name, obj.Name, index))
+                if not physical_bounds(shape.BoundBox):
+                    raise RuntimeError('%s/%s: nonphysical feature bounds despite solid validation' % (name, obj.Name))
+                measured.append(limits(shape.BoundBox))
+                legacy.add(shape.BoundBox)
+                lines.append('  included: valid physical Part feature with finite solid/feature bounds.')
+            if not measured:
+                raise RuntimeError('No physical STEP solids: ' + name)
+            xmin = min(b[0] for b in measured)
+            xmax = max(b[1] for b in measured)
+            ymin = min(b[2] for b in measured)
+            ymax = max(b[3] for b in measured)
+            zmin = min(b[4] for b in measured)
+            zmax = max(b[5] for b in measured)
+            dimensions = (xmax - xmin, ymax - ymin, zmax - zmin, zmax)
+            if not all(math.isfinite(v) and v > 0 for v in dimensions):
+                raise RuntimeError('Invalid aggregate dimensions/height: ' + name)
+            lines.append('Legacy empty App.BoundBox().add result: ' + describe(legacy))
+            lines.append('Explicit physical union: X %.12g..%.12g Y %.12g..%.12g Z %.12g..%.12g'
+                         % (xmin, xmax, ymin, ymax, zmin, zmax))
+            out[name] = {
+                'source': str(path),
+                'x_mm': xmax - xmin,
+                'y_mm': ymax - ymin,
+                'z_min_mm': zmin,
+                'height_above_pcb_mm': zmax,
+            }
+        finally:
+            App.closeDocument(doc.Name)
+    # Reject NaN/Infinity at serialization as well as at the geometry boundary.
+    (build / 'component-heights.json').write_text(json.dumps(out, indent=2, allow_nan=False) + '\n')
+    lines.append('\nAll six imported models contain valid solids with finite physical bounds.')
+    (build / 'height-measurement.log').write_text('\n'.join(lines) + '\n')
+except Exception:
+    lines.append(traceback.format_exc())
+    (build / 'height-measurement.log').write_text('\n'.join(lines) + '\n')
+    os._exit(1)
+os._exit(0)

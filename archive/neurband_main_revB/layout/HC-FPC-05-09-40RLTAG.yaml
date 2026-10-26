@@ -1,0 +1,27 @@
+# Copper/body parameterization for the existing KiCad Library Tools generator:
+# src/generators/connector/SMD_single_row_plus_mounting_pad/footprint.py
+# Not executed. Standalone .kicad_mod is hand-authored, with separate reduced
+# signal paste apertures and a conservative closed-actuator envelope.
+# No new generator was implemented. Units: mm.
+group_definitions:
+  manufacturer: HCTL
+device_definition:
+  HC-FPC-05-09:
+    series: HC-FPC-05-09
+    mpn_format_string: 'HC-FPC-05-09-{pincount}RLTAG'
+    datasheet: 'https://datasheet.lcsc.com/datasheet/pdf/94239c3bf870fbd9168a2953a20da7e1.pdf?productCode=C5213762'
+    orientation: H
+    pitch: 0.5
+    pinrange: [list, [40]]
+    pad1_position: top-left
+    pad_size_x: 0.3
+    rel_pad_y_outside_edge: 3.3
+    rel_pad_y_inside_edge: 2.5
+    mounting_pad_size: [0.4, 0.8]
+    center_pad_to_mounting_pad_edge: 0.8
+    center_shift_y: -1.25
+    rel_body_edge_x: 1.25
+    rel_body_edge_y: 0.15
+    body_size_y: 2.9
+    text_inside_pos: 1.55
+    pin1_fab_marker_y: 0.15

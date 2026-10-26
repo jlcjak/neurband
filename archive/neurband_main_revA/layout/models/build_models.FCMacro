@@ -1,0 +1,77 @@
+import os
+import json
+import traceback
+import FreeCAD as App
+import Part
+import ImportGui
+
+ROOT = os.path.join(os.environ.get('NEURBAND_ROOT', os.path.expanduser('~/neurband')), 'boards/neurband_main/layout/models')
+LOG = open(os.path.join(ROOT, 'build_models.log'), 'w', buffering=1)
+
+def dimension(obj, name, value):
+    obj.addProperty('App::PropertyLength', name, 'Dimensions')
+    setattr(obj, name, value)
+
+def box(x, y, z, dx, dy, dz):
+    return Part.makeBox(dx, dy, dz, App.Vector(x, y, z))
+
+def feature(doc, name, shape, color):
+    obj = doc.addObject('PartDesign::Feature', name)
+    obj.Shape = shape
+    obj.ViewObject.ShapeColor = color
+    obj.ViewObject.LineColor = (0.15, 0.15, 0.15)
+    obj.ViewObject.DisplayMode = 'Flat Lines'
+    if not shape.isValid():
+        raise RuntimeError(name + ': invalid shape')
+    LOG.write(name + ': shape.isValid()=True\n')
+    return obj
+
+def save(doc, stem, objects):
+    doc.recompute()
+    Gui.activeDocument().activeView().viewAxonometric()
+    Gui.activeDocument().activeView().fitAll()
+    doc.saveAs(os.path.join(ROOT, stem + '.FCStd'))
+    ImportGui.export(objects, os.path.join(ROOT, stem + '.step'))
+    bounds = Part.makeCompound([o.Shape for o in objects]).BoundBox
+    LOG.write(stem + ': envelope XYZ mm ' + str((bounds.XMin, bounds.XMax, bounds.YMin, bounds.YMax, bounds.ZMin, bounds.ZMax)) + '\n')
+
+try:
+    doc = App.newDocument('ESP32_S3_MINI_1_N8')
+    # CAD XY equals footprint (X,-Y); PCB mounting plane is Z=0.
+    module_width_mm = 15.4
+    module_depth_mm = 20.5
+    module_height_mm = 2.4
+    antenna_depth_mm = 5.05
+    substrate_height_mm = 0.8  # illustrative, not a manufacturer controlled dimension
+    substrate = feature(doc, 'ModuleSubstrate', box(-7.7, -10.25, 0, module_width_mm, module_depth_mm, substrate_height_mm), (0.12, 0.30, 0.18))
+    for name, value in [('ModuleWidth', module_width_mm), ('ModuleDepth', module_depth_mm), ('ModuleHeight', module_height_mm), ('AntennaDepth', antenna_depth_mm), ('IllustrativeSubstrateHeight', substrate_height_mm)]:
+        dimension(substrate, name, value)
+    # Simplified solid shield; no invented antenna trace or internal electronics.
+    shield = feature(doc, 'SimplifiedMetalShield', box(-7.7, -10.25, substrate_height_mm, module_width_mm, module_depth_mm-antenna_depth_mm, module_height_mm-substrate_height_mm), (0.68, 0.70, 0.73))
+    save(doc, 'ESP32-S3-MINI-1-N8', [substrate, shield])
+
+    doc = App.newDocument('HCTL_HC_FPC_05_09_40RLTAG')
+    housing_width_mm = 22.0
+    housing_depth_mm = 2.9
+    closed_height_mm = 1.0
+    overall_depth_mm = 3.5
+    entry_width_mm = 20.57
+    entry_depth_mm = 1.30
+    entry_floor_mm = 0.19
+    entry_height_mm = 0.35  # illustrative clearance for nominal 0.30 mm cable
+    # Local KiCad opening at +Y=3.05 becomes CAD -Y=-3.05.
+    housing_shape = box(-11, -3.05, 0, housing_width_mm, housing_depth_mm, closed_height_mm)
+    entry_cut = box(-entry_width_mm/2, -3.051, entry_floor_mm, entry_width_mm, entry_depth_mm+0.001, entry_height_mm)
+    housing = feature(doc, 'NaturalLCPHousing', housing_shape.cut(entry_cut), (0.87, 0.84, 0.71))
+    for name, value in [('HousingWidth', housing_width_mm), ('HousingDepth', housing_depth_mm), ('ClosedHeight', closed_height_mm), ('OverallDepth', overall_depth_mm), ('EntryWidth', entry_width_mm), ('EntryDepth', entry_depth_mm), ('EntryFloor', entry_floor_mm), ('IllustrativeEntryHeight', entry_height_mm)]:
+        dimension(housing, name, value)
+    # Rear flip cover is closed, at local footprint negative Y. Front slot remains exposed.
+    actuator = feature(doc, 'ClosedRearFlipActuator', box(-10.55, -1.10, 0.60, 21.10, 1.55, 0.40), (0.055, 0.055, 0.06))
+    save(doc, 'HCTL_HC-FPC-05-09-40RLTAG', [housing, actuator])
+    LOG.write('SUCCESS: both FCStd and colored STEP assets exported with ImportGui.export.\n')
+except BaseException:
+    LOG.write(traceback.format_exc())
+    LOG.close()
+    os._exit(1)
+LOG.close()
+os._exit(0)

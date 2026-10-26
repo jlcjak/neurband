@@ -1,0 +1,1 @@
+(fp_lib_table (lib (name "neurband_c_flex")(type "KiCad")(uri "${KIPRJMOD}/neurband_c_flex.pretty")(options "")(descr "REV C fabricated contacts")))

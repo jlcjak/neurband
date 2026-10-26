@@ -1,0 +1,35 @@
+(footprint "Electrode_D6.5mm"
+	(version 20260206)
+	(generator "kicad-footprint-generator")
+	(layer "F.Cu")
+	(descr "6.5 mm exposed gold skin electrode; F coverlay opening; no paste")
+	(property "Reference" "REF**"
+		(at 0 -4.1 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Electrode_D6.5mm"
+		(at 0 4.1 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(pad "1" smd circle
+		(at 0 0)
+		(size 6.5 6.5)
+		(layers "F.Cu" "F.Mask")
+		(solder_mask_margin 0.05)
+	)
+	(embedded_fonts no)
+)

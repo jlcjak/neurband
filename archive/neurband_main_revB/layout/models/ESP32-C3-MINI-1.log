@@ -1,0 +1,4 @@
+Substrate: shape.isValid()=True
+SimplifiedShieldEnvelope: shape.isValid()=True
+CAD bounds mm: (-6.6, 6.6, -5.6, 11.000000000000002, 0.0, 2.4)
+PASS: nominal envelope 13.2 x 16.6 x 2.4 mm; colored STEP exported

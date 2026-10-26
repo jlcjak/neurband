@@ -1,0 +1,16 @@
+{
+  "kind": "pcb",
+  "name": "Electrode flex M",
+  "source": "neurband_electrodes.kicad_pcb",
+  "qty": 5,
+  "options": {
+    "layers": 2,
+    "thickness_mm": 0.4,
+    "finish": "enig"
+  },
+  "features": {
+    "width_mm": 152.5,
+    "height_mm": 50.0,
+    "min_drill_mm": 0.2
+  }
+}

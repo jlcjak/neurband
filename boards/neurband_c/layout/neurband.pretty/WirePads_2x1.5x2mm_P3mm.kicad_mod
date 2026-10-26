@@ -1,0 +1,10 @@
+(footprint "WirePads_2x1.5x2mm_P3mm"
+ (version 20260206) (generator "neurband") (layer "F.Cu")
+ (descr "Two wire/charge solder pads, no paste; 1.5 x 2.0 mm, 3.0 mm pitch")
+ (attr smd exclude_from_pos_files exclude_from_bom)
+ (property "Reference" "REF**" (at 1.5 -2) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.15))))
+ (property "Value" "WirePads" (at 1.5 2) (layer "F.Fab") (effects (font (size 0.8 0.8) (thickness 0.15))))
+ (fp_rect (start -1 -1.25) (end 4 1.25) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+ (pad "1" smd roundrect (at 0 0) (size 1.5 2) (layers "F.Cu" "F.Mask") (roundrect_rratio 0.15))
+ (pad "2" smd roundrect (at 3 0) (size 1.5 2) (layers "F.Cu" "F.Mask") (roundrect_rratio 0.15))
+)

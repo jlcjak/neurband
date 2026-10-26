@@ -1,0 +1,192 @@
+Title: FH26W-39S-0.3SHW(60)
+
+URL Source: https://www.hirose.com/en/product/p/CL0580-2412-8-60
+
+Markdown Content:
+[](https://www.hirose.com/en/product)
+
+[](https://www.hirose.com/en/product)
+*   [Hirose Electric Company Information](https://www.hirose.com/corporate/en/)
+*   English 
+
+[Login｜Member Registration](https://www.hirose.com/en/product/login)
+
+*   [Login｜Member Registration](https://www.hirose.com/en/product/login)
+*   [Search by Category](https://www.hirose.com/en/product/category)
+*   [Search by Application](https://www.hirose.com/en/product/industry)
+*   [Series Search](https://www.hirose.com/en/product/series)
+*   [Product Search](https://www.hirose.com/en/product/c/all)
+*   [Specials & Campaigns](https://www.hirose.com/en/product/campaign)
+*   [Support](https://www.hirose.com/en/product/sales-support)
+*    
+
+*   [Home](https://www.hirose.com/en/product)  
+*   [FH26](https://www.hirose.com/en/product/series/FH26)  
+*   FH26W-39S-0.3SHW(60) 
+
+[FH26](https://www.hirose.com/en/product/series/FH26)
+
+# FH26W-39S-0.3SHW(60)
+
+CL0580-2412-8-60
+
+![Image 1: FH26W-39S-0.3SHW(60)](https://www.hirose.com/_next/image?url=https%3A%2F%2Fgated.hirose.com%2Fseries%2Fimages%2Fba41ebb0-d1f5-47a4-aa9d-d8a9ee007e31%2F58177ce6-288b-436a-a026-50d2a4bdaf8f.jpg%3FExpires%3D1792963956%26Key-Pair-Id%3DKDT9LK7C4VPA2%26Signature%3DV7UVz9-BcmPlcN2n8xC68kLTzaQIaPVCVMr5LpM53sB1hC5HSUeD~K3rWNx0QKROEBSRu7UzOaZme5BuhkRy5sEme~7sWXVw~4jUvVGizAzki64ruCjIgFFXBBFJQJCy4H1ERn2bBFIMoboF4UMPUStQc5-VzlQe86qfQi0qkzloH06ESMy5fRglm7c8UgzH76X3U-IkWK6LMpyreRbqdLfh7v09KUZNEVtSrMt85U2Ae7TAzycjs7-VKCVftbvJu9~NjsW8kmpiUWF4IpALr3YjI~bRBMgeZyaU00nej6BakNz7gphkexSghMjfPscXewJveaX2mC7VrDoTklRHrA__&w=3840&q=75)powered by TraceParts
+
+*The actual product may differ from the image
+
+Connector Type
+
+Receptacle
+
+Mounting Pitch
+
+0.6mm
+
+Connector Length
+
+13.2mm
+
+Connector Height
+
+1mm
+
+PART NUMBER CONFIGURATION
+
+### Hirose-provided data download
+
+[2D](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fdrawing_2d%2Fcontent%3Flang%3DEN)[3D model (IGES)](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fmodel_3d_iges%2Fcontent)[3D model (STEP)](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fmodel_3d_step%2Fcontent)
+
+Click here to check inventory and purchase.
+
+[View Distributor List](https://www.hirose.com/en/product/partner?country_cd=US)[Check Stock & Purchase](https://www.hirose.com/en/product/global-stock-information/CL0580-2412-8-60)
+
+※Click here if you are considering purchasing.[QA How to purchase](https://www.hirose.com/en/product/faq/q19)
+
+[CONTACT US](https://support.hirose.com/customer/login)
+
+[FH26 Series Detail](https://www.hirose.com/en/product/series/FH26)[FH26 Product List](https://www.hirose.com/en/product/series/FH26#connectors)
+
+[Detailed Specifications](https://www.hirose.com/en/product/p/CL0580-2412-8-60#specifications)[Documents](https://www.hirose.com/en/product/p/CL0580-2412-8-60#documents)
+
+[FH26 Series Detail](https://www.hirose.com/en/product/series/FH26)[FH26 Product List](https://www.hirose.com/en/product/series/FH26#connectors)[Check Stock & Purchase](https://www.hirose.com/en/product/global-stock-information/CL0580-2412-8-60)
+
+[Detailed Specifications](https://www.hirose.com/en/product/p/CL0580-2412-8-60#specifications)[Documents](https://www.hirose.com/en/product/p/CL0580-2412-8-60#documents)
+
+[FH26 Series Detail](https://www.hirose.com/en/product/series/FH26)[FH26 Product List](https://www.hirose.com/en/product/series/FH26#connectors)[Check Stock & Purchase](https://www.hirose.com/en/product/global-stock-information/CL0580-2412-8-60)
+
+## Detailed Specifications
+
+Last Updated On October 2, 2026
+
+Basic Specifications
+
+| Connector Type | Receptacle | Mounting Pitch | 0.6mm |
+| --- | --- |
+| Connector Length | 13.2mm | Connector Height | 1mm |
+| Connector Width | 3.2mm | Contact Orientation | Bottom |
+| ZIF/Non-ZIF/LIF | ZIF | Recommended FFC/FPC | FPC |
+| FFC/FPC Thickness | 0.2mm | FPC/FFC Insertion Direction | Horizontal |
+| Depth dimension (mm) actuator OPEN state |  | Depth dimension (mm) actuator CLOSE state |  |
+| Actuator method | Front | Number of Positions | 39 |
+| Remarks on Number of Positions |  | Contact Pitch | 0.3mm |
+| Number of Rows (Lead/PCB Side) | 2 | Performance Characteristics |  |
+| Transmission Rate |  | Operating Temperature Max. | 85℃ |
+| Operating Temperature Min. | -55℃ | Effective Mating Length(Z)(mm) |  |
+| Rated Voltage (AC) | AC30V | Rated Voltage (AC) other |  |
+| Rated Voltage (DC) | DC30V | Rated Voltage (DC) other |  |
+| Rated Current | 0.2A | Rated Current other |  |
+| RoHS (EU)2015/863 | Handled | SVHC | 35th Non-Contained |
+| Connector Type Details |  |  |  |
+
+| Connector Type | Receptacle |
+| --- |
+| Mounting Pitch | 0.6mm |
+| Connector Length | 13.2mm |
+| Connector Height | 1mm |
+| Connector Width | 3.2mm |
+| Contact Orientation | Bottom |
+| ZIF/Non-ZIF/LIF | ZIF |
+| Recommended FFC/FPC | FPC |
+| FFC/FPC Thickness | 0.2mm |
+| FPC/FFC Insertion Direction | Horizontal |
+| Depth dimension (mm) actuator OPEN state |  |
+| Depth dimension (mm) actuator CLOSE state |  |
+| Actuator method | Front |
+| Number of Positions | 39 |
+| Remarks on Number of Positions |  |
+| Contact Pitch | 0.3mm |
+| Number of Rows (Lead/PCB Side) | 2 |
+| Performance Characteristics |  |
+| Transmission Rate |  |
+| Operating Temperature Max. | 85℃ |
+| Operating Temperature Min. | -55℃ |
+| Effective Mating Length(Z)(mm) |  |
+| Rated Voltage (AC) | AC30V |
+| Rated Voltage (AC) other |  |
+| Rated Voltage (DC) | DC30V |
+| Rated Voltage (DC) other |  |
+| Rated Current | 0.2A |
+| Rated Current other |  |
+| RoHS (EU)2015/863 | Handled |
+| SVHC | 35th Non-Contained |
+| Connector Type Details |  |
+
+Read More
+
+Mechanical Specifications
+
+Electrical Specifications
+
+Dimensional Information
+
+Packaging Specifications
+
+Others
+
+Show All
+
+## Documents
+
+In cases where the application will demand a high level of reliability, such as automotive, please contact a company representative for further information.
+
+### Catalogs & Data Sheets
+
+| Series Catalogs | [日本語 [pdf]](https://www.hirose.com/en/product/series/FH26/documents?path=%2Fapi%2Fv1%2Fseries%2FFH26%2Fdocuments%2Fproduct_series_catalog%2Fcontent%3Flang%3DJA)[English [pdf]](https://www.hirose.com/en/product/series/FH26/documents?path=%2Fapi%2Fv1%2Fseries%2FFH26%2Fdocuments%2Fproduct_series_catalog%2Fcontent%3Flang%3DEN) |
+| --- |
+| Drawing (2D) | [日本語 [pdf]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fdrawing_2d%2Fcontent%3Flang%3DJA)[English [pdf]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fdrawing_2d%2Fcontent%3Flang%3DEN) |
+| Specification Sheet | [日本語 [pdf]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fspec_sheet%2Fcontent%3Flang%3DJA)[English [pdf]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fspec_sheet%2Fcontent%3Flang%3DEN) |
+
+### 3D Models, MCAD, PCB Footprints & ECAD
+
+| 3D Model (IGES) | [Download [zip]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fmodel_3d_iges%2Fcontent) |
+| --- |
+| 3D Model (STEP) | [Download [zip]](https://www.hirose.com/en/product/p/CL0580-2412-8-60/documents?path=%2Fapi%2Fv1%2Fproducts%2FCL0580-2412-8-60%2Fdocuments%2Fmodel_3d_step%2Fcontent) |
+
+Support & Contact
+
+[Distributor Information Purchase products here.](https://www.hirose.com/en/product/partner?country_cd=US)[FAQ Frequently asked questions.](https://www.hirose.com/en/product/faq)
+
+Contact Us
+
+Member registration is required for inquiries.
+
+Product Search Site
+
+*   [Search by Category](https://www.hirose.com/en/product/category)
+*   [Search by Application](https://www.hirose.com/en/product/industry)
+*   [Series Search](https://www.hirose.com/en/product/series)
+*   [Product Search](https://www.hirose.com/en/product/c/all)
+*   [Specials & Campaigns](https://www.hirose.com/en/product/campaign)
+*   [Support](https://www.hirose.com/en/product/sales-support)
+
+Hirose Electric Company Information
+
+*   [Company Information](https://www.hirose.com/corporate/en/)
+*   [Shareholder & Investor Information](https://www.hirose.com/corporate/en/ir/)
+*   [News](https://www.hirose.com/corporate/en/global_news/)
+
+*   [Terms of Use](https://www.hirose.com/corporate/en/terms/)
+*   [Member Terms](https://www.hirose.com/corporate/en/terms/membership/)
+*   [Privacy Policy](https://www.hirose.com/corporate/en/terms/privacy/)
+
+ © 1999 HIROSE ELECTRIC CO., LTD.Cookie settings

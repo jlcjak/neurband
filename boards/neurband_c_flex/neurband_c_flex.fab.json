@@ -1,0 +1,16 @@
+{
+  "kind": "pcb",
+  "name": "Electrode flex rev C",
+  "source": "neurband_c_flex.kicad_pcb",
+  "qty": 5,
+  "options": {
+    "layers": 2,
+    "thickness_mm": 0.4,
+    "finish": "enig"
+  },
+  "features": {
+    "width_mm": 133.1,
+    "height_mm": 38.5,
+    "min_drill_mm": 0.3
+  }
+}

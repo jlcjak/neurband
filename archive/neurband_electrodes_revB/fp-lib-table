@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "neurband")(type "KiCad")(uri "${KIPRJMOD}/neurband.pretty")(options "")(descr "Electrode flex artwork"))
+)

@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C module base (chassis, carries pods 3/4)",
+  "source": "module_base.step",
+  "qty": 3,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "gray"
+  },
+  "features": {
+    "volume_cm3": 1.194,
+    "area_cm2": 34.67,
+    "size_x_mm": 34.53,
+    "size_y_mm": 31.86,
+    "size_z_mm": 6.17
+  }
+}

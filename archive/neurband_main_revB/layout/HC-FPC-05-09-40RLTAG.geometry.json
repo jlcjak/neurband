@@ -1,0 +1,115 @@
+{
+  "schema": "neurband.connector-geometry.v1",
+  "part": "HC-FPC-05-09-40RLTAG",
+  "manufacturer": "HCTL / Shenzhen Huacantianlu Electronics Co., Ltd.",
+  "catalog": "LCSC C5213762",
+  "units": "mm",
+  "footprint": "neurband.pretty/HCTL_HC-FPC-05-09-40RLTAG_1x40-1MP_P0.50mm_Horizontal.kicad_mod",
+  "certainty": {
+    "copper_land_pattern": "high: manufacturer drawing Rev A, page 1, 40-contact row; corroborated by LCSC EasyEDA footprint",
+    "pin1": "high: manufacturer explicitly labels leftmost signal pad Pin 1 in top-side PCB mounting pattern",
+    "opening_direction": "high: manufacturer side/front views and front-insert/rear-flip designation",
+    "contact_side": "high: LCSC explicitly specifies double-sided contacts / top and bottom entry; manufacturer cross-section depicts both contact surfaces",
+    "body_envelope": "nominal drawing dimensions; overall depth 3.5 and open height 1.55 are reference dimensions, not controlled maxima",
+    "tool_verification": "not run: parent owns verification; no KiCad load, render, DRC, tests, or generator execution claimed"
+  },
+  "coordinate_system": {
+    "view": "top/component side, footprint unrotated on F.Cu",
+    "origin": "midpoint of signal pad row",
+    "positive_x": "pin 1 toward pin 40",
+    "positive_y": "toward cable opening and free cable",
+    "positive_z": "above PCB",
+    "pin1_center": [-9.75, 0],
+    "pin40_center": [9.75, 0],
+    "opening_outward_unit_vector": [0, 1, 0],
+    "cable_insertion_unit_vector": [0, -1, 0],
+    "opening_edge_y": 3.05,
+    "actuator": "rear flip; rear is negative Y"
+  },
+  "contacts": {
+    "count": 40,
+    "pitch": 0.5,
+    "side": "dual-sided: top and bottom contacts, not Hirose FH12 bottom-contact-only",
+    "mating_cable_thickness": 0.3,
+    "mating_cable_thickness_tolerance": 0.02,
+    "mating_cable_width": 20.5,
+    "mating_cable_width_tolerance": 0.05,
+    "mating_contact_width": 0.3,
+    "mating_contact_length_min": 1.5
+  },
+  "vendor_dimension_table_40_contacts": {
+    "A": 22.0,
+    "B": 19.5,
+    "C": 20.57,
+    "D": 21.39,
+    "E": 21.1,
+    "F": 21.9,
+    "G": 20.5
+  },
+  "overall": {
+    "closed_xyz_nominal": [22.0, 3.5, 1.0],
+    "width_tolerance": 0.15,
+    "closed_height_tolerance": 0.1,
+    "depth_is_reference_dimension": true,
+    "actuator_open_height_reference": 1.55,
+    "main_housing_depth": 2.9,
+    "conservative_closed_xy_envelope": {"min": [-11.0, -0.45], "max": [11.0, 3.05]},
+    "main_housing_xy_envelope": {"min": [-11.0, 0.15], "max": [11.0, 3.05]},
+    "envelope_derivation": "Housing rear edge is signal copper inside edge 0.4 minus drawing reference 0.25 = 0.15. Housing front edge is mount copper outside edge 2.9 plus drawing reference 0.15 = 3.05. Closed actuator extends rearward by overall depth 3.5 minus housing depth 2.9 = 0.6. F.Fab is a conservative full-width overall envelope, not a detailed molded outline.",
+    "courtyard_xy": {"min": [-11.5, -0.95], "max": [11.5, 3.55]},
+    "courtyard_note": "0.5 nominal clearance from overall closed envelope; cable routing and open-actuator handling clearance are additional system constraints"
+  },
+  "signal_pads": {
+    "numbering": "1..40 from left to right in top view",
+    "shape": "rect",
+    "size_xy": [0.3, 0.8],
+    "size_tolerance_xy": [0.05, 0.05],
+    "row_y": 0,
+    "center_formula": "x = -9.75 + 0.5*(pin_number-1); y = 0",
+    "centers": [[1,-9.75,0],[2,-9.25,0],[3,-8.75,0],[4,-8.25,0],[5,-7.75,0],[6,-7.25,0],[7,-6.75,0],[8,-6.25,0],[9,-5.75,0],[10,-5.25,0],[11,-4.75,0],[12,-4.25,0],[13,-3.75,0],[14,-3.25,0],[15,-2.75,0],[16,-2.25,0],[17,-1.75,0],[18,-1.25,0],[19,-0.75,0],[20,-0.25,0],[21,0.25,0],[22,0.75,0],[23,1.25,0],[24,1.75,0],[25,2.25,0],[26,2.75,0],[27,3.25,0],[28,3.75,0],[29,4.25,0],[30,4.75,0],[31,5.25,0],[32,5.75,0],[33,6.25,0],[34,6.75,0],[35,7.25,0],[36,7.75,0],[37,8.25,0],[38,8.75,0],[39,9.25,0],[40,9.75,0]]
+  },
+  "mounting_pads": {
+    "number": "MP",
+    "electrical_policy": "mechanical retention only; do not assign a signal net",
+    "shape": "rect",
+    "size_xy": [0.4, 0.8],
+    "centers": [[-10.75,2.5],[10.75,2.5]],
+    "derivation": "width=(F-E)/2=0.4; abs(x)=(F+E)/4=10.75. Copper top of signal to bottom of mount is 3.30, so center separation=3.30-0.80/2-0.80/2=2.50."
+  },
+  "paste": {
+    "signal_aperture_xy": [0.25, 0.65],
+    "signal_aperture_placement": "centered on copper; separate unnumbered F.Paste-only pads",
+    "signal_aperture_evidence": "vendor explicitly dimensions 0.25+/-0.03 by 0.65+/-0.03 metal mask",
+    "mount_aperture_xy": [0.4, 0.8],
+    "mount_aperture_policy": "full copper aperture, a standard assembly choice rather than a claim of exact vendor stencil reproduction; vendor mounting-mask inset diagram is not fully dimensioned",
+    "vendor_recommended_stencil_thickness": 0.1,
+    "solder_mask": "zero per-pad expansion; board/fabricator must retain 0.2 copper-to-copper interpad spacing"
+  },
+  "placeholder_comparison": {
+    "name": "Connector_FFC-FPC:Hirose_FH12-40S-0.5SH_1x40-1MP_P0.50mm_Horizontal",
+    "compatible": false,
+    "hirose_signal_size_xy": [0.3,1.3],
+    "hirose_signal_row_y": -1.85,
+    "hirose_mount_size_xy": [1.8,2.2],
+    "hirose_mount_centers": [[-11.65,1.4],[11.65,1.4]],
+    "hirose_signal_to_mount_row_separation": 3.25,
+    "hctl_signal_to_mount_row_separation": 2.5,
+    "reason": "Shared 40-pin 0.5 pitch does not imply compatible land pattern; pad lengths, hold-down widths, hold-down X span and row separation differ materially."
+  },
+  "implementation": {
+    "method": "standalone hand-authored KiCad footprint, using existing stock connector conventions; no new generator",
+    "comparable_existing_generator": "KiCad Library Tools src/generators/connector/SMD_single_row_plus_mounting_pad/footprint.py",
+    "comparable_parameter_file": "HC-FPC-05-09-40RLTAG.yaml",
+    "generator_status": "source inspected, not installed or executed; its existing parameter interface supports the exact copper/body geometry; final standalone additionally has independent reduced signal paste and conservative actuator envelope",
+    "skill": "kistack/skills/footprint/SKILL.md read completely; skill://footprint is unavailable in this worker runtime",
+    "model_3d": "none: no dimensionally verified vendor model attached; intentionally do not reuse incompatible Hirose model",
+    "schematic_changed": false,
+    "canonical_pcb_changed": false
+  },
+  "sources": [
+    {"kind":"manufacturer drawing distributed by authorized catalog", "url":"https://datasheet.lcsc.com/datasheet/pdf/94239c3bf870fbd9168a2953a20da7e1.pdf?productCode=C5213762", "title":"HCTL HC-FPC-05-09-NRLTAG, 0.5 Pitch 1.0H ZIF, Rev A, page 1", "local":"HC-FPC-05-09-NRLTAG_vendor.pdf"},
+    {"kind":"catalog specifications", "url":"https://www.lcsc.com/product-detail/C5213762.html", "supports":"exact MPN/catalog mapping, 40 contacts, 0.5mm pitch, dual-sided contacts, 0.3mm cable, front-insert/rear-flip"},
+    {"kind":"corroborating catalog EDA land pattern", "url":"https://image.easyeda.com/component_svgs/prod/0d300cdf29c441e4833fc9ee09f2e032.svg", "supports":"0.3x0.8 signal pads; 0.4x0.8 mount pads; 2.5 row separation; 21.5 mount center span; left pin1"},
+    {"kind":"existing generic generator source", "url":"https://gitlab.com/kicad/libraries/kicad-library-tools/-/blob/main/src/generators/connector/SMD_single_row_plus_mounting_pad/footprint.py"}
+  ]
+}

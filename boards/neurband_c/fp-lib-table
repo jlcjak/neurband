@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "neurband")(type "KiCad")(uri "${KIPRJMOD}/layout/neurband.pretty")(options "")(descr "neurband REV C local drawing-backed footprints"))
+)

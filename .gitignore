@@ -1,0 +1,51 @@
+# vendor documents (copyrighted; links are in the docs instead)
+*.pdf
+docs/datasheets/*.txt
+**/*vendor*.png
+**/*catalog*.png
+**/FH26W-*.png
+# large third-party assets: fetched by render/fetch_assets.sh
+extra/render_assets/
+# KiCad / tool caches
+*.lck
+*-backups/
+fp-info-cache
+*.kicad_prl
+*.net
+**/~*
+__pycache__/
+*.pyc
+.pytest_cache/
+# build outputs that are regenerated
+firmware/.pio/
+firmware_c/build/
+**/build/
+mech/**/logs/
+*.FCBak
+# local / OS
+.DS_Store
+*.swp
+.backplane/review.md
+.venv/
+# regenerable CAD outputs (scripts are the source; run the .py to rebuild)
+*.FCStd
+mech/fit_*.step
+mech/band_*.step
+mech/housing_assy.step
+mech/main_board.step
+mech/rev_c/fit_*.step
+mech/renders/
+extra/wrists/*.step
+# rev A/B working folders: identical copies live in archive/
+boards/neurband_main/
+boards/neurband_electrodes/
+# bulky intermediate layout artefacts
+archive/**/renders/layers/
+archive/**/build/
+# tool state / generated
+.backplane/
+.backplane.json
+*.backplane.json
+mfg/
+render/out/
+render/scenes/

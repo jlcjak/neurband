@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Module housing base",
+  "source": "housing_base.step",
+  "qty": 2,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 8.757,
+    "area_cm2": 101.14,
+    "size_x_mm": 65.8,
+    "size_y_mm": 39.05,
+    "size_z_mm": 16.26
+  }
+}
