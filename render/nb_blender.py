@@ -965,9 +965,10 @@ def world_bbox(objs):
     return bbox([o for o in objs if o.type == 'MESH' and not o.hide_render])
 
 
-def finish(name, save_blend):
+def finish(name, save_blend, outdir=OUT):
     sc = bpy.context.scene
-    sc.render.filepath = os.path.join(OUT, name + '.png')
+    os.makedirs(outdir, exist_ok=True)
+    sc.render.filepath = os.path.join(outdir, name + '.png')
     t = time.time()
     if save_blend:
         os.makedirs(SCENES, exist_ok=True)
@@ -1511,14 +1512,54 @@ SHOTS = {
 }
 
 
+# 16:9 versions for social posts (render/out/social/): same scene, the camera is re-fitted so the subject
+# (every band mesh with a 'kind', or only the kinds listed; the board's meshes) sits centred and fills `fill` of the frame height.
+SOCIAL_RES = (2048, 1152)
+SOCIAL = {
+    'hero_crop': dict(fill=0.46, kinds=('module_lid', 'module_base', 'button_cap')),
+    'pods_inside': dict(fill=0.86),
+    'pcb_top': dict(fill=0.72),
+}
+
+
+def subject_points(kinds=None):
+    objs = [o for o in bpy.context.scene.objects if o.type == 'MESH' and not o.hide_render
+            and (('kind' in o and (kinds is None or o['kind'] in kinds)) or (o.parent and o.parent.name == 'pcb'))]
+    bpy.context.view_layer.update()
+    return np.vstack([verts_np(o) for o in objs if len(o.data.vertices)])
+
+
+def frame_subject(pts, fill=0.7, offset=(0.0, 0.0)):
+    """re-fit the scene camera (lens shift + vertical sensor size, so perspective is unchanged) so the
+    points' screen-space box is centred and spans `fill` of the frame height (or width, whichever binds)."""
+    sc = bpy.context.scene
+    cam = sc.camera
+    aspect = sc.render.resolution_x / sc.render.resolution_y
+    m = np.array(cam.matrix_world.inverted())
+    pc = pts @ m[:3, :3].T + m[:3, 3]
+    pc = pc[pc[:, 2] < -1e-4]
+    u, v = pc[:, 0] / -pc[:, 2], pc[:, 1] / -pc[:, 2]
+    uc, vc = (u.min() + u.max()) / 2, (v.min() + v.max()) / 2
+    hy = max((v.max() - v.min()) / (2 * fill), (u.max() - u.min()) / (2 * fill * aspect))
+    hx = hy * aspect
+    cd = cam.data
+    cd.shift_x, cd.shift_y = 0.0, 0.0
+    cd.sensor_fit = 'VERTICAL'
+    cd.sensor_height = 2 * hy * cd.lens
+    cd.shift_x = uc / (2 * hy) + offset[0]     # with a vertical sensor fit, shift is in frame heights
+    cd.shift_y = vc / (2 * hy) + offset[1]
+    log('social frame: sensor_h %.2f mm, shift %.3f %.3f' % (cd.sensor_height, cd.shift_x, cd.shift_y))
+
+
 TT_FRAMES = 135          # 4.5 s at 30 fps
 
 
-def turntable(frames, quick, samples=0):
-    """band_product look, the band spins once about the pedestal axis with a cosine ease (seamless loop)."""
+def turntable(frames, quick, samples=0, social=False):
+    """band_product look, the band spins once about the pedestal axis with a cosine ease (seamless loop).
+    social=True: 1920 x 1080, camera fitted to the band over the whole turn, frames in build/turntable_social."""
     reset()
     MATS.clear()
-    setup_render(1080, 1350, samples or (32 if quick else 256), quick)
+    setup_render(*((1920, 1080) if social else (1080, 1350)), samples or (32 if quick else 256), quick)
     bpy.context.scene.render.resolution_percentage = 50 if quick else 100
     bpy.context.scene.render.use_persistent_data = True
     shot_band_product(quick)
@@ -1530,7 +1571,15 @@ def turntable(frames, quick, samples=0):
     bpy.context.view_layer.update()
     rig.parent = piv
     rig.matrix_parent_inverse = piv.matrix_world.inverted()
-    out = os.path.join(BUILD, 'turntable')
+    if social:
+        pts = []
+        for k in range(12):
+            piv.rotation_euler.z = 2 * math.pi * k / 12
+            bpy.context.view_layer.update()
+            pts.append(subject_points())
+        piv.rotation_euler.z = 0.0
+        frame_subject(np.vstack(pts), fill=0.80)
+    out = os.path.join(BUILD, 'turntable_social' if social else 'turntable')
     os.makedirs(out, exist_ok=True)
     for i in frames:
         t = i / TT_FRAMES
@@ -1550,22 +1599,28 @@ def main():
     ap.add_argument('--samples', type=int, default=0)
     ap.add_argument('--save-blend', action='store_true')
     ap.add_argument('--turntable', default='', help='frames start:stop:step (exclusive stop)')
+    ap.add_argument('--social', action='store_true', help='16:9 subject-centred versions -> render/out/social/')
     a = ap.parse_args(argv)
     os.makedirs(OUT, exist_ok=True)
     if a.turntable:
         st, sp, sd = (int(x) for x in a.turntable.split(':'))
-        turntable(range(st, sp, sd), a.quick, a.samples)
+        turntable(range(st, sp, sd), a.quick, a.samples, a.social)
         return
     for name in a.shots.split(','):
         fn, kw, (w, h) = SHOTS[name]
+        if a.social:
+            w, h = SOCIAL_RES
         reset()
         MATS.clear()
         t = time.time()
         samples = a.samples or (64 if a.quick else 768)
         setup_render(w, h, samples, a.quick)
         fn(a.quick, **kw)
+        if a.social:
+            cfg = dict(SOCIAL.get(name, {}))
+            frame_subject(subject_points(cfg.pop('kinds', None)), **cfg)
         log('built', name, '%.1f s' % (time.time() - t))
-        finish(name, a.save_blend)
+        finish(name, a.save_blend, os.path.join(OUT, 'social') if a.social else OUT)
 
 
 if __name__ == '__main__':

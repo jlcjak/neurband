@@ -1,6 +1,6 @@
 # neurband
 
-**An open, minimal, ~$200 copy of Meta's sEMG wristband.** Eight bipolar surface-EMG channels around the
+**An open, minimal sEMG wristband, like the Meta Neural Band.** Eight bipolar surface-EMG channels around the
 wrist, a 24-bit biopotential front end, Bluetooth LE, and a module the size of a small watch face — designed
 from first principles to record data good enough to train gesture models, and cheap enough to just build.
 
@@ -37,6 +37,10 @@ The boards as laid out (KiCad renders, main board top and bottom; 28.7 × 27 mm)
 |---|---|
 | ![](docs/media/board_top.png) | ![](docs/media/board_bottom.png) |
 
+All four copper layers (`python3 tools/copper_layers.py`):
+
+![four copper layers of the main board](docs/media/board_layers.png)
+
 A 1080 × 1350 turntable video is in [docs/media/turntable.mp4](docs/media/turntable.mp4).
 All images are rendered from the real CAD and KiCad files with `python3 render/make_renders.py` (Blender Cycles);
 see [docs/renders.md](docs/renders.md).
@@ -53,8 +57,8 @@ see [docs/renders.md](docs/renders.md).
         LiPo ─ XC6206 3.3 V ─ RC filter ─ AVDD          charge pads (recessed) ─ TP4054
 ```
 
-The design copies what matters in Meta's research band (*A generic non-invasive neuromotor interface for
-human-computer interaction*, Nature 2025): bipolar gold contacts 20 mm apart along the forearm, µV-level noise,
+Like Meta's research band (*A generic non-invasive neuromotor interface for
+human-computer interaction*, Nature 2025), it has what matters: bipolar gold contacts 20 mm apart along the forearm, µV-level noise,
 2 kHz data. It drops what only costs money: per-pod amplifiers, 16 channels, custom electrodes.
 The reasoning, decision by decision, is in [docs/rev_c/README.md](docs/rev_c/README.md).
 
@@ -83,6 +87,9 @@ swipes at ~75–90 %, 2-axis wrist control. Not expected: models that work acros
 typing, fluent handwriting.
 
 ## Build one
+
+A first prototype can be built for around $200 (≈ $195–240 for two assembled boards, the electrode flex, prints and
+the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)).
 
 1. **Order** the main board (assembled) and the electrode flex through the fab files in
    `boards/neurband_c/` and `boards/neurband_c_flex/` (`*.fab.json`). Print `mech/rev_c/` parts

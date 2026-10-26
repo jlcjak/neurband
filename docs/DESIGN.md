@@ -3,7 +3,7 @@
 
 # neurband — design notes (iteration 1)
 
-A minimal, first-principles copy of Meta's surface-EMG wristband: the sEMG-RD research
+A minimal, first-principles surface-EMG wristband like Meta's: the sEMG-RD research
 device from *"A generic non-invasive neuromotor interface for human-computer interaction"*
 (Nature 2025) and the consumer Meta Neural Band. The aim of this first spin is to **take
 real 16-channel EMG data** with as few parts as possible. Polish comes later.

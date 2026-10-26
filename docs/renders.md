@@ -41,6 +41,8 @@ python3 render/make_renders.py --quick    # previews: 40 % size, 64 spp (~1 min)
 python3 render/make_renders.py --shots xray,pcb_top --no-export --save-blend
 python3 render/make_renders.py --video          # stills plus the turntable MP4 and GIF (about 5 min extra)
 python3 render/make_renders.py --video-only     # turntable only
+python3 render/make_renders.py --social --no-export --shots hero_crop,pods_inside,pcb_top --video
+                                               # 16:9 versions for social posts, subject centred -> render/out/social/
 ```
 
 The turntable frames are split across the GPUs (even and odd frames) and written to

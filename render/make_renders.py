@@ -9,8 +9,9 @@ process per shot, spread over the GPUs (one queue worker per GPU).
   python3 render/make_renders.py --quick         # previews: 40 % size, 64 spp
   python3 render/make_renders.py --shots xray,pcb_top --no-export --save-blend
   python3 render/make_renders.py --video             # also the turntable MP4 + GIF (--video-only for just that)
+  python3 render/make_renders.py --social --shots hero_crop,pods_inside,pcb_top --video   # 16:9, subject centred
 
-Outputs: render/out/<shot>.png, logs in render/build/logs/, scenes in render/scenes/ (--save-blend).
+Outputs: render/out/<shot>.png (render/out/social/ with --social), logs in render/build/logs/, scenes in render/scenes/ (--save-blend).
 """
 import argparse, json, os, queue, subprocess, sys, threading, time
 
@@ -84,7 +85,7 @@ def export():
         sys.exit('STEP -> GLB failed for %s, see render/build/logs/step2glb.log' % missing)
 
 
-def render(shots, gpus, quick, samples, save_blend):
+def render(shots, gpus, quick, samples, save_blend, social=False):
     os.makedirs(LOGS, exist_ok=True)
     q = queue.Queue()
     for s in shots:
@@ -104,6 +105,8 @@ def render(shots, gpus, quick, samples, save_blend):
                 cmd += ['--samples', str(samples)]
             if save_blend:
                 cmd.append('--save-blend')
+            if social:
+                cmd.append('--social')
             env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu))
             try:
                 rc = run(cmd, os.path.join(LOGS, 'render_%s.log' % s), timeout=3600, env=env)
@@ -119,10 +122,10 @@ def render(shots, gpus, quick, samples, save_blend):
     return failed
 
 
-def video(gpus, quick, samples):
+def video(gpus, quick, samples, social=False):
     """turntable: frames split over the GPUs, then H.264 MP4 + small GIF with ffmpeg."""
     import glob
-    out = os.path.join(BUILD, 'turntable')
+    out = os.path.join(BUILD, 'turntable_social' if social else 'turntable')
     os.makedirs(out, exist_ok=True)
     for f in glob.glob(os.path.join(out, 'f_*.png')):
         os.remove(f)
@@ -135,6 +138,8 @@ def video(gpus, quick, samples):
             cmd.append('--quick')
         if samples:
             cmd += ['--samples', str(samples)]
+        if social:
+            cmd.append('--social')
         log = open(os.path.join(LOGS, 'turntable_gpu%d.log' % g), 'w')
         procs.append(subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT,
                                       env=dict(os.environ, CUDA_VISIBLE_DEVICES=str(g))))
@@ -146,12 +151,14 @@ def video(gpus, quick, samples):
     if have != n:
         sys.exit('turntable render incomplete, see render/build/logs/turntable_gpu*.log')
     src = os.path.join(out, 'f_%04d.png')
-    mp4 = os.path.join(HERE, 'out', 'turntable.mp4')
-    gif = os.path.join(HERE, 'out', 'turntable.gif')
+    dst = os.path.join(HERE, 'out', 'social') if social else os.path.join(HERE, 'out')
+    os.makedirs(dst, exist_ok=True)
+    mp4 = os.path.join(dst, 'turntable.mp4')
+    gif = os.path.join(dst, 'turntable.gif')
     run(['ffmpeg', '-y', '-framerate', '30', '-i', src, '-c:v', 'libx264', '-preset', 'slow', '-crf', '18',
          '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4], os.path.join(LOGS, 'ffmpeg_mp4.log'))
     run(['ffmpeg', '-y', '-framerate', '30', '-i', src, '-vf',
-         'fps=15,scale=-2:720:flags=lanczos,split[a][b];[a]palettegen=max_colors=96:stats_mode=diff[p];'
+         'fps=15,scale=%s:flags=lanczos,split[a][b];' % ('1280:720' if social else '-2:720') + '[a]palettegen=max_colors=96:stats_mode=diff[p];'
          '[b][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle', '-loop', '0', gif],
         os.path.join(LOGS, 'ffmpeg_gif.log'))
     for f in (mp4, gif):
@@ -168,16 +175,17 @@ def main():
     ap.add_argument('--save-blend', action='store_true', help='also save render/scenes/<shot>.blend')
     ap.add_argument('--video', action='store_true', help='also render the turntable (render/out/turntable.mp4/.gif)')
     ap.add_argument('--video-only', action='store_true', help='only the turntable (implies --video)')
+    ap.add_argument('--social', action='store_true', help='16:9 subject-centred versions in render/out/social/')
     a = ap.parse_args()
     t = time.time()
     if not a.no_export:
         export()
     shots = [] if a.video_only else [s for s in a.shots.split(',') if s]
     print('render: %d shots on GPUs %s (%s)' % (len(shots), a.gpus, 'quick' if a.quick else 'final'), flush=True)
-    failed = render(shots, [int(g) for g in a.gpus.split(',')], a.quick, a.samples, a.save_blend)
+    failed = render(shots, [int(g) for g in a.gpus.split(',')], a.quick, a.samples, a.save_blend, a.social)
     if a.video or a.video_only:
-        print('render: turntable (135 frames, 1080 x 1350)', flush=True)
-        video([int(g) for g in a.gpus.split(',')], a.quick, a.samples)
+        print('render: turntable (135 frames, %s)' % ('1920 x 1080' if a.social else '1080 x 1350'), flush=True)
+        video([int(g) for g in a.gpus.split(',')], a.quick, a.samples, a.social)
     print('done in %.1f min; outputs in render/out/' % ((time.time() - t) / 60))
     if failed:
         sys.exit('failed shots: %s (logs in render/build/logs/)' % failed)
