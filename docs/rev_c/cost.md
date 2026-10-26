@@ -34,7 +34,7 @@ composer); it checks the design, gets the fab's quote from Backplane's order ser
 | 2-pin magnetic charge connector (smartwatch style) | ~€5 | AliExpress |
 | BLE receiver: nRF52840 USB dongle | ~€11 | or a "Pro Micro nRF52840" board ~€5.50 |
 | SWD probe: Raspberry Pi Pico running debugprobe | ~€5 | any CMSIS-DAP probe works |
-| Elastic strap 20 mm + hook-and-loop | ~€5 | |
+| Elastic strap 22 mm + hook-and-loop | ~€5 | |
 | Optional: 2 mm-head gold SMD spring pins (10 for €0.59) | ~€3 | only an experiment: 10× less contact area than the 6.5 mm pad (see docs/science/signal_chain.md) |
 | 3D prints (module + 8 pods) | ~€2 own FDM / $10–20 at the fab | |
 | **Total** | **≈ $195–240** | |

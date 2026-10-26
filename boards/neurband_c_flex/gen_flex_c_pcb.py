@@ -129,11 +129,14 @@ class Board:
         self.items.append(f'(via (at {xy(p)}) (size {VIA_D}) (drill {VIA_DRILL}) (layers "F.Cu" "B.Cu") (net {self.nets[net]}) (uuid "{self.id()}"))')
 
     def line(self,a,b,layer='Edge.Cuts',width=0.05):
+        if layer in ('F.SilkS','B.SilkS'):
+            width=max(width,0.15)
         self.items.append(f'(gr_line (start {xy(a)}) (end {xy(b)}) (stroke (width {width}) (type default)) (layer "{layer}") (uuid "{self.id()}"))')
 
     def text(self,text,p,layer='F.SilkS',size=0.65):
         mirror='(justify mirror)' if layer.startswith('B.') else ''
-        self.items.append(f'(gr_text {q(text)} (at {xy(p)}) (layer "{layer}") (uuid "{self.id()}") (effects (font (size {size} {size}) (thickness 0.12)) {mirror}))')
+        stroke=0.15 if layer in ('F.SilkS','B.SilkS') else 0.12
+        self.items.append(f'(gr_text {q(text)} (at {xy(p)}) (layer "{layer}") (uuid "{self.id()}") (effects (font (size {size} {size}) (thickness {stroke})) {mirror}))')
 
     def footprint(self,ref,name,p,side,pads):
         stamp,value=self.refs[ref]

@@ -9,11 +9,12 @@
     "color": "black"
   },
   "features": {
-    "volume_cm3": 0.322,
-    "area_cm2": 7.62,
-    "size_x_mm": 32.16,
-    "size_y_mm": 9.14,
-    "size_z_mm": 3.79
+    "volume_cm3": 0.507,
+    "area_cm2": 8.11,
+    "size_x_mm": 32.11,
+    "size_y_mm": 9.11,
+    "size_z_mm": 4.47
   },
-  "notes": "TPU 95A, print on its side; 6 per band + spares; foam disks 6.6 x 1.5 mm bought separately"
+  "notes": "TPU 95A, print on its side; 6 per band + spares; foam disks 6.6 x 1.5 mm bought separately",
+  "min_wall_mm": 1.0
 }

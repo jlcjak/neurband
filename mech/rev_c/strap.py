@@ -24,10 +24,10 @@ V = FreeCAD.Vector
 
 # ---------------- parameters (mm) ----------------
 STRAP_W, STRAP_T = R.STRAP_W, R.STRAP_T
-LOOP_W = STRAP_W + 1.8          # overall along the arm (fits the 27.2 mm lug slot)
-LINK_T = 0.7                    # side links outside the webbing edges
-CLIP_RI, CLIP_RO = 0.95, 1.45   # C-clip around the 1.3 x 1.6 integral bar
-CLIP_SLIT = 1.1                 # snaps over the bar's 1.3 mm side
+LINK_T = 1.0                    # side links outside the webbing edges (>= 1.0 mm for MJF)
+LOOP_W = STRAP_W + 0.4 + 2 * LINK_T   # overall along the arm (24.4; slot 24.8)
+CLIP_RI, CLIP_RO = 0.9, 1.9     # C-clip around the 1.3 x 1.6 integral bar (1.0 mm wall)
+CLIP_OPEN_DEG = 130.0           # opening direction in the loop frame (local +X = toward the far bar)
 LOOP_REACH = 4.2                # hinge axis -> far bar centre (short: keeps pod 5 loaded)
 FAR_U, FAR_W = 1.3, 1.6         # far bar section (along the strap x thickness)
 LOOP_T = 1.6
@@ -41,7 +41,13 @@ def build_loop():
     hw = LOOP_W / 2
     clip = Part.makeCylinder(CLIP_RO, LOOP_W, V(0, -hw, 0), V(0, 1, 0)).cut(
         Part.makeCylinder(CLIP_RI, LOOP_W + 2, V(0, -hw - 1, 0), V(0, 1, 0)))
-    clip = clip.cut(R.box(-CLIP_RO - 1, 0, -hw - 1, hw + 1, -CLIP_SLIT / 2, CLIP_SLIT / 2))   # slit faces away
+    # radial 80 deg opening centred at CLIP_OPEN_DEG (worn: pointing up, away from the strap pull, so the
+    # tension seats the clip on the bar); lip ends are full 1.0 mm radial faces; the chord at the inner
+    # radius (1.16 mm) snaps over the bar's 1.3 mm side
+    c0, half = math.radians(CLIP_OPEN_DEG), math.radians(40.0)
+    L_ = 3 * CLIP_RO
+    pts = [V(0, -hw - 1, 0)] + [V(L_ * math.cos(c0 + t), -hw - 1, L_ * math.sin(c0 + t)) for t in (-half, 0.0, half)] + [V(0, -hw - 1, 0)]
+    clip = clip.cut(Part.Face(Part.makePolygon(pts)).extrude(V(0, LOOP_W + 2, 0)))
     links = [R.box(CLIP_RI, LOOP_REACH + FAR_U / 2, sy * hw - (LINK_T if sy > 0 else 0), sy * hw + (0 if sy > 0 else LINK_T),
                    -LOOP_T / 2, LOOP_T / 2) for sy in (-1, 1)]
     far = R.box(LOOP_REACH - FAR_U / 2, LOOP_REACH + FAR_U / 2, -hw, hw, -FAR_W / 2, FAR_W / 2)
@@ -50,9 +56,12 @@ def build_loop():
     return s
 
 
-def placed_loop(hx, hz, ang, y):
-    """Loop hinged on (hx, hz) at band line y, reaching along direction ang (rad, XZ plane)."""
+def placed_loop(hx, hz, ang, y, flip=False):
+    """Loop hinged on (hx, hz) at band line y, reaching along direction ang (rad, XZ plane). flip turns
+    the part over (the ulnar loop), so its opening still points up."""
     s = build_loop()
+    if flip:
+        s.rotate(V(0, 0, 0), V(1, 0, 0), 180)
     s.rotate(V(0, 0, 0), V(0, 1, 0), -math.degrees(ang))
     s.translate(V(hx, y, hz))
     return s

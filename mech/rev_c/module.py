@@ -34,19 +34,20 @@ V = FreeCAD.Vector
 OUT_W = 31.9              # across the wrist (board 28.7 + 2 x 0.5 + walls)
 CX_OFF = 0.35             # body centre X: board grows on +X only; underside/pods/tail stay at X = 0
 Y_MIN, Y_MAX = -17.5, 16.8  # along the arm (distal end holds the tail U-turn)
-PLAN_R = 5.5
+PLAN_R = 3.4              # plan corners: the 24.8 mm strap slots keep >= 1.0 mm side walls
 R_U = 42.0                # underside radius (dorsal wrist 33-42 mm on 145-180 wrists)
 H_TOP = 9.9               # top apex above the underside apex
 R_T = 65.0                # top crown radius (soft pebble crown across the wrist)
 TOP_FILLET = 2.5          # max that keeps the lid clear of the cell's proximal end
 BOT_FILLET = 1.4
+BOT_FILLET_DISTAL = 0.3   # the tail slot removes the floor behind the distal wall: keep it 1.0+
 WALL = 1.1
 FLOOR = 1.1
 LID_T = 1.0
 IN_FILLET = TOP_FILLET - 1.05
 H_BASE = 2.0              # parting surface: constant height above the underside
 GROOVE_H, GROOVE_D = 0.3, 0.12   # soft parting hairline
-TONGUE_T, TONGUE_H = 0.6, 1.5
+TONGUE_T, TONGUE_H = 1.4, 1.5     # 1.4 tongue carries the 0.35 snap groove (1.05 left); bead on the lid
 BEAD_R, BEAD_LEN = 0.3, 16.0
 # ---------------- board (placeholder until boards/neurband_c/neurband_c.step) ----------------
 BOARD_STEP = os.path.join(R.ROOT, 'boards', 'neurband_c', 'neurband_c.step')
@@ -76,7 +77,7 @@ SW1 = k2m(*SW1_K)
 D1 = k2m(*D1_K)
 CHG_PADS_Y = tuple(k2m(*p)[1] for p in CHG_K)
 ANT_X = (-14.0, -8.0)                          # antenna strip (KiCad x 0..6)
-STANDOFFS_K = [(1.6, 1.6), (26.4, 1.6), (1.6, 25.4), (26.6, 22.6)]   # KiCad, board bottom (clear of J2/J3/TP pads)
+STANDOFFS_K = []                               # none: the two lug-slot roofs carry the board's X edges (KiCad x 0..2.75 and 25.95..28.7)
 STANDOFFS = [k2m(*p) for p in STANDOFFS_K]
 STANDOFF_D = 2.0
 # ---------------- battery ----------------
@@ -87,26 +88,28 @@ COMP_UNDER_BAT = 1.3                           # TQFP-64 1.2 mm is the tallest p
 BAT_TAPE = 0.15
 BAT_SWELL = 0.3
 # ---------------- lid features ----------------
-LP_D, LP_TUBE = 1.6, 3.0                       # light pipe (1.5 mm PMMA rod or clear resin)
-BTN_HOLE_D, BTN_GAP_R = 5.0, 0.1                # flush button cap in a 5.0 mm opening (0.1 mm hairline)
-BTN_FLANGE_D, BTN_FLANGE_T = 6.0, 0.6
+LP_D, LP_TUBE = 1.6, 3.6                       # light pipe (1.5 mm PMMA rod or clear resin), 1.0 mm tube wall
+BTN_HOLE_D, BTN_GAP_R = 4.6, 0.1                # flush button cap (4.4 mm) in a 4.6 mm opening, clear of the lid edge blend
+BTN_FLANGE_D, BTN_FLANGE_T = 6.0, 1.0
 BTN_STEM_D, BTN_GAP = 2.0, 0.15
 NOTCH_W = 3.0
 # ---------------- underside features ----------------
 CHG_WIN = (3.0, 6.0)                           # stadium window (X, Y) to the pads
-CHG_CB = (4.0, 8.0, 0.4)                       # locating counterbore for the charger nose
+CHG_CB = None                                  # (no counterbore: the magnets align the charger)
 CHG_Y = sum(CHG_PADS_Y) / 2
 MAG_D, MAG_T, MAG_SKIN = 3.1, 1.05, 0.35
-MAG_X = 3.6                                    # magnets beside the window (x = +/-3.6), clear of the spine and pods
+MAG_X = 2.1                                    # two through-hole magnets side by side, proximal of the counterbore
+MAG_DY = 6.55                                  # magnet centres at CHG_Y + MAG_DY (>= 1.0 mm web to the window)
 TAIL_SLOT = (R.TAIL_W + 0.7, 1.8)              # X, Y
 # ---------------- hidden strap lugs (slots in the module ends, integral bars) ----------------
-SLOT_W = R.STRAP_W + 2.2                       # along the arm (webbing 25 + loop side links)
+SLOT_W = R.STRAP_W + 2.8                       # along the arm (webbing 22 + loop 24.4 + clearance)
 SLOT_D = 3.35                                  # depth into the body from each X end face
-SLOT_TOP = 1.2                                 # slot roof (board bottom at 1.7 rests on the roof)
-SLOT_WALL = 0.8
-BAR_IN, BAR_Z = 0.7, -1.0                      # bar centre: from the end face (outer face ~flush), height; wrap clears paddle and link
+SLOT_TOP = 0.7                                 # slot roof: 1.0 mm under the board bottom (1.7) it carries
+SLOT_Z_STEP = -0.25                            # below this the slot stops 1.0 mm short of the foam pockets
+SLOT_WALL = 1.0
+BAR_IN, BAR_Z = 0.6, -0.8                      # bar centre (outer face flush), height: clip under the 1.0 mm roof, links >= R2.2
 BAR_T, BAR_H = 1.3, 1.6                        # integral PA12 bar section (X x Z), stadium (<= 5 N)
-J2_RELIEF = ((23.2, 28.4), (24.4, 26.8))       # KiCad x, y under the J2 battery pads: no slot roof
+J2_RELIEF = ((23.2, 28.2), (24.4, 26.8))       # KiCad x, y under the J2 battery pads (1.0 mm wall left to the lid)
 
 YC = (Y_MIN + Y_MAX) / 2
 
@@ -151,8 +154,10 @@ def body(log=None):
     s = prism(OUT_W, OUT_L, PLAN_R).common(tcyl(R_T)).cut(ucyl(R_U))
     s = R.fillet_edges(s, TOP_FILLET, lambda e: e.BoundBox.ZMin > 4.0, log, 'top')
     s = R.fillet_edges(s, BOT_FILLET, lambda e: e.BoundBox.ZMax < 0.5 and e.BoundBox.ZMax - e.BoundBox.ZMin < 4.0
-                       and (abs(e.BoundBox.XMax - CX_OFF) > OUT_W / 2 - 1.0 or abs(e.BoundBox.YMax - Y_MAX) < 0.5
-                            or abs(e.BoundBox.YMin - Y_MIN) < 0.5), log, 'bottom')
+                       and (abs(e.BoundBox.XMax - CX_OFF) > OUT_W / 2 - 1.0 or abs(e.BoundBox.YMax - Y_MAX) < 0.5),
+                       log, 'bottom')
+    s = R.fillet_edges(s, BOT_FILLET_DISTAL, lambda e: e.BoundBox.ZMax < 0.5 and abs(e.BoundBox.YMin - Y_MIN) < 0.05
+                       and abs(e.BoundBox.YMax - Y_MIN) < 0.05, log, 'bottom distal')
     return s
 
 
@@ -191,16 +196,32 @@ def capsule_xz(p0, p1, r, y0, y1):
 def build_base(log=None):
     full = body(log)
     b = full.common(ucyl(R_U + H_BASE))
+    # square bottom edge on the distal wall across the tail slot (no floor behind it there): the
+    # perimeter blend propagates round the whole loop, which would thin that wall to 0.4 mm
+    fill = R.box(-6.8, 6.8, Y_MIN, Y_MIN + WALL, -6, H_BASE).common(prism(OUT_W, OUT_L, PLAN_R)).common(ucyl(R_U + H_BASE)).cut(ucyl(R_U))
+    b = b.fuse(fill).removeSplitter()
     lid_zone = full.cut(ucyl(R_U + H_BASE))
     cav = cavity(log)
     b = b.cut(cav)
+    # bosses inside the floor behind the pod 3/4 foam pockets: >= 1.0 mm behind each pocket
+    for sgn in (-1, 1):
+        pl = pod_place(sgn)
+        for y in R.PAD_Y:
+            bo = Part.makeCylinder(R.FOAM_POCKET_D / 2 + 0.6, R.FOAM_POCKET_H + 0.7, V(0, y, 0.3))   # local z 0.3..1.5
+            bo.Placement = pl.multiply(bo.Placement)
+            b = b.fuse(bo)
+    b = b.removeSplitter()
     # tongue (inside the lid wall) with snap beads on the long sides; cut back over the tail riser
     ring = prism(IN_W, IN_L, PLAN_R - WALL).cut(prism(IN_W - 2 * TONGUE_T, IN_L - 2 * TONGUE_T, PLAN_R - WALL - TONGUE_T))
     tongue = ring.common(ucyl(R_U + H_BASE + TONGUE_H)).cut(ucyl(R_U + FLOOR - 0.01))
     tongue = tongue.cut(R.box(-R.TAIL_W / 2 - 1.5, R.TAIL_W / 2 + 1.5, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
     b = b.fuse(tongue)
-    for bx0, bx1, yw, zw in beads():
-        b = b.fuse(Part.makeCylinder(BEAD_R, bx1 - bx0, V(bx0, yw, zw), V(1, 0, 0)))
+    for x0, x1, yf, sy, zb in snaps():       # tongue risers with a square snap groove (1.0+ all round)
+        y0, y1 = sorted((yf, yf - sy * TONGUE_T))
+        riser = R.box(x0, x1, y0, y1, -5, zb + SNAP_GROOVE_H + 1.0).common(full)
+        b = b.fuse(riser)
+        g0, g1 = sorted((yf, yf - sy * SNAP_DEPTH))
+        b = b.cut(R.box(x0, x1, g0, g1, zb, zb + SNAP_GROOVE_H))   # groove through the riser (no thin end caps)
     # board standoffs
     for x, y in STANDOFFS:
         b = b.fuse(Part.makeCylinder(STANDOFF_D / 2, Z_PCB - z_u(abs(x)) - 0.6, V(x, y, z_u(abs(x)) + 0.6)))
@@ -208,7 +229,7 @@ def build_base(log=None):
     for sx in (-1, 1):
         xe = end_x(sx)
         xa, xb_ = sorted((xe - sx * (WALL + 0.01), xe - sx * (SLOT_D + SLOT_WALL)))
-        blk = R.box(xa, xb_, -SLOT_W / 2 - SLOT_WALL, SLOT_W / 2 + SLOT_WALL, -10, Z_PCB).common(cav)
+        blk = R.box(xa, xb_, -SLOT_W / 2 - SLOT_WALL, SLOT_W / 2 + SLOT_WALL, -10, Z_PCB).common(full)
         b = b.fuse(blk)
     b = b.removeSplitter()
     for sx in (-1, 1):
@@ -228,9 +249,9 @@ def build_base(log=None):
     for sgn in (-1, 1):
         pl = pod_place(sgn)
         for y in R.PAD_Y:
-            p = Part.makeCylinder(R.FOAM_POCKET_D / 2, R.FOAM_POCKET_H, V(0, y, 0))
+            p = Part.makeCylinder(R.FOAM_POCKET_D / 2, R.FOAM_POCKET_H + 0.6, V(0, y, -0.6))
             p.Placement = pl.multiply(p.Placement)
-            b = b.cut(p)
+            b = b.cut(p)                                 # starts below the curved underside: no feathered skin
         for y in R.HOLE_Y:
             pin = Part.makeCylinder(0.525, 0.55 - 0.525 + 0.3, V(0, y, -0.55 + 0.525))
             pin = pin.fuse(Part.makeSphere(0.525, V(0, y, -0.55 + 0.525)).common(Part.makeCylinder(0.525, 0.525, V(0, y, -0.55))))
@@ -240,30 +261,36 @@ def build_base(log=None):
     b = b.cut(R.box(-TAIL_SLOT[0] / 2, TAIL_SLOT[0] / 2, Y_MIN + WALL, Y_MIN + WALL + TAIL_SLOT[1], -10, FLOOR + 2))
     # charge window + locating counterbore + magnet pockets (from inside)
     b = b.cut(stadium_z(CHG_WIN[0], CHG_WIN[1], -10, 20, 0, CHG_Y))
-    b = b.cut(stadium_z(CHG_CB[0], CHG_CB[1], -10, 10 + CHG_CB[2], 0, CHG_Y))
-    for sx in (-1, 1):
-        b = b.cut(Part.makeCylinder(MAG_D / 2, 5, V(sx * MAG_X, CHG_Y, MAG_SKIN)))
+    for sx in (-1, 1):   # through holes: magnets glued in flush with the underside (no thin skin)
+        b = b.cut(Part.makeCylinder(MAG_D / 2, 10, V(sx * MAG_X, CHG_Y + MAG_DY, -5)))
     # parting-line groove (lower half)
     b = b.cut(groove())
     return b.removeSplitter()
 
 
 def slot_void(sx):
+    """Lug slot: full depth above SLOT_Z_STEP (room for the loop clip), and below it stopping 1.0 mm
+    short of the pod 3/4 foam pockets on the underside (no thin wall between slot and pocket)."""
     xe = end_x(sx)
     xa, xb_ = sorted((xe + sx * 2, xe - sx * SLOT_D))
-    return R.box(xa, xb_, -SLOT_W / 2, SLOT_W / 2, -10, SLOT_TOP)
+    upper = R.box(xa, xb_, -SLOT_W / 2, SLOT_W / 2, SLOT_Z_STEP, SLOT_TOP)
+    x_low = sx * (R_U * math.sin(POD_TH) + R.FOAM_POCKET_D / 2 + 1.0)
+    la, lb = sorted((xe + sx * 2, x_low))
+    return upper.fuse(R.box(la, lb, -SLOT_W / 2, SLOT_W / 2, -10, SLOT_Z_STEP + 0.01)).removeSplitter()
 
 
-def beads():
-    """Snap beads on the +/-Y walls (the X walls carry the lug slots): (x0, x1, y, z); z follows the
-    curved parting surface over each short segment."""
-    yp, yd = Y_MAX - WALL + BEAD_R - 0.25, Y_MIN + WALL - BEAD_R + 0.25
+SNAP_SEGS = ((-10.5, -6.0, 1), (9.0, 12.0, 1), (-10.5, -6.75, -1), (6.75, 10.5, -1))  # (x0, x1, +1 proximal / -1 distal); distal ones start at the tail cut-back
+SNAP_DEPTH, SNAP_GROOVE_H, SNAP_RIB_H = 0.3, 1.1, 1.0
+
+
+def snaps():
+    """Snap segments on the +/-Y walls, clear of the cell, J1, the tail and the light pipe:
+    (x0, x1, y_inner_face, sign, z_groove_bottom). The groove sits >= 1.0 mm above the parting."""
     out = []
-    for x0, x1, yy in ((CX_OFF - 5, CX_OFF + 5, yp), (-10.0, -7.0, yd), (7.0, 10.0, yd)):
-        xm = max(abs(x0), abs(x1)) if x0 * x1 > 0 else max(abs(x0), abs(x1))
-        zlo = z_u(xm) + H_BASE                       # tongue bottom at the segment's outer end
-        zhi = z_u(min(abs(x0), abs(x1)) if x0 * x1 > 0 else 0.0) + H_BASE + TONGUE_H
-        out.append((x0, x1, yy, (zlo + zhi) / 2))
+    for x0, x1, sy in SNAP_SEGS:
+        yf = (Y_MAX - WALL) if sy > 0 else (Y_MIN + WALL)
+        zb = z_u(min(abs(x0), abs(x1))) + H_BASE + 1.0
+        out.append((x0, x1, yf, sy, zb))
     return out
 
 
@@ -280,6 +307,9 @@ def build_button_cap(log=None):
     """Flush disc cap over SW1: top follows the lid surface, flange under the lid, stem onto SW1."""
     x, y = SW1
     top = Part.makeCylinder(BTN_HOLE_D / 2 - BTN_GAP_R, 30, V(x, y, -5)).common(body(log))
+    zlow = min(v.Point.z for f in top.Faces if f.BoundBox.ZMax > top.BoundBox.ZMax - 1.5 and f.BoundBox.ZLength < 1.5
+               for v in f.Vertexes) if top.Faces else top.BoundBox.ZMax
+    top = top.common(R.box(x - 5, x + 5, y - 5, y + 5, -10, zlow - 0.05))   # flat top: no acute rim
     zt = top.BoundBox.ZMax
     rf = BTN_FLANGE_D / 2                            # under the lid: below its lowest inner point over the flange
     z_in = min(z_top(x - rf), z_top(x + rf)) - LID_T - 0.5
@@ -290,12 +320,18 @@ def build_button_cap(log=None):
     return top.fuse([flange, stem]).removeSplitter()
 
 
+def cav_ring():
+    """Band just inside the lid wall (where the lid's snap beads live)."""
+    return prism(IN_W, IN_L, PLAN_R - WALL).cut(prism(IN_W - 1.0, IN_L - 1.0, PLAN_R - WALL - 0.5))
+
+
 def build_lid(log=None):
     l = body(log).cut(ucyl(R_U + H_BASE))
     cav = cavity(log)
     l = l.cut(cav)
-    for bx0, bx1, yw, zw in beads():
-        l = l.cut(Part.makeCylinder(BEAD_R + 0.05, bx1 - bx0 + 1, V(bx0 - 0.5, yw, zw), V(1, 0, 0)))
+    for x0, x1, yf, sy, zb in snaps():       # square snap ribs on the lid's inner face
+        r0, r1 = sorted((yf + sy * 0.01, yf - sy * SNAP_DEPTH))
+        l = l.fuse(R.box(x0 + 0.3, x1 - 0.3, r0, r1, zb + 0.05, zb + 0.05 + SNAP_RIB_H))
     for sx in (-1, 1):
         l = l.cut(slot_void(sx))
     # light pipe: through hole + guide tube down to the LED
@@ -412,7 +448,7 @@ def internals():
     pcb, parts, src = board()
     bat, swell = battery()
     tail, tl = tail_shape()
-    mags = Part.makeCompound([Part.makeCylinder(1.5, 1.0, V(sx * MAG_X, CHG_Y, MAG_SKIN + 0.02)) for sx in (-1, 1)])
+    mags = Part.makeCompound([Part.makeCylinder(1.5, 1.0, V(sx * MAG_X, CHG_Y + MAG_DY, z_u(MAG_X) + 0.02)) for sx in (-1, 1)])
     lp = Part.makeCylinder(0.75, 20, V(D1[0], D1[1], Z_PCB_TOP + 1.3)).common(body())     # flush with the lid
     cap = build_button_cap()
     return dict(pcb=pcb, parts=parts, src=src, bat=bat, swell=swell, tail=tail, tail_len=tl, mags=mags, lp=lp, cap=cap)

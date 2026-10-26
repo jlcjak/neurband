@@ -88,7 +88,7 @@ typing, fluent handwriting.
    `boards/neurband_c/` and `boards/neurband_c_flex/` (`*.fab.json`). Print `mech/rev_c/` parts
    (MJF PA12 / TPU, or PETG/TPU on your own printer). Buy the off-the-shelf bits in
    [docs/rev_c/cost.md](docs/rev_c/cost.md) (LiPo 401225, magnetic charge pins, nRF52840 dongle, Pico as SWD probe,
-   25 mm elastic webbing, foam discs).
+   22 mm elastic webbing, foam discs).
 2. **Assemble**: foam discs under each pad, pods onto the flex, flex tail into J1 (contacts toward the board),
    cell onto the battery pads, close the module. Details: [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
 3. **Flash** `firmware_c/` (Zephyr) over SWD with any CMSIS-DAP probe; follow the bring-up checklist in

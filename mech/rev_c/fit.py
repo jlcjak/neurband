@@ -406,7 +406,7 @@ def build_band(c, log, with_wrist=True, cad=True):
             break
     fold = S.sweep_band(S.offset(S.resample(S.smooth(fp, 2), 0.8), R.STRAP_T + 0.05), y)
     loop = S.placed_loop(L['bar_b'][0], L['bar_b'][1], L['loop_ang'], y).fuse(
-        S.placed_loop(L['bar_a'][0], L['bar_a'][1], L['loop_ang_a'], y))
+        S.placed_loop(L['bar_a'][0], L['bar_a'][1], L['loop_ang_a'], y, flip=True))
     def tilt(sh):                                      # follow the module's taper tilt at its lugs
         if sh is None:
             return None

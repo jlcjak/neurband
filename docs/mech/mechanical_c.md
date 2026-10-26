@@ -23,13 +23,14 @@ build order: pod.py, module.py, strap.py, charge_puck.py, fit.py, assembly.py
 
 | | |
 |---|---|
-| Module | **31.9 x 34.3 x 9.9 mm** (across x along the arm x thickness at the apex). The crowned lid has R2.5 blends and the underside is a R42 hollow; the body edges hang 3.1 mm lower, 13.0 mm overall. There are no external lugs: the strap enters hidden slots in the two end faces. The button is a flush disc and the light pipe a flush dot. It stands 10.5-10.8 mm above the skin |
-| Strap | **One continuous 25 x 1.2 mm elastic woven webbing** (loop-fabric face) around the whole outside. Two identical slim printed loops snap onto the hidden integral bars. The ulnar end is sewn round one loop's far bar; the radial end passes through the other loop and folds back with a 40 mm hook tab. Opens fully |
-| Pods | 6 low TPU pods, 9.0 x 32.0 x 3.2 mm. They cover the whole 30 mm flex paddle, so no flex shows, and their ends taper to 2.0 mm under the band edges. The webbing slides through a captive edge sleeve; only the soft tapered pod ends show beyond the band. Pods 3 and 4 sit in the module underside |
-| Contact | Each 6.5 mm gold pad sits on a 6.6 x 1.5 mm self-adhesive foam disk in a 0.5 mm pocket, so it stands 1.0 mm proud (about 0.65 mm when worn). P-N spacing is 20 mm |
+| Module | **31.9 x 34.3 x 9.9 mm** (across x along the arm x thickness at the apex). R3.4 plan corners; the crowned lid has R2.5 blends and the underside is a R42 hollow. The body edges hang 3.1 mm lower, 13.0 mm overall. There are no external lugs: the strap enters hidden slots in the two end faces. The button is a flush disc and the light pipe a flush dot. It stands 10.5-10.8 mm above the skin |
+| Strap | **One continuous 22 x 1.2 mm elastic woven webbing** (loop-fabric face) around the whole outside. Two identical slim printed loops snap onto the hidden integral bars. The ulnar end is sewn round one loop's far bar; the radial end passes through the other loop and folds back with a 40 mm hook tab. Opens fully |
+| Pods | 6 TPU pods, 9.0 x 32.0 x 3.9 mm with 1.0 mm minimum walls. They cover the whole 30 mm flex paddle, so no flex shows, and their ends taper to 2.0 mm beyond the band edges. The webbing slides through a captive edge sleeve; only the soft tapered pod ends show beyond the band. Pods 3 and 4 sit in the module underside |
+| Contact | Each 6.5 mm gold pad sits on a 6.0 x 1.5 mm self-adhesive foam disk in a 6.2 x 0.5 mm pocket, so it stands 1.0 mm proud (about 0.65 mm when worn). P-N spacing is 20 mm |
 | Sizes | One size. A wrist of 145 / 160 / 180 mm leaves a 17 / 32 / 52 mm gap between pods 1 and 8 on the volar-ulnar side, which the band bridges. The electrodes cover 89 / 81 / 72 % of the circumference |
 | Materials | MJF PA12 (natural grey or dyed black) for the module base, lid, button cap and strap loop. TPU 95A for the pods (own FDM printer, on their side, or MJF TPU). Bought webbing, foam and hook tape |
 | Charging | The board's bottom pads VCHG/GND are reached through a 1.7 mm deep window in the module underside, with 2 magnets and a printed pogo puck. Skin cannot reach the pads, so the band cannot charge while worn |
+| Printability | Every printed part has walls of at least 1.0 mm, measured on the exported STEPs (`wallcheck.py`, sec. 8) |
 | Mass (estimate) | About 5 g of printed parts, plus the board, the 401225 cell (about 3 g), the webbing and the flex: roughly 15 g |
 
 ## 2. Concept and frame
@@ -50,12 +51,12 @@ that line.
 - **Continuous band, sliding pods.** The webbing runs through every pod sleeve and slides freely.
   This is essential: the flex links between pods are inextensible (18 mm pitch), while elastic
   webbing stretches 5-15 % when worn. Pods fixed to the webbing would pull the flex apart. The
-  flex sets the pod positions and the webbing only presses them on. Because the 25 mm webbing
-  covers the whole pad span (y -13.25..+13.25 is under 25 mm of fabric), each pod's load lands on
-  all three pads even though the TPU shell is soft.
+  flex sets the pod positions and the webbing only presses them on. The 22 mm webbing presses the
+  middle 22 mm of each pod. The pod's 1.0 mm-wall TPU shell, a box 3.9 mm deep, carries that load
+  to all three pads.
 - **Module-edge spine links** (pods 3 to 2 and 4 to 5) leave the paddle edge along the R42 seat
   and hang free on a smooth tangent curve to pod 2/5. They pass under the loop clips and the
-  strap's wraps round the loops' far bars with at least 0.1 mm clearance and bend at R4.0 mm or
+  strap's wraps round the loops' far bars with at least 0.1 mm clearance and bend at R2.3 mm or
   more. The strap is always outside the flex.
 - **The gap** between pod 1 and pod 8 (17-52 mm) lies on the volar-ulnar side, centred
   137-145 deg from the dorsal centre. The band bridges it, so from outside the band is
@@ -70,8 +71,10 @@ that line.
 into J1, the board on its supports, the cell over the TQFP and the pod 3/4 foam and pads under
 the floor.)
 
-**Shape.** The plan is a 31.9 x 34.3 mm rounded rectangle (R5.5), offset +0.35 mm radially
-because the board is 28.7 mm wide on its +X side. The underside, pods 3/4 and the tail stay on
+**Shape.** The plan is a 31.9 x 34.3 mm rounded rectangle with R3.4 corners, offset +0.35 mm
+radially because the board is 28.7 mm wide on its +X side. The corner radius was reduced from 5.5
+so the strap slots keep 1.0 mm side walls; with R5.5 the slots cut into the corner arcs and left
+0.2 mm slivers. The underside, pods 3/4 and the tail stay on
 the dorsal centre.
 - The lid is a single soft crown (R65 across the wrist) with R2.5 blends into the walls. R2.5 is
   the largest blend that keeps the lid clear of the cell's proximal end.
@@ -80,33 +83,46 @@ the dorsal centre.
   curve as a 0.3 x 0.12 mm hairline.
 - Walls are 1.1 mm, the floor 1.1 mm and the top 1.0 mm. A 3 mm pry notch sits at the proximal
   seam.
+- Behind the pod 3/4 foam pockets, the floor has 1.0 mm bosses inside. The pockets are cut from
+  below the curved underside, so no feathered skin is left at their mouths.
+- The distal wall keeps a square bottom edge across the tail slot, where there is no floor behind
+  it. That keeps its 1.1 mm all the way down.
 
-**Hidden strap attachment.** Each X end face has a slot 27.2 mm wide (along the arm), 3.35 mm deep
+**Hidden strap attachment.** Each X end face has a slot 24.8 mm wide (along the arm), 3.35 mm deep
 and open underneath, through which the webbing enters the body. It looks like a watch band slot.
+The slot has 1.0 mm side walls and a 1.0 mm roof (slot top 0.7 under the board bottom at 1.7).
+Below z = -0.25 the slot stops 1.0 mm short of the pod 3/4 foam pockets; only the part that
+holds the loop clip is full depth (3.35 mm).
 - Inside each slot an **integral PA12 bar** (1.3 x 1.6 mm stadium section, rated for about 5 N of
-  strap tension) spans the slot, 0.7 mm in from the end face, so its outer face is flush. There
-  are no pins, no metal, and nothing protrudes.
+  strap tension) spans the slot at z = -0.8, 0.6 mm in from the end face, so its outer face is
+  flush. There are no pins, no metal, and nothing protrudes.
 - An identical slim loop snaps onto each bar. The webbing never wraps the bars themselves, so
   nothing bulky sits under the module edge and the flex links pass beneath on a gentle curve.
 - Ulnar side: the webbing end is sewn round its loop's far bar (fixed).
 - Radial side: the webbing passes through its loop and folds back (closure).
-- The slot roofs double as the board's edge supports (top at the board bottom), together with
-  four 2 mm standoffs. A 1 mm relief under the J2 battery pads leaves room for the wire joints.
-- The snap beads moved to the +/-Y walls, because the X walls now carry the slots.
+- The slot roofs are the board's supports: both X edges of the board rest on them (KiCad
+  x 0..2.75 and 25.95..28.7). A 1 mm relief under the J2 battery pads leaves room for the wire
+  joints. The separate standoffs were removed because they overlapped the roofs.
+- **Snap:** four square snap features on the +/-Y walls. The X walls carry the slots, and round
+  beads would leave sub-1 mm tips and lips. Each is a local tongue riser, 1.4 mm thick and
+  3.1-4.5 mm long, with a 0.3 x 1.1 mm groove that has at least 1.0 mm of material on all sides.
+  A matching 0.3 x 1.0 mm rib on the lid clicks into it. They sit clear of the cell, J1, the tail
+  and the light pipe. The plain tongue is 1.4 mm thick.
 
 **Lid details.**
-- **Button:** a flush 4.8 mm PA12 disc (`button_cap`) in a 5.0 mm opening (0.1 mm hairline) over
-  SW1. It is retained by a 6.0 mm flange under the lid, and its stem stops 0.15 mm above the
-  switch. It is a separate part, put in from inside before the lid closes, and replaces the
-  earlier U-slot.
-- **Light pipe:** a 1.5 mm PMMA rod (or clear UV resin) in a guide tube over D1, cut flush with
-  the crown.
+- **Button:** a 4.4 mm PA12 disc (`button_cap`) in a 4.6 mm opening (0.1 mm hairline) over SW1.
+  Its flat top sits just below the lowest point of the crown around it, so it reads as a subtle
+  flush pad with no knife edge. It is retained by a 6.0 x 1.0 mm flange under the lid, and its
+  stem stops 0.15 mm above the switch. It is a separate part, put in from inside before the lid
+  closes.
+- **Light pipe:** a 1.5 mm PMMA rod (or clear UV resin) in a 3.6 mm guide tube (1.0 mm wall) over
+  D1, cut flush with the crown.
 
 **Stack at the centre (z above the underside apex).**
 
 | z (mm) | item |
 |---|---|
-| 0-1.1 | floor; pods 3/4 foam pockets 0.5 deep on the outside |
+| 0-1.1 | floor; pods 3/4 foam pockets 0.5 deep on the outside, with 1.0 mm bosses behind them |
 | 1.1-1.7 | 0.6 mm gap for bottom pads and wire joints (SWD, battery, charge pads) |
 | 1.7-2.7 | board, 28.7 x 27 x 1.0 mm (`boards/neurband_c/neurband_c.step`) |
 | 2.7-4.7 | parts: J1 FPC and SW1 2.0 mm, TQFP 1.2 mm |
@@ -118,10 +134,13 @@ and open underneath, through which the webbing enters the body. It looks like a 
   flex spine, which runs under the module centre strip at y -7..+0.6.
 - They sit in a 3.0 x 6.0 mm stadium window, **1.7 mm deep** (at least 1.5 mm), at module
   y 1.7..7.7. When worn the pads are about 2.4 mm from the skin, so skin cannot touch them.
-- A 4 x 8 x 0.4 mm counterbore locates the charger. Two N52 3 x 1 mm magnets sit in floor pockets
-  at x = +/-3.6, set N/S to key the polarity.
-- `charge_puck.step` carries two 2.0 x 6 mm pogo pins at 3 mm pitch and two flush magnets of
-  opposite polarity, with a USB lead.
+- Two N52 3 x 1 mm magnets sit in **through holes**, glued flush with the underside at
+  (x = +/-2.1, y = 11.25). They are proximal of the window with 1.0 mm webs, clear of the spine
+  and of the antenna region, so no thin skin is left over them. Set them N/S to key the polarity;
+  they also locate the charger, so there is no counterbore.
+- `charge_puck.step` carries two 2.0 x 6 mm pogo pins, staggered +/-0.5 mm across the 2 mm pads
+  (1.1 mm web between the holes), and two magnets of opposite polarity, glued flush under flat
+  spot faces. It has a USB lead. It has no nose: the magnets centre it.
 
 ![puck](../../mech/rev_c/renders/charge_puck.iso.png)
 
@@ -139,16 +158,19 @@ for fit tests.
 
 ![pod](../../mech/rev_c/renders/pod_with_flex.iso.png) ![pod shell](../../mech/rev_c/renders/pod.iso.png)
 
-- **Shape.** A low TPU 95A pebble, 9.0 x 32.0 x 3.2 mm (4.05 mm above the skin when worn), with
-  R1.2 top blends and R0.8 face blends. It covers the whole 30 mm flex paddle; the ends taper on
-  an R43 arc from 3.2 mm at the sleeve rims to 2.0 mm at the tips. The face blends are the strain relief where the flex
+- **Shape.** A TPU 95A pebble, 9.0 x 32.0 x 3.9 mm (4.75 mm above the skin when worn), with R0.8
+  top and face blends. It covers the whole 30 mm flex paddle, and the ends taper from 3.9 mm at
+  the sleeve rims to 2.0 mm at the tips.
+- **Walls:** at least 1.0 mm everywhere (FDM TPU: 2.5 perimeters at 0.4 mm). The floor behind the
+  foam pockets is 1.0 mm and the sleeve rims are 1.0 mm thick. That is why the pod is 3.9 mm
+  rather than 3.2 mm: with the 1.5 mm foam kept, there is no thinner way. The face blends are the strain relief where the flex
   spine leaves at +/-X (y -7..+0.6).
-- **Captive edge sleeve.** A 25.4 x 1.6 mm slot runs through the pod along the band. Its roof is
-  open over the middle 22.4 mm, so the fabric stays visible, and two 1.5 mm rounded rims hold the
+- **Captive edge sleeve.** A 22.4 x 1.4 mm slot runs through the pod along the band. Its roof is
+  open over the middle 19.4 mm, so the fabric stays visible, and two 1.5 x 1.0 mm rims hold the
   webbing edges. To assemble, thread the webbing through the pods; it cannot pop out and slides
   freely. Nothing protrudes: from outside the pods read as small soft bumps under the band.
-- **Compliant contact** (signal-chain review sec. 2). A 7.0 x 0.5 mm pocket behind each pad
-  (y = -10/0/+10) holds a 6.6 x 1.5 mm self-adhesive PU or EVA foam disk, so the pad stands
+- **Compliant contact** (signal-chain review sec. 2). A 6.2 x 0.5 mm pocket behind each pad
+  (y = -10/0/+10) holds a 6.0 x 1.5 mm self-adhesive PU or EVA foam disk (6 mm punch), so the pad stands
   1.0 mm proud when free and about 0.65 mm when worn. The flex is held only by the adhesive foam
   and floats between the pads (polyimide cannot be forced into a dome).
 - **Locating pins.** Two pins, 1.0 mm diameter and 0.55 mm tall, sit at y = +/-5 in the flex's
@@ -163,24 +185,30 @@ for fit tests.
 
 ![loop](../../mech/rev_c/renders/strap_loop.iso.png)
 
-**Chosen: one continuous 25 x 1.2 mm elastic woven webbing** with a loop-fabric face
-(off-the-shelf 1 in elastic hook-and-loop band; plain elastic webbing plus 110 mm of sew-on loop
-tape also works). Keep it at 1.2-1.4 mm: the wraps round the loops' far bars pass just over the
+**Chosen: one continuous 22 x 1.2 mm elastic woven webbing** with a loop-fabric face
+(off-the-shelf 7/8 in elastic hook-and-loop band; plain elastic webbing plus 110 mm of sew-on
+loop tape also works). Keep it at 1.2-1.4 mm: the wraps round the loops' far bars pass just over the
 spine links.
 - **Ulnar end:** fixed, sewn round the far bar of a slim loop snapped onto the hidden ulnar bar.
 - **Around the wrist:** the webbing runs through the six pod sleeves and across the gap.
 - **Radial end:** it passes through the identical loop on the radial side. Each loop is
-  26.8 x 6.4 x 3.3 mm, snaps onto its hidden bar and has a 1.9 mm opening. The webbing turns
-  round the loop's far bar and folds back over its own outer face, closing with a 25 x 40 mm hook
+  24.4 x 6.4 x 3.8 mm, with 1.0 mm side links and a 1.0 mm C-clip.
+- The clip's 80 deg opening points up, away from the strap pull, so tension seats the clip on the
+  bar. It snaps on with 0.14 mm interference over the bar's 1.3 mm side.
+- The ulnar loop is the same part turned over. The webbing turns
+  round the loop's far bar and folds back over its own outer face, closing with a 22 x 40 mm hook
   tab.
-- The fold-back is 77 / 64 / 45 mm on 145 / 160 / 180 mm wrists. The whole band opens by peeling
+- The fold-back is 77 / 63 / 45 mm on 145 / 160 / 180 mm wrists. The whole band opens by peeling
   the tab and pulling the end out of the loop.
 
-Why 25 mm: it covers the whole pad span, so it presses all three pads directly, and the 32 mm
-pods show only their tapered 3.5 mm ends at each edge. The flex is fully covered. A 28-30 mm band
-would hide the pod ends too, but its 30-32 mm slot would cut into the module's R5.5 plan corners
-(the end faces are straight for only 23 mm). That needs a squarer module, so it is left as an
-option.
+Why 22 mm: the module's strap slots must keep 1.0 mm walls beside the straight part of the end
+faces. Slot half-width + 1.0 mm cannot exceed the straight half-length (17.15 mm minus the plan
+corner radius). For a 25 mm band (27.4 mm slot) that would need corners of R2.4 or less, a boxy
+module. The 22 mm band (24.8 mm slot) allows R3.4.
+
+The cost is that the 32 mm pods show about 5 mm of their tapered TPU ends at each band edge; the
+flex stays covered. The band presses the centre 22 mm of each pod, and the stiffer 1.0 mm-wall
+TPU shell spreads it to the outer pads.
 
 Alternatives considered:
 1. Two-piece webbing with a printed buckle ring at the gap (the previous version). Rejected: it
@@ -191,8 +219,8 @@ Alternatives considered:
 4. Shock-cord tensioner (Meta sEMG-RD style). The most uniform load, but cord and cord lock look
    technical.
 
-**Cut list (from `fit_results.json`):** 2 strap loops; webbing **224 mm**, including the 12 mm sewn loop round
-the ulnar loop's far bar and a 45 mm fold-back at 180 mm. Hook tape 25 x 40 mm.
+**Cut list (from `fit_results.json`):** 2 strap loops; webbing **226 mm**, including the 12 mm sewn loop round
+the ulnar loop's far bar and a 45 mm fold-back at 180 mm. Hook tape 22 x 40 mm.
 
 ## 6. Fit check (`fit.py` -> `fit_results.json`, `fit_145.step`, `fit_180.step`; `assembly.py` -> `fit_160.step`, `band_assembly.step`)
 
@@ -215,16 +243,16 @@ The wrist model is the rev A/B ellipse forearm (`extra/wrists/wrist.py`), now al
 | Gap centre from the dorsal centre (90 = ulnar apex, 180 = volar centre) | 137 deg | 141 deg | 145 deg |
 | Electrode coverage (pod 1 to pod 8 arc / circumference) | 88.6 % (128.4 mm) | 80.5 % (128.9 mm) | 71.8 % (129.3 mm) |
 | Pod collisions (shell-shell, shell-module, CAD mm3) | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 |
-| Spine bend radius, min free link (mm); module-edge links (free, under the loops) | 10.51; 4.05 | 11.81; 4.89 | 13.44; 6.12 |
+| Spine bend radius, min free link (mm); module-edge links (free, under the loops) | 10.51; 2.46 | 11.81; 2.28 | 13.44; 2.42 |
 | Module seat gap underside-skin: centre / edge (mm) | 0.61 / 1.63 | 0.73 / 1.3 | 0.85 / 0.97 |
 | Module tilt following the forearm taper | 2.72 deg | 3.0 deg | 3.37 deg |
-| Strap loop far bar clearance to skin (mm) | 1.89 | 1.81 | 1.73 |
-| Module / pod shells vs. skin (CAD mm3); strap inner face to skin, min (mm) | 0.0 / 0.0; 0.7 | 0.0 / 0.0; -0.41 | 0.0 / 0.0; -0.57 |
+| Strap loop far bar clearance to skin (mm) | 2.19 | 2.11 | 2.03 |
+| Module / pod shells vs. skin (CAD mm3); strap inner face to skin, min (mm) | 0.0 / 0.0; 1.11 | 0.0 / 0.0; -0.33 | 0.0 / 0.0; -0.48 |
 | Strap vs. pods / module; loop vs. module / pods (CAD mm3) | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 |
-| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.43, 0.86, 0.76, 1.28, 0.79, 0.88 | 1.59, 0.71, 0.60, 1.30, 0.86, 0.95 | 1.63, 0.58, 0.50, 1.30, 1.01, 0.99 |
-| Strap load max / min | 1.89 | 2.66 | 3.28 |
-| Strap tension for 3 kPa on an average pad (N) | 0.39 | 0.41 | 0.45 |
-| Strap path ulnar bar -> loop (mm); fold-back (mm) | 123.0; 77.3 | 136.8; 63.5 | 155.3; 45.0 |
+| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.41, 0.88, 0.78, 1.26, 0.79, 0.87 | 1.59, 0.73, 0.63, 1.26, 0.84, 0.96 | 1.63, 0.61, 0.50, 1.27, 0.98, 1.01 |
+| Strap load max / min | 1.8 | 2.54 | 3.26 |
+| Strap tension for 3 kPa on an average pad (N) | 0.39 | 0.4 | 0.44 |
+| Strap path ulnar bar -> loop (mm); fold-back (mm) | 125.0; 77.1 | 138.7; 63.4 | 157.0; 45.0 |
 | Pads pressed into the rigid wrist model (taper; foam/skin take it, CAD mm3) | 11.505 | 12.222 | 13.344 |
 | Strap vs. flex links (CAD mm3) | 0.0 | 0.0 | 0.0 |
 
@@ -237,8 +265,8 @@ Notes:
   centre and 1.0-1.6 mm at the edges.
 - **Strap.** The webbing rests on the skin across the gap. Strap-vs-pod volume is measured with
   untilted pods: the 1-3 deg taper tilt of each pod is taken by a slight twist of the webbing.
-  The module-edge links hang free from the R42 seat to pods 2/5 and bend at R4.0-8.1 mm (the
-  tightest is the ulnar link on 145 mm wrists), well above the 1.2 mm guideline for 2-layer flex. The load spread across pods is 1.9-3.3:1. Pods 1 and 6 carry the most; pods 2 and 5 next to
+  The module-edge links hang free from the R42 seat to pods 2/5 and bend at R2.3-8.8 mm (the
+  tightest is the ulnar link), well above the 1.2 mm guideline for 2-layer flex. The load spread across pods is 1.8-3.3:1. Pods 1 and 6 carry the most; pods 2 and 5 next to
   the module the least.
 
 ## 7. Interface to the board and flex
@@ -246,11 +274,11 @@ Notes:
 - **Board** (`boards/neurband_c/neurband_c.step`, 28.7 x 27 x 1.0 mm):
   - J1 centred at x = 14 with its mouth on the y = 27 edge;
   - SW1 at (24.8, 25.1), D1 at (2, 1), and J2 (bottom) at (23.9, 25.6)/(26.9, 25.6);
-  - **J3 VCHG/GND must be at (14, 6)/(14, 9).** This was agreed; the 03:12 PCB still had
-    (14, 9)/(14, 12), which would put the window over the flex spine;
-  - the board is supported by the two slot roofs (x 0..3 and 25.7..28.7, |y - 12.2| <= 14.4) and
-    standoffs at (1.6, 1.6), (26.4, 1.6), (1.6, 25.4), (26.6, 22.6). Keep bottom copper off
-    those areas except J2;
+  - **J3 VCHG/GND must be at (14, 6)/(14, 9)**, as agreed with the coordinator; the window and the
+    magnets (KiCad (11.9, 0.95)/(16.1, 0.95), under the board) follow that position;
+  - the board rests on the two lug-slot roofs along its X edges, KiCad x 0..2.75 and 25.95..28.7
+    (y -1.2..25.6), with no separate standoffs. Keep bottom copper off those strips; J2 has its
+    own relief in the +X roof;
   - parts under the cell rectangle must be at most 1.3 mm;
   - the mapping is KiCad (x, y) to module (x - 14, -14.8 + 27 - y) (`module.k2m`).
 - **Flex** (`flex_c_layout.md`):
@@ -263,15 +291,30 @@ Notes:
 
 | Part | File | Process / material | Qty (fab) | Size mm | Volume cm3 |
 |---|---|---|---|---|---|
-| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 31.9 x 6.2 | 1.19 |
-| Module lid | `mech/rev_c/module_lid.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 11.0 | 1.85 |
-| Button cap | `mech/rev_c/button_cap.step` | MJF PA12, grey | 4 | 6.0 x 6.0 x 4.5 | 0.06 |
-| Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 32.2 x 9.1 x 3.8 | 0.32 |
-| Strap loop | `mech/rev_c/strap_loop.step` | MJF PA12, black | 5 (2 per band) | 26.8 x 6.2 x 2.9 | 0.14 |
-| Charger puck | `mech/rev_c/charge_puck.step` | MJF PA12 or FDM PETG | 2 | 30.1 x 26.1 x 7.4 | 3.50 |
+| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 7.4 | 1.58 |
+| Module lid | `mech/rev_c/module_lid.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 11.1 | 1.95 |
+| Button cap | `mech/rev_c/button_cap.step` | MJF PA12, grey | 4 | 6.0 x 6.0 x 3.7 | 0.06 |
+| Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 32.1 x 9.1 x 4.5 | 0.51 |
+| Strap loop | `mech/rev_c/strap_loop.step` | MJF PA12, black | 5 (2 per band) | 24.4 x 6.8 x 3.8 | 0.22 |
+| Charger puck | `mech/rev_c/charge_puck.step` | MJF PA12 or FDM PETG | 2 | 30.1 x 26.1 x 7.1 | 3.65 |
 
 The fab files are `mech/rev_c/<part>.fab.json` (kind 3dp; volume, area and size measured from the
-FreeCAD shapes).
+FreeCAD shapes, plus `min_wall_mm` from the wall check).
+
+**Minimum wall per part** (`wallcheck.py` on the exported STEPs -> `wall_check.json` and
+`min_wall_mm` in each fab.json). Rays are shot along the inward normal from a grid on every face
+(0.3 mm in from the edges) and intersected exactly with the solid. A ray counts as a wall only
+where it leaves through a roughly opposite face, so acute rims, such as the lid's edge where the
+curved parting meets the wall at 21 deg, are not reported as walls.
+
+| Part | Process | Min wall measured (mm) | 1st percentile (mm) | Samples | Design minima |
+|---|---|---|---|---|---|
+| module_base | MJF PA12 | **0.98** | 1.00 | 6068 | walls 1.1, floor 1.1, 1.0 behind the pod 3/4 foam pockets, tongue 1.4 (1.05 behind the snap groove), slot side walls and roof 1.0, magnets in through holes |
+| module_lid | MJF PA12 | **0.98** | 1.00 | 4159 | walls 1.1, crown 1.0, light-pipe tube 1.0, square snap ribs 0.3 x 1.0 on the 1.1 wall |
+| button_cap | MJF PA12 | **1.00** | 1.00 | 342 | flat-topped 4.4 mm disc, flange 6.0 x 1.0, stem 2.0 |
+| strap_loop | MJF PA12 | **1.00** | 1.00 | 838 | C-clip 1.0 (80 deg opening), side links 1.0, far bar 1.3 x 1.6 |
+| charge_puck | MJF PA12 / FDM PETG | **1.00** | 1.29 | 1577 | magnet pocket walls >= 1.5, pin-hole web 1.1 (staggered pins), solid body |
+| pod | FDM TPU 95A | **1.00** | 1.00 | 1485 | floor behind the foam 1.0, sleeve rims 1.0, foam-pocket-to-side 1.1 |
 
 Bought parts per band:
 - 25 mm elastic woven webbing with a loop face (0.25 m) and a 25 mm sew-on hook tab;
@@ -283,7 +326,7 @@ Bought parts per band:
 Together these are about 6-10 EUR.
 
 **Cost.** MJF PA12 at JLC3DP-class services is roughly 1.5-3 USD per part (the per-part minimum
-dominates), so the 4 PA12 parts per band cost about 8-12 USD. The six TPU pods on your own FDM
+dominates), so the 5 PA12 parts per band (base, lid, cap, 2 loops) cost about 8-15 USD. The six TPU pods on your own FDM
 printer use about 1.5 g of TPU, well under 0.10 EUR. These are estimates; take the live quote
 from the fab files.
 

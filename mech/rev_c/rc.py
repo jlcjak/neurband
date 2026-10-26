@@ -34,21 +34,21 @@ TAIL_T = 0.3            # at the stiffened end (connector wants 0.3)
 FLEX_T = 0.2
 
 # ---------------- compliant contact ----------------
-FOAM_D = 6.6            # self-adhesive PU/EVA foam disk behind each pad
+FOAM_D = 6.0            # self-adhesive PU/EVA foam disk behind each 6.5 mm pad (6 mm punch)
 FOAM_T = 1.5            # free thickness
-FOAM_POCKET_D = 7.0
+FOAM_POCKET_D = 6.2     # 1.0+ mm walls to the pod sides and to the module's strap slots
 FOAM_POCKET_H = 0.5     # pocket depth in the shell face -> pad stands FOAM_T - FOAM_POCKET_H proud
 FOAM_PROUD = FOAM_T - FOAM_POCKET_H         # 1.0 mm free, ~0.6-0.7 mm at 2-5 kPa
 STACK = FOAM_PROUD + FLEX_T                  # shell face above the skin at a pad (free foam)
 STACK_LOADED = 0.65 + FLEX_T                 # nominal worn (foam ~35 % compressed)
 
 # ---------------- strap ----------------
-STRAP_W = 25.0          # one continuous 25 mm (1 in) elastic woven webbing, covers the pad span
+STRAP_W = 22.0          # one continuous 22 mm (7/8 in) elastic woven webbing (slot walls >= 1.0 at R3.4 corners)
 STRAP_T = 1.2           # elastic woven webbing 1.2 mm (thin: the sewn wrap must clear the flex link)
 CHANNEL_W = STRAP_W + 0.4
-CHANNEL_H = 1.6         # clear sleeve height (STRAP_T + 0.2)
-BASE_T = 1.1            # pod shell face -> sleeve floor (0.5 foam pocket + 0.6)
-LIP_T = 0.5
+CHANNEL_H = 1.4         # clear sleeve height (STRAP_T + 0.2)
+BASE_T = 1.5            # pod shell face -> sleeve floor (0.5 foam pocket + 1.0 floor)
+LIP_T = 1.0             # sleeve rims (>= 1.0 for FDM TPU)
 
 # ---------------- wrist sizes for the fit check ----------------
 SIZES = (145.0, 160.0, 180.0)

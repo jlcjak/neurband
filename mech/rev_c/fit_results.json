@@ -37,8 +37,8 @@
    "3-2": -0.06
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 4.05,
-   "4-5": 5.23
+   "3-2": 2.46,
+   "4-5": 6.83
   },
   "module_seat_gap_mm": {
    "centre": 0.61,
@@ -46,20 +46,20 @@
    "max": 1.7,
    "edge": 1.63
   },
-  "loop_clear_of_skin_mm": 1.89,
+  "loop_clear_of_skin_mm": 2.19,
   "strap_load_rel": {
-   "1": 1.43,
-   "2": 0.86,
-   "5": 0.76,
-   "6": 1.28,
+   "1": 1.41,
+   "2": 0.88,
+   "5": 0.78,
+   "6": 1.26,
    "7": 0.79,
-   "8": 0.88
+   "8": 0.87
   },
-  "strap_load_max_min": 1.89,
+  "strap_load_max_min": 1.8,
   "strap_tension_for_3kPa_N": 0.39,
-  "strap_path_mm": 123.0,
-  "fold_back_mm": 77.3,
-  "strap_min_clear_to_skin_mm": 0.7,
+  "strap_path_mm": 125.0,
+  "fold_back_mm": 77.1,
+  "strap_min_clear_to_skin_mm": 1.11,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
@@ -111,8 +111,8 @@
    "3-2": -0.04
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 4.89,
-   "4-5": 6.38
+   "3-2": 2.28,
+   "4-5": 8.78
   },
   "module_seat_gap_mm": {
    "centre": 0.73,
@@ -120,20 +120,20 @@
    "max": 1.34,
    "edge": 1.3
   },
-  "loop_clear_of_skin_mm": 1.81,
+  "loop_clear_of_skin_mm": 2.11,
   "strap_load_rel": {
    "1": 1.59,
-   "2": 0.71,
-   "5": 0.6,
-   "6": 1.3,
-   "7": 0.86,
-   "8": 0.95
+   "2": 0.73,
+   "5": 0.63,
+   "6": 1.26,
+   "7": 0.84,
+   "8": 0.96
   },
-  "strap_load_max_min": 2.66,
-  "strap_tension_for_3kPa_N": 0.41,
-  "strap_path_mm": 136.8,
-  "fold_back_mm": 63.5,
-  "strap_min_clear_to_skin_mm": -0.41,
+  "strap_load_max_min": 2.54,
+  "strap_tension_for_3kPa_N": 0.4,
+  "strap_path_mm": 138.7,
+  "fold_back_mm": 63.4,
+  "strap_min_clear_to_skin_mm": -0.33,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
@@ -185,8 +185,8 @@
    "3-2": -0.01
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 6.12,
-   "4-5": 8.12
+   "3-2": 2.42,
+   "4-5": 5.57
   },
   "module_seat_gap_mm": {
    "centre": 0.85,
@@ -194,20 +194,20 @@
    "max": 0.98,
    "edge": 0.97
   },
-  "loop_clear_of_skin_mm": 1.73,
+  "loop_clear_of_skin_mm": 2.03,
   "strap_load_rel": {
    "1": 1.63,
-   "2": 0.58,
+   "2": 0.61,
    "5": 0.5,
-   "6": 1.3,
-   "7": 1.01,
-   "8": 0.99
+   "6": 1.27,
+   "7": 0.98,
+   "8": 1.01
   },
-  "strap_load_max_min": 3.28,
-  "strap_tension_for_3kPa_N": 0.45,
-  "strap_path_mm": 155.3,
+  "strap_load_max_min": 3.26,
+  "strap_tension_for_3kPa_N": 0.44,
+  "strap_path_mm": 157.0,
   "fold_back_mm": 45.0,
-  "strap_min_clear_to_skin_mm": -0.57,
+  "strap_min_clear_to_skin_mm": -0.48,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
@@ -222,8 +222,8 @@
   }
  },
  "strap_cut_mm": {
-  "webbing": 224.0,
-  "fold_back_at_145": 77.3,
+  "webbing": 226.0,
+  "fold_back_at_145": 77.1,
   "fold_back_at_180": 45.0,
   "hook_tape": 40.0,
   "loop_face": "whole outer face (loop-fabric webbing) or 110 mm sew-on loop tape"
