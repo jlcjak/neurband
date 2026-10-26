@@ -317,7 +317,7 @@ curved parting meets the wall at 21 deg, are not reported as walls.
 | pod | FDM TPU 95A | **1.00** | 1.00 | 1485 | floor behind the foam 1.0, sleeve rims 1.0, foam-pocket-to-side 1.1 |
 
 Bought parts per band:
-- 25 mm elastic woven webbing with a loop face (0.25 m) and a 25 mm sew-on hook tab;
+- 22 mm (7/8 in) elastic woven webbing with a loop face (0.25 m) and a 22 mm sew-on hook tab;
 - self-adhesive foam sheet 1.5 mm (18 disks);
 - 4 N52 3 x 1 mm magnets, 2 x 2.0 x 6 mm pogo pins and a USB lead;
 - 1.5 mm PMMA fibre;
