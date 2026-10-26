@@ -36,25 +36,29 @@
    "4-5": -0.06,
    "3-2": -0.06
   },
+  "module_edge_link_min_bend_r_mm": {
+   "3-2": 4.05,
+   "4-5": 5.23
+  },
   "module_seat_gap_mm": {
    "centre": 0.61,
    "min": 0.61,
    "max": 1.7,
    "edge": 1.63
   },
-  "loop_clear_of_skin_mm": 1.52,
+  "loop_clear_of_skin_mm": 1.89,
   "strap_load_rel": {
-   "1": 1.35,
-   "2": 1.0,
-   "5": 0.86,
-   "6": 1.21,
-   "7": 0.75,
-   "8": 0.83
+   "1": 1.43,
+   "2": 0.86,
+   "5": 0.76,
+   "6": 1.28,
+   "7": 0.79,
+   "8": 0.88
   },
-  "strap_load_max_min": 1.8,
-  "strap_tension_for_3kPa_N": 0.37,
-  "strap_path_mm": 128.9,
-  "fold_back_mm": 78.3,
+  "strap_load_max_min": 1.89,
+  "strap_tension_for_3kPa_N": 0.39,
+  "strap_path_mm": 123.0,
+  "fold_back_mm": 77.3,
   "strap_min_clear_to_skin_mm": 0.7,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
@@ -62,6 +66,7 @@
    "strap_vs_module": 0.0,
    "strap_vs_pods_untilted": 0.0,
    "loop_vs_module": 0.0,
+   "strap_vs_flex": 0.0,
    "loop_vs_pods": 0.0,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
@@ -105,32 +110,37 @@
    "4-5": -0.04,
    "3-2": -0.04
   },
+  "module_edge_link_min_bend_r_mm": {
+   "3-2": 4.89,
+   "4-5": 6.38
+  },
   "module_seat_gap_mm": {
    "centre": 0.73,
    "min": 0.73,
    "max": 1.34,
    "edge": 1.3
   },
-  "loop_clear_of_skin_mm": 1.47,
+  "loop_clear_of_skin_mm": 1.81,
   "strap_load_rel": {
-   "1": 1.5,
-   "2": 0.87,
-   "5": 0.72,
-   "6": 1.22,
-   "7": 0.81,
-   "8": 0.89
+   "1": 1.59,
+   "2": 0.71,
+   "5": 0.6,
+   "6": 1.3,
+   "7": 0.86,
+   "8": 0.95
   },
-  "strap_load_max_min": 2.08,
-  "strap_tension_for_3kPa_N": 0.38,
-  "strap_path_mm": 143.2,
-  "fold_back_mm": 64.0,
+  "strap_load_max_min": 2.66,
+  "strap_tension_for_3kPa_N": 0.41,
+  "strap_path_mm": 136.8,
+  "fold_back_mm": 63.5,
   "strap_min_clear_to_skin_mm": -0.41,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
-   "strap_vs_module": 0.256,
+   "strap_vs_module": 0.0,
    "strap_vs_pods_untilted": 0.0,
    "loop_vs_module": 0.0,
+   "strap_vs_flex": 0.0,
    "loop_vs_pods": 0.0,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
@@ -174,32 +184,37 @@
    "4-5": -0.01,
    "3-2": -0.01
   },
+  "module_edge_link_min_bend_r_mm": {
+   "3-2": 6.12,
+   "4-5": 8.12
+  },
   "module_seat_gap_mm": {
    "centre": 0.85,
    "min": 0.85,
    "max": 0.98,
    "edge": 0.97
   },
-  "loop_clear_of_skin_mm": 1.41,
+  "loop_clear_of_skin_mm": 1.73,
   "strap_load_rel": {
-   "1": 1.53,
-   "2": 0.77,
-   "5": 0.61,
-   "6": 1.22,
-   "7": 0.94,
-   "8": 0.93
+   "1": 1.63,
+   "2": 0.58,
+   "5": 0.5,
+   "6": 1.3,
+   "7": 1.01,
+   "8": 0.99
   },
-  "strap_load_max_min": 2.52,
-  "strap_tension_for_3kPa_N": 0.42,
-  "strap_path_mm": 162.2,
+  "strap_load_max_min": 3.28,
+  "strap_tension_for_3kPa_N": 0.45,
+  "strap_path_mm": 155.3,
   "fold_back_mm": 45.0,
-  "strap_min_clear_to_skin_mm": -0.58,
+  "strap_min_clear_to_skin_mm": -0.57,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
-   "strap_vs_module": 0.47,
+   "strap_vs_module": 0.0,
    "strap_vs_pods_untilted": 0.0,
    "loop_vs_module": 0.0,
+   "strap_vs_flex": 0.0,
    "loop_vs_pods": 0.0,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
@@ -207,8 +222,8 @@
   }
  },
  "strap_cut_mm": {
-  "webbing": 234.0,
-  "fold_back_at_145": 78.3,
+  "webbing": 224.0,
+  "fold_back_at_145": 77.3,
   "fold_back_at_180": 45.0,
   "hook_tape": 40.0,
   "loop_face": "whole outer face (loop-fabric webbing) or 110 mm sew-on loop tape"

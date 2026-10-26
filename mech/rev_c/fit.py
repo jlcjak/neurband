@@ -137,18 +137,68 @@ def layout(c):
     # under the strap's wrap round the hidden bar ----
     lift = R.STACK_LOADED - R.FLEX_T
     lskin = G.Curve(a, b, R.FLEX_T / 2 + 0.12)
+    far_pre, loop_dir = {}, {}
+    for si, pj in ((-1, 2), (1, 5)):                 # slim loops on both hidden bars, reaching toward pods 2 / 5
+        _c = loc(pods[pj], -si * (P.SHELL_W / 2 - 0.6), R.BASE_T + R.STRAP_T / 2)
+        _bb = (M.bar_x(si), z0 + M.BAR_Z)
+        _dl = math.dist(_bb, _c)
+        loop_dir[si] = ((_c[0] - _bb[0]) / _dl, (_c[1] - _bb[1]) / _dl)
+        far_pre[si] = (_bb[0] + S.LOOP_REACH * loop_dir[si][0], _bb[1] + S.LOOP_REACH * loop_dir[si][1])
     edge_links = {}
     bars_m = {-1: (M.bar_x(-1), z0 + M.BAR_Z), 1: (M.bar_x(1), z0 + M.BAR_Z)}
+    wrap_r = {-1: S.CLIP_RO, 1: S.CLIP_RO}                  # loop clips on the hidden bars
+    def hermite(p0, t0, p1, t1, n=30):
+        m = math.dist(p0, p1)
+        out = []
+        for k in range(n + 1):
+            u = k / n
+            h00, h10, h01, h11 = 2*u**3 - 3*u**2 + 1, u**3 - 2*u**2 + u, -2*u**3 + 3*u**2, u**3 - u**2
+            out.append((h00*p0[0] + h10*m*t0[0] + h01*p1[0] + h11*m*t1[0], h00*p0[1] + h10*m*t0[1] + h01*p1[1] + h11*m*t1[1]))
+        return out
+    rf_out = S.FAR_U / 2 + R.STRAP_T                     # strap wrap round the loop's far bar
+    def spline(pts, t0, t1, n=16):
+        """Tangent-continuous Catmull-Rom/Hermite through pts with end tangents t0, t1."""
+        tans = [t0]
+        for k in range(1, len(pts) - 1):
+            dx, dz = pts[k + 1][0] - pts[k - 1][0], pts[k + 1][1] - pts[k - 1][1]
+            d = math.hypot(dx, dz)
+            tans.append((dx / d, dz / d))
+        tans.append(t1)
+        out = []
+        for k in range(len(pts) - 1):
+            seg = hermite(pts[k], tans[k], pts[k + 1], tans[k + 1], n)
+            out += seg[:-1] if k < len(pts) - 2 else seg
+        return out
     for i, j, si in ((3, 2, -1), (4, 5, 1)):
+        # free link: leaves the paddle edge along the R42 seat, arrives along pod j's face (smooth,
+        # tangent), passing under the strap wrap / loop clip / far-bar wrap (skin side)
         e0 = loc(pods[i], si * R.POD_W / 2, -R.FLEX_T / 2)
         e1 = loc(pods[j], -si * R.POD_W / 2, -lift - R.FLEX_T / 2)
-        sa, sb = sorted((nearest_s(lskin, *e0), nearest_s(lskin, *e1)))
-        mid = [lskin.at(sa + (sb - sa) * k / 40)[:2] for k in range(41)]
-        mid = [q for q in mid if abs(e0[0]) + 1.6 < abs(q[0]) < abs(e1[0]) - 0.3]
-        mid.sort(key=lambda q: abs(q[0]))
-        edge_links[f'{i}-{j}'] = [e0] + mid + [e1]
+        t0 = (si * math.cos(pods[i]['ang']), si * math.sin(pods[i]['ang']))
+        t1 = (si * math.cos(pods[j]['ang']), si * math.sin(pods[j]['ang']))
+        obst = [(bars_m[si], wrap_r[si]), (far_pre[si], rf_out)]
+        vias = []
+        q = hermite(e0, t0, e1, t1)
+        for _ in range(4):
+            bad = None
+            for (cx, cz), r in obst:
+                need = r + R.FLEX_T / 2 + 0.1
+                dmin = min(math.dist(pt, (cx, cz)) for pt in q)
+                if dmin < need - 0.02 and (bad is None or need - dmin > bad[2]):
+                    bad = ((cx, cz), need, need - dmin)
+            if bad is None:
+                break
+            (cx, cz), need, _ = bad
+            rc0 = math.hypot(cx, cz)
+            v = (cx - cx / rc0 * need, cz - cz / rc0 * need)
+            sk = lskin.at(nearest_s(lskin, *v))
+            if math.hypot(*v) < math.hypot(sk[0], sk[1]) + 0.05:   # do not go into the skin
+                v = (sk[0] * 1.0, sk[1] * 1.0)
+            vias = sorted([x for x in vias if math.dist(x, v) > 0.5] + [v], key=lambda p_: abs(p_[0]))
+            q = spline([e0] + vias + [e1], t0, t1)
+        edge_links[f'{i}-{j}'] = q
     def min_radius(q):
-        q = S.resample(S.smooth(S.densify(q, 0.3), 3), 0.25)
+        q = S.resample(q, 0.25)
         best = 1e9
         for k in range(1, len(q) - 1):
             (x1, y1), (x2, y2), (x3, y3) = q[k - 1], q[k], q[k + 1]
@@ -161,17 +211,14 @@ def layout(c):
     # ---- strap: one continuous webbing, taut convex hull ----
     zc = R.BASE_T + R.STRAP_T / 2
     pts = []
-    rb = M.BAR_H / 2 + R.STRAP_T / 2                   # around the integral bars
-    bar_a = (M.bar_x(-1), z0 + M.BAR_Z)               # ulnar: fixed end, sewn around the bar
-    bar_b = (M.bar_x(1), z0 + M.BAR_Z)                # radial: hinge of the slim loop
-    p5 = pods[5]
-    c5 = loc(p5, -P.SHELL_W / 2 + 0.6, zc)
-    dl = math.dist(bar_b, c5)
-    d = ((c5[0] - bar_b[0]) / dl, (c5[1] - bar_b[1]) / dl)
-    far_b = (bar_b[0] + S.LOOP_REACH * d[0], bar_b[1] + S.LOOP_REACH * d[1])   # loop far bar: strap turns here
-    rf = S.FAR_U / 2 + R.STRAP_T / 2
+    rb = S.FAR_U / 2 + R.STRAP_T / 2                   # strap centre line round each loop's far bar
+    bar_a = (M.bar_x(-1), z0 + M.BAR_Z)
+    bar_b = (M.bar_x(1), z0 + M.BAR_Z)
+    far_a, far_b = far_pre[-1], far_pre[1]
+    d = loop_dir[1]
+    rf = rb
     circ = {}
-    for key, (cx, cz), r in (('A', bar_a, rb), ('B', far_b, rf)):
+    for key, (cx, cz), r in (('A', far_a, rb), ('B', far_b, rf)):
         circ[key] = []
         for k in range(24):
             t = 2 * math.pi * k / 24
@@ -236,11 +283,12 @@ def layout(c):
     def path_len(seq):
         return sum(math.dist(seq[k], seq[k + 1]) for k in range(len(seq) - 1))
     loop_ang = math.atan2(d[1], d[0])
+    loop_ang_a = math.atan2(loop_dir[-1][1], loop_dir[-1][0])
     loop_skin = min(math.hypot(far_b[0] - x, far_b[1] - z) for x, z in skin.pts[::4]) - S.FAR_W / 2
     return dict(c=c, a=a, b=b, z0=z0, mod_tilt=mod_tilt, pods=pods, face_P=face.P, skin_P=skin.P, chain=chain, gap=gap,
                 gap_deg=gap_deg, cover=cover, radii=radii, edge_slack=edge_slack, seat=seat,
                 ear_skin=loop_skin, loads=loads, path=path, path_len=path_len(path), bar_a=bar_a, bar_b=bar_b,
-                far_b=far_b, rb=rb, rf=rf, loop_ang=loop_ang,
+                far_b=far_b, far_a=far_a, rb=rb, rf=rf, loop_ang=loop_ang, loop_ang_a=loop_ang_a,
                 edge_links=edge_links, edge_link_r=edge_link_r)
 
 
@@ -333,7 +381,7 @@ def build_band(c, log, with_wrist=True, cad=True):
             continue
         if pods[i]['on_module'] or pods[i + 1]['on_module']:
             key = '3-2' if (i, i + 1) == (2, 3) else '4-5'
-            bm = S.sweep_band(L['edge_links'][key], ys, w=sw, t=R.FLEX_T, n_smooth=3)
+            bm = S.sweep_band(L['edge_links'][key], ys, w=sw, t=R.FLEX_T)
             if bm is not None:                         # leaves the tilted module, drapes on the tapered skin
                 bm.rotate(V(0, y, L['z0']), V(1, 0, 0), math.degrees(L['mod_tilt']))
         else:
@@ -345,7 +393,7 @@ def build_band(c, log, with_wrist=True, cad=True):
     # strap: one continuous swept band + wraps + fold-back + slim loop
     path = L['path']
     band = S.sweep_band(path[::-1], y)                 # bar A -> pods 2, 1, gap, 8..5 -> loop far bar
-    (ax, az), (fx, fz) = L['bar_a'], L['far_b']
+    (ax, az), (fx, fz) = L['far_a'], L['far_b']
     wrap_a = S.wrap(ax, az, L['rb'] - R.STRAP_T / 2, y)
     sewn = S.sweep_band(S.offset(S.resample(S.smooth(path[::-1], 2), 0.8)[:18], -(R.STRAP_T + 0.05)), y)
     wrap_b = S.wrap(fx, fz, L['rf'] - R.STRAP_T / 2, y)
@@ -357,7 +405,8 @@ def build_band(c, log, with_wrist=True, cad=True):
         if acc >= fold_len:
             break
     fold = S.sweep_band(S.offset(S.resample(S.smooth(fp, 2), 0.8), R.STRAP_T + 0.05), y)
-    loop = S.placed_loop(L['bar_b'][0], L['bar_b'][1], L['loop_ang'], y)
+    loop = S.placed_loop(L['bar_b'][0], L['bar_b'][1], L['loop_ang'], y).fuse(
+        S.placed_loop(L['bar_a'][0], L['bar_a'][1], L['loop_ang_a'], y))
     def tilt(sh):                                      # follow the module's taper tilt at its lugs
         if sh is None:
             return None
@@ -420,7 +469,7 @@ if not getattr(sys, 'neurband_fit_lib', False):
                    folder=os.path.join(R.ROOT, 'extra', 'wrists'))
     # one strap for all sizes: cut length from the largest wrist
     lo, hi = results['145'], results['180']
-    wrap_a = math.pi * 2 * (1.0 + R.STRAP_T / 2)
+    wrap_a = math.pi * 2 * (S.FAR_U / 2 + R.STRAP_T / 2)
     wrap_b = math.pi * (S.FAR_U / 2 + R.STRAP_T / 2)
     results['strap_cut_mm'] = dict(
         webbing=round(hi['strap_path_mm'] + wrap_a + S.SEW_OVERLAP + wrap_b + S.FOLD_MIN, 0),

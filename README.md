@@ -4,7 +4,7 @@
 wrist, a 24-bit biopotential front end, Bluetooth LE, and a module the size of a small watch face — designed
 from first principles to record data good enough to train gesture models, and cheap enough to just build.
 
-![neurband on the wrist](docs/media/hero_arm.jpg)
+![neurband on the wrist](docs/media/hero_arm_wide.jpg)
 
 > **Status: design complete, not yet built.** Schematics, both PCBs (DRC-clean), mechanics, firmware
 > (compiles, untested on hardware), recorder and analysis code are done; everything below that says
@@ -25,11 +25,19 @@ from first principles to record data good enough to train gesture models, and ch
 
 | | |
 |---|---|
-| ![](docs/media/band_product.jpg) | ![](docs/media/xray.jpg) |
-| ![](docs/media/exploded.jpg) | ![](docs/media/flatlay.jpg) |
+| ![](docs/media/hero_crop.jpg) | ![](docs/media/band_product.jpg) |
+| ![](docs/media/xray.jpg) | ![](docs/media/exploded.jpg) |
+| ![](docs/media/flatlay.jpg) | ![](docs/media/pods_inside.jpg) |
 | ![](docs/media/pcb_top.jpg) | ![](docs/media/flex_detail.jpg) |
 
-More in [docs/renders.md](docs/renders.md).
+The boards as laid out (KiCad renders, main board top and bottom; 28.7 × 27 mm):
+
+| | |
+|---|---|
+| ![](docs/media/board_top.png) | ![](docs/media/board_bottom.png) |
+
+All images are rendered from the real CAD and KiCad files with `python3 render/make_renders.py` (Blender Cycles);
+see [docs/renders.md](docs/renders.md).
 
 ## How it works
 

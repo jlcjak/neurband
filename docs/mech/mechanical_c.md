@@ -24,7 +24,7 @@ build order: pod.py, module.py, strap.py, charge_puck.py, fit.py, assembly.py
 | | |
 |---|---|
 | Module | **31.9 x 34.3 x 9.9 mm** (across x along the arm x thickness at the apex). The crowned lid has R2.5 blends and the underside is a R42 hollow; the body edges hang 3.1 mm lower, 13.0 mm overall. There are no external lugs: the strap enters hidden slots in the two end faces. The button is a flush disc and the light pipe a flush dot. It stands 10.5-10.8 mm above the skin |
-| Strap | **One continuous 25 x 1.2 mm elastic woven webbing** (loop-fabric face) around the whole outside. It is sewn round a hidden integral bar on the ulnar side, passes through a slim printed loop that snaps onto the hidden radial bar, and folds back with a 40 mm hook tab. Opens fully |
+| Strap | **One continuous 25 x 1.2 mm elastic woven webbing** (loop-fabric face) around the whole outside. Two identical slim printed loops snap onto the hidden integral bars. The ulnar end is sewn round one loop's far bar; the radial end passes through the other loop and folds back with a 40 mm hook tab. Opens fully |
 | Pods | 6 low TPU pods, 9.0 x 32.0 x 3.2 mm. They cover the whole 30 mm flex paddle, so no flex shows, and their ends taper to 2.0 mm under the band edges. The webbing slides through a captive edge sleeve; only the soft tapered pod ends show beyond the band. Pods 3 and 4 sit in the module underside |
 | Contact | Each 6.5 mm gold pad sits on a 6.6 x 1.5 mm self-adhesive foam disk in a 0.5 mm pocket, so it stands 1.0 mm proud (about 0.65 mm when worn). P-N spacing is 20 mm |
 | Sizes | One size. A wrist of 145 / 160 / 180 mm leaves a 17 / 32 / 52 mm gap between pods 1 and 8 on the volar-ulnar side, which the band bridges. The electrodes cover 89 / 81 / 72 % of the circumference |
@@ -53,8 +53,10 @@ that line.
   flex sets the pod positions and the webbing only presses them on. Because the 25 mm webbing
   covers the whole pad span (y -13.25..+13.25 is under 25 mm of fabric), each pod's load lands on
   all three pads even though the TPU shell is soft.
-- **Module-edge spine links** (pods 3 to 2 and 4 to 5) leave the module underside and lie on the
-  skin under the strap's sewn wrap and the loop clip. The strap is always outside the flex.
+- **Module-edge spine links** (pods 3 to 2 and 4 to 5) leave the paddle edge along the R42 seat
+  and hang free on a smooth tangent curve to pod 2/5. They pass under the loop clips and the
+  strap's wraps round the loops' far bars with at least 0.1 mm clearance and bend at R4.0 mm or
+  more. The strap is always outside the flex.
 - **The gap** between pod 1 and pod 8 (17-52 mm) lies on the volar-ulnar side, centred
   137-145 deg from the dorsal centre. The band bridges it, so from outside the band is
   continuous.
@@ -82,12 +84,12 @@ the dorsal centre.
 **Hidden strap attachment.** Each X end face has a slot 27.2 mm wide (along the arm), 3.35 mm deep
 and open underneath, through which the webbing enters the body. It looks like a watch band slot.
 - Inside each slot an **integral PA12 bar** (1.3 x 1.6 mm stadium section, rated for about 5 N of
-  strap tension) spans the slot, 0.7 mm in from the end face, so its outer face is flush and
-  hidden behind the strap. There are no pins, no metal, and nothing protrudes.
-- The slot is 3.35 mm deep and the bar sits high (z = -1.0). This keeps the 1.2 mm webbing's sewn
-  wrap clear of the pod 3/4 paddles and of the spine link passing beneath it.
-- The ulnar bar is the fixed end: the webbing is sewn round it once, through the open underside.
-- The radial bar carries the slim strap loop, which snaps on with a C-clip.
+  strap tension) spans the slot, 0.7 mm in from the end face, so its outer face is flush. There
+  are no pins, no metal, and nothing protrudes.
+- An identical slim loop snaps onto each bar. The webbing never wraps the bars themselves, so
+  nothing bulky sits under the module edge and the flex links pass beneath on a gentle curve.
+- Ulnar side: the webbing end is sewn round its loop's far bar (fixed).
+- Radial side: the webbing passes through its loop and folds back (closure).
 - The slot roofs double as the board's edge supports (top at the board bottom), together with
   four 2 mm standoffs. A 1 mm relief under the J2 battery pads leaves room for the wire joints.
 - The snap beads moved to the +/-Y walls, because the X walls now carry the slots.
@@ -163,15 +165,15 @@ for fit tests.
 
 **Chosen: one continuous 25 x 1.2 mm elastic woven webbing** with a loop-fabric face
 (off-the-shelf 1 in elastic hook-and-loop band; plain elastic webbing plus 110 mm of sew-on loop
-tape also works). Keep it at 1.2 mm or thinner: the sewn wrap round the ulnar bar must clear the
-spine link beneath it.
-- **Ulnar end:** fixed, sewn round the hidden ulnar bar.
+tape also works). Keep it at 1.2-1.4 mm: the wraps round the loops' far bars pass just over the
+spine links.
+- **Ulnar end:** fixed, sewn round the far bar of a slim loop snapped onto the hidden ulnar bar.
 - **Around the wrist:** the webbing runs through the six pod sleeves and across the gap.
-- **Radial end:** it passes through the slim printed loop on the radial side. The loop is
-  26.8 x 6.4 x 3.3 mm, snaps onto the hidden bar and has a 1.9 mm opening. The webbing turns
+- **Radial end:** it passes through the identical loop on the radial side. Each loop is
+  26.8 x 6.4 x 3.3 mm, snaps onto its hidden bar and has a 1.9 mm opening. The webbing turns
   round the loop's far bar and folds back over its own outer face, closing with a 25 x 40 mm hook
   tab.
-- The fold-back is 78 / 64 / 45 mm on 145 / 160 / 180 mm wrists. The whole band opens by peeling
+- The fold-back is 77 / 64 / 45 mm on 145 / 160 / 180 mm wrists. The whole band opens by peeling
   the tab and pulling the end out of the loop.
 
 Why 25 mm: it covers the whole pad span, so it presses all three pads directly, and the 32 mm
@@ -189,8 +191,8 @@ Alternatives considered:
 4. Shock-cord tensioner (Meta sEMG-RD style). The most uniform load, but cord and cord lock look
    technical.
 
-**Cut list (from `fit_results.json`):** webbing **234 mm**, including the 12 mm sewn loop at
-the ulnar bar and a 45 mm fold-back at 180 mm. Hook tape 25 x 40 mm.
+**Cut list (from `fit_results.json`):** 2 strap loops; webbing **224 mm**, including the 12 mm sewn loop round
+the ulnar loop's far bar and a 45 mm fold-back at 180 mm. Hook tape 25 x 40 mm.
 
 ## 6. Fit check (`fit.py` -> `fit_results.json`, `fit_145.step`, `fit_180.step`; `assembly.py` -> `fit_160.step`, `band_assembly.step`)
 
@@ -213,17 +215,18 @@ The wrist model is the rev A/B ellipse forearm (`extra/wrists/wrist.py`), now al
 | Gap centre from the dorsal centre (90 = ulnar apex, 180 = volar centre) | 137 deg | 141 deg | 145 deg |
 | Electrode coverage (pod 1 to pod 8 arc / circumference) | 88.6 % (128.4 mm) | 80.5 % (128.9 mm) | 71.8 % (129.3 mm) |
 | Pod collisions (shell-shell, shell-module, CAD mm3) | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 |
-| Spine bend radius, min free link (mm); links 2-3/4-5 at the module | 10.51; 14.41 | 11.81; 17.09 | 13.44; 21.0 |
+| Spine bend radius, min free link (mm); module-edge links (free, under the loops) | 10.51; 4.05 | 11.81; 4.89 | 13.44; 6.12 |
 | Module seat gap underside-skin: centre / edge (mm) | 0.61 / 1.63 | 0.73 / 1.3 | 0.85 / 0.97 |
 | Module tilt following the forearm taper | 2.72 deg | 3.0 deg | 3.37 deg |
-| Strap loop far bar clearance to skin (mm) | 1.52 | 1.47 | 1.41 |
-| Module / pod shells vs. skin (CAD mm3); strap inner face to skin, min (mm) | 0.0 / 0.0; 0.7 | 0.0 / 0.0; -0.41 | 0.0 / 0.0; -0.58 |
-| Strap vs. pods / module; loop vs. module / pods (CAD mm3) | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.256; 0.0 / 0.0 | 0.0 / 0.47; 0.0 / 0.0 |
-| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.35, 1.00, 0.86, 1.21, 0.75, 0.83 | 1.50, 0.87, 0.72, 1.22, 0.81, 0.89 | 1.53, 0.77, 0.61, 1.22, 0.94, 0.93 |
-| Strap load max / min | 1.8 | 2.08 | 2.52 |
-| Strap tension for 3 kPa on an average pad (N) | 0.37 | 0.38 | 0.42 |
-| Strap path ulnar bar -> loop (mm); fold-back (mm) | 128.9; 78.3 | 143.2; 64.0 | 162.2; 45.0 |
+| Strap loop far bar clearance to skin (mm) | 1.89 | 1.81 | 1.73 |
+| Module / pod shells vs. skin (CAD mm3); strap inner face to skin, min (mm) | 0.0 / 0.0; 0.7 | 0.0 / 0.0; -0.41 | 0.0 / 0.0; -0.57 |
+| Strap vs. pods / module; loop vs. module / pods (CAD mm3) | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 |
+| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.43, 0.86, 0.76, 1.28, 0.79, 0.88 | 1.59, 0.71, 0.60, 1.30, 0.86, 0.95 | 1.63, 0.58, 0.50, 1.30, 1.01, 0.99 |
+| Strap load max / min | 1.89 | 2.66 | 3.28 |
+| Strap tension for 3 kPa on an average pad (N) | 0.39 | 0.41 | 0.45 |
+| Strap path ulnar bar -> loop (mm); fold-back (mm) | 123.0; 77.3 | 136.8; 63.5 | 155.3; 45.0 |
 | Pads pressed into the rigid wrist model (taper; foam/skin take it, CAD mm3) | 11.505 | 12.222 | 13.344 |
+| Strap vs. flex links (CAD mm3) | 0.0 | 0.0 | 0.0 |
 
 Notes:
 - **Gap and the ulna.** The flex chain is 133 mm long, so the gap absorbs the 35 mm size range.
@@ -234,9 +237,8 @@ Notes:
   centre and 1.0-1.6 mm at the edges.
 - **Strap.** The webbing rests on the skin across the gap. Strap-vs-pod volume is measured with
   untilted pods: the 1-3 deg taper tilt of each pod is taken by a slight twist of the webbing.
-  The module-edge links drape onto the skin under the strap wrap. That gives a static S-bend of
-  R0.6-1.4 mm where they leave the module (the tightest on 145 mm wrists), which is below the
-  12x-thickness guideline for 2-layer flex (see open issues). The load spread across pods is 1.8-2.5:1. Pods 1 and 6 carry the most; pods 2 and 5 next to
+  The module-edge links hang free from the R42 seat to pods 2/5 and bend at R4.0-8.1 mm (the
+  tightest is the ulnar link on 145 mm wrists), well above the 1.2 mm guideline for 2-layer flex. The load spread across pods is 1.9-3.3:1. Pods 1 and 6 carry the most; pods 2 and 5 next to
   the module the least.
 
 ## 7. Interface to the board and flex
@@ -261,11 +263,11 @@ Notes:
 
 | Part | File | Process / material | Qty (fab) | Size mm | Volume cm3 |
 |---|---|---|---|---|---|
-| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 31.6 x 6.2 | 1.20 |
+| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 31.9 x 6.2 | 1.19 |
 | Module lid | `mech/rev_c/module_lid.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 11.0 | 1.85 |
 | Button cap | `mech/rev_c/button_cap.step` | MJF PA12, grey | 4 | 6.0 x 6.0 x 4.5 | 0.06 |
-| Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 27.7 x 9.1 x 3.8 | 0.23 |
-| Strap loop | `mech/rev_c/strap_loop.step` | MJF PA12, black | 4 | 26.8 x 6.4 x 3.3 | 0.16 |
+| Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 32.2 x 9.1 x 3.8 | 0.32 |
+| Strap loop | `mech/rev_c/strap_loop.step` | MJF PA12, black | 5 (2 per band) | 26.8 x 6.2 x 2.9 | 0.14 |
 | Charger puck | `mech/rev_c/charge_puck.step` | MJF PA12 or FDM PETG | 2 | 30.1 x 26.1 x 7.4 | 3.50 |
 
 The fab files are `mech/rev_c/<part>.fab.json` (kind 3dp; volume, area and size measured from the
@@ -296,9 +298,9 @@ from the fab files.
    3. Fold the tail (R1) into J1, fingers down, and close the actuator.
 4. Tape the cell, fit the light-pipe rod and the button cap, and snap the lid on.
 5. Fit the strap:
-   1. Sew the webbing end round the hidden ulnar bar through the underside opening.
+   1. Sew the webbing end round the far bar of one strap loop.
    2. Thread the webbing through the six pod sleeves.
-   3. Snap the strap loop onto the radial bar.
+   3. Snap the two loops onto the hidden bars (ulnar: the sewn one; radial: the empty one).
 6. To wear it, put the module on the back of the wrist about 25 mm above the crease. Pass the end
    through the loop, pull it just snug and press the hook tab down.
 7. To charge, take the band off and lay it module-down on the puck.
@@ -309,9 +311,6 @@ from the fab files.
 - **Antenna.** The plastic-only region (KiCad x 0..5.65, y 11.65..27) is kept free of metal by
   the module (integral bars, magnets at x 10.4/17.6). Pod 3's flex lies below it. Tune with the
   band worn.
-- **Module-edge spine links** bend at R0.6-1.4 mm (static) where the strap wrap presses them onto
-  the skin. Keep those first 3 mm of the links free of vias and of B-side copper, or accept the
-  static bend after a flex-cycling test.
 - **Pod load spread** is up to 3.3:1 on 180 mm wrists; pods 2 and 5 next to the module carry the
   least. A 0.5-1 mm shim in their sleeves evens it out.
 - **Strap bars are integral PA12** (about 5 N). If a bar ever cracks, drill 1.6 mm and use a

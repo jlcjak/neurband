@@ -1,14 +1,16 @@
 """strap.py - rev C strap: ONE continuous 25 mm elastic woven webbing (off the shelf, loop-fabric
 face, e.g. 1 in elastic hook-and-loop-compatible band) around the whole wrist, outside the pods.
 
-  ulnar end (A, -X): sewn around the integral bar hidden in the module's ulnar lug slot (fixed).
-  radial end (B, +X): passes through the slim printed loop (strap_loop) that snaps onto the
-      hidden radial bar, turns around the loop's far bar and folds back over its own outer face;
+  ulnar end (A, -X): sewn round the far bar of a slim printed loop (strap_loop) that snaps onto the
+      integral bar hidden in the module's ulnar slot (fixed end).
+  radial end (B, +X): passes through an identical loop on the hidden radial bar, turns around its
+      far bar and folds back over its own outer face;
       a 40 mm sew-on hook tab on the end closes on the loop-fabric face. Opens fully, adjusts
       continuously over 145-180 mm.
   The webbing slides in the pod sleeves, so its stretch never loads the flex (the flex keeps the
   18 mm pitch) and the tension equalises.
-Printed part: strap_loop (PA12). Bought: elastic webbing 25 x 1.2-1.5 mm, 25 mm sew-on hook tape.
+Printed part: strap_loop (PA12), 2 per band. The webbing never wraps the hidden bars, so the flex
+links leaving the module underside pass under the loops on a smooth curve (R >= 4 mm). Bought: elastic webbing 25 x 1.2-1.5 mm, 25 mm sew-on hook tape.
 The webbing itself is modelled as a smooth swept band (sweep_band) from the path in fit.py.
 Run: QT_QPA_PLATFORM=offscreen timeout 300 /usr/bin/freecad mech/rev_c/strap.py
 """
@@ -148,5 +150,5 @@ if not getattr(sys, 'neurband_lib', False):
     log(f"  strap_loop {bb.XLength:.1f} x {bb.YLength:.1f} x {bb.ZLength:.1f} mm, opening "
         f"{LOOP_REACH - FAR_U / 2 - CLIP_RO:.1f} x {STRAP_W + 1.8 - 2 * LINK_T:.1f} mm")
     R.save('strap_loop', [('strap_loop', loop, R.C_POD)], log)
-    R.fab('strap_loop', 'neurband rev C slim strap loop (snaps on the hidden radial bar)', loop, 4, 'mjf', 'pa12', 'black', log)
+    R.fab('strap_loop', 'neurband rev C slim strap loop (2 per band, snap on the hidden bars)', loop, 5, 'mjf', 'pa12', 'black', log)
     R.finish(log)

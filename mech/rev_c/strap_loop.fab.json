@@ -1,8 +1,8 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C slim strap loop (snaps on the hidden radial bar)",
+  "name": "neurband rev C slim strap loop (2 per band, snap on the hidden bars)",
   "source": "strap_loop.step",
-  "qty": 4,
+  "qty": 5,
   "options": {
     "process": "mjf",
     "material": "pa12",
