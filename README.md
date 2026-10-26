@@ -25,6 +25,7 @@ from first principles to record data good enough to train gesture models, and ch
 
 | | |
 |---|---|
+| ![](docs/media/turntable.gif) | ![](docs/media/hero_dark.jpg) |
 | ![](docs/media/hero_crop.jpg) | ![](docs/media/band_product.jpg) |
 | ![](docs/media/xray.jpg) | ![](docs/media/exploded.jpg) |
 | ![](docs/media/flatlay.jpg) | ![](docs/media/pods_inside.jpg) |
@@ -36,6 +37,7 @@ The boards as laid out (KiCad renders, main board top and bottom; 28.7 × 27 mm)
 |---|---|
 | ![](docs/media/board_top.png) | ![](docs/media/board_bottom.png) |
 
+A 1080 × 1350 turntable video is in [docs/media/turntable.mp4](docs/media/turntable.mp4).
 All images are rendered from the real CAD and KiCad files with `python3 render/make_renders.py` (Blender Cycles);
 see [docs/renders.md](docs/renders.md).
 

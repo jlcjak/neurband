@@ -11,6 +11,7 @@ current files.
 | `hero_arm.png` | 4:5, 1638 x 2048 | Hero shot. The hand rests on the table on gently curled fingertips, with the forearm raised. Seen from above on the thumb side, with the module facing the camera at a 3/4 angle. Shallow depth of field. |
 | `hero_arm_wide.png` | 16:9, 2048 x 1152 | Low side view of the same pose, with the hand leading into the frame and contact shadows under the fingertips. |
 | `hero_crop.png` | 4:5 | Tight 3/4 forearm crop. The module fills the frame. |
+| `hero_dark.png`, `hero_dark_wide.png` | 4:5, 16:9 | Moody variant of the hero pose. Deep charcoal sweep with a faint gradient, a warm key, and cool rims that are light-linked to the arm and band only, so the backdrop stays dark. f/2.8. |
 | `arm_volar.png` | 4:5 | Palm up, held above the backdrop. Shows the strap, buckle side and pods on the volar wrist. |
 | `flatlay.png` | 16:9 | Top-down flat-lay of the band laid open, skin side up: all 8 pods with their gold pads, and the module underside with the charge window. |
 | `pods_inside.png` | 4:5 | Close-up into the closed band: gold pads on the pods and under the module. |
@@ -21,6 +22,7 @@ current files.
 | `pcb_top.png` | 16:9 | Main board top macro: black mask, ENIG, the KiCad 3D models. |
 | `pcb_pair.png` | 16:9 | Main board top and bottom side by side. The bottom shows the VCHG/GND charge pads and the SWD pads. |
 | `flex_detail.png` | 16:9 | Electrode flex close-up, skin side up: ENIG pads on amber polyimide. |
+| `turntable.mp4`, `turntable.gif` | 1080 x 1350, GIF 576 x 720 | 360-degree turntable in the `band_product` look. 4.5 s at 30 fps (135 frames) with a cosine ease that loops seamlessly. The MP4 is H.264, yuv420p, CRF 18 (about 1 MB); the GIF is 15 fps with a 96-colour palette (about 4 MB). |
 
 The look is meant to be restrained:
 - warm-grey, deep-charcoal or slate sweeps;
@@ -37,7 +39,13 @@ There are no text overlays, flares or glow effects.
 python3 render/make_renders.py            # final: 2048 px long side, 768 spp + OptiX denoise (~15 min)
 python3 render/make_renders.py --quick    # previews: 40 % size, 64 spp (~1 min)
 python3 render/make_renders.py --shots xray,pcb_top --no-export --save-blend
+python3 render/make_renders.py --video          # stills plus the turntable MP4 and GIF (about 5 min extra)
+python3 render/make_renders.py --video-only     # turntable only
 ```
+
+The turntable frames are split across the GPUs (even and odd frames) and written to
+`render/build/turntable/`. ffmpeg then encodes `render/out/turntable.mp4` (libx264) and
+`turntable.gif` (palettegen and paletteuse).
 
 Every run does the following:
 

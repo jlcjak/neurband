@@ -1080,19 +1080,32 @@ def shot_hero_arm_wide(q):
 
 
 def shot_hero_dark(q, wide=False):
-    """moody variant: deep charcoal sweep, warm key, cool rim, shallow depth of field."""
-    COOL = (0.70, 0.82, 1.0)
+    """moody variant: deep charcoal sweep, warm key, cool rims from behind the subject, shallow DOF."""
+    COOL = (0.68, 0.80, 1.0)
+    az = 118 if wide else 62
+    back = Vector((-math.sin(math.radians(az)), math.cos(math.radians(az)), 0))   # away from the camera
+    side = Vector((back.y, -back.x, 0))
+    kw = dict(pitch=8, curl=30, fstop=2.8, yaw_sweep=180 + az, tgt_off=(0, -0.05, -0.02),
+              backdrop=(0.008, 0.008, 0.009))
+    lights = dict(key=3.6, fill=0.12, rim=0.0, top=0.3, key_size=0.4, rim_color=COOL,
+                  key_dir=(0.15, -0.55, 0.5) if wide else (-0.45, -0.3, 0.5),
+                  rim_dir=tuple(back * 0.45 + side * 0.2 + Vector((0, 0, 0.22))))
     if wide:
-        arm_shot(q, az=118, el=22, dist=0.62, lens=85, pitch=8, curl=30, fstop=2.8, yaw_sweep=180 + 118,
-                 tgt_off=(0, -0.05, -0.02), backdrop=(0.016, 0.016, 0.017),
-                 lights=dict(key=5, fill=0.15, rim=9, top=0.4, key_dir=(0.15, -0.55, 0.5), key_size=0.4,
-                             rim_dir=(-0.35, 0.45, 0.25), rim_color=COOL))
+        arm, band, c = arm_shot(q, az=az, el=22, dist=0.62, lens=85, lights=lights, **kw)
     else:
-        arm_shot(q, az=62, el=42, dist=0.56, pitch=8, curl=30, fstop=2.8, yaw_sweep=180 + 62,
-                 tgt_off=(0, -0.05, -0.02), backdrop=(0.016, 0.016, 0.017),
-                 lights=dict(key=5, fill=0.15, rim=9, top=0.4, key_dir=(-0.45, -0.3, 0.5), key_size=0.4,
-                             rim_dir=(0.1, 0.55, 0.3), rim_color=COOL))
-    area('rim_cool2', Vector((-0.4, 0.5, 0.2)), Vector((0, 0, 0.02)), size=0.08, size_y=0.5, energy=4, color=COOL)
+        arm, band, c = arm_shot(q, az=az, el=42, dist=0.56, lights=lights, **kw)
+    # cool rims: tight beams (spread-limited) so they edge the arm and band without lighting the sweep
+    # cool rims from behind, light-linked to the arm and band only so the charcoal sweep stays dark
+    recv = bpy.data.collections.new('rim_receivers')
+    for o in [arm] + list(band.values()):
+        recv.objects.link(o)
+    for name, pos, e in (('rim_cool', c + back * 0.40 + side * 0.15 + Vector((0, 0, 0.16)), 6.0),
+                         ('rim_cool2', c + back * 0.40 - side * 0.25 + Vector((0, 0, 0.08)), 3.2)):
+        L = area(name, pos, c, size=0.08, size_y=0.45, energy=e, color=COOL)
+        L.light_linking.receiver_collection = recv
+    # faint gradient on the sweep behind the subject (not linked: it only lights the backdrop)
+    area('wallglow', c + back * 0.35 + Vector((0, 0, 0.35)), c + back * 1.1 + Vector((0, 0, 0.15)), size=0.7,
+         energy=2.2, color=(0.85, 0.9, 1.0))
 
 
 def shot_arm_volar(q):
