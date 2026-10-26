@@ -14,5 +14,6 @@
     "size_x_mm": 34.01,
     "size_y_mm": 7.01,
     "size_z_mm": 4.26
-  }
+  },
+  "order": false
 }

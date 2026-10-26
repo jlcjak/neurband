@@ -1033,12 +1033,12 @@ def orbit(target, az, el, dist):
 
 
 def studio(c, key=6.0, fill=1.5, rim=4.0, top=0.0, key_dir=(-0.45, -0.35, 0.6), fill_dir=(0.6, -0.5, 0.25),
-           rim_dir=(0.25, 0.55, 0.35), key_size=0.6, warm=True):
+           rim_dir=(0.25, 0.55, 0.35), key_size=0.6, warm=True, rim_color=(1.0, 0.98, 0.96)):
     c = Vector(c)
     kc = (1.0, 0.92, 0.82) if warm else (1, 1, 1)
     area('key', c + Vector(key_dir), c, size=key_size, energy=key, color=kc)
     area('fill', c + Vector(fill_dir), c, size=1.0, energy=fill, color=(0.94, 0.97, 1.0))
-    area('rim', c + Vector(rim_dir), c, size=0.12, size_y=0.6, energy=rim, color=(1.0, 0.98, 0.96))
+    area('rim', c + Vector(rim_dir), c, size=0.12, size_y=0.6, energy=rim, color=rim_color)
     if top:
         area('top', c + Vector((0, 0, 0.7)), c, size=0.9, energy=top)
 
@@ -1079,6 +1079,22 @@ def shot_hero_arm_wide(q):
              lights=dict(key=7, fill=1.2, rim=6, top=1.5, key_dir=(0.1, -0.6, 0.6)))
 
 
+def shot_hero_dark(q, wide=False):
+    """moody variant: deep charcoal sweep, warm key, cool rim, shallow depth of field."""
+    COOL = (0.70, 0.82, 1.0)
+    if wide:
+        arm_shot(q, az=118, el=22, dist=0.62, lens=85, pitch=8, curl=30, fstop=2.8, yaw_sweep=180 + 118,
+                 tgt_off=(0, -0.05, -0.02), backdrop=(0.016, 0.016, 0.017),
+                 lights=dict(key=5, fill=0.15, rim=9, top=0.4, key_dir=(0.15, -0.55, 0.5), key_size=0.4,
+                             rim_dir=(-0.35, 0.45, 0.25), rim_color=COOL))
+    else:
+        arm_shot(q, az=62, el=42, dist=0.56, pitch=8, curl=30, fstop=2.8, yaw_sweep=180 + 62,
+                 tgt_off=(0, -0.05, -0.02), backdrop=(0.016, 0.016, 0.017),
+                 lights=dict(key=5, fill=0.15, rim=9, top=0.4, key_dir=(-0.45, -0.3, 0.5), key_size=0.4,
+                             rim_dir=(0.1, 0.55, 0.3), rim_color=COOL))
+    area('rim_cool2', Vector((-0.4, 0.5, 0.2)), Vector((0, 0, 0.02)), size=0.08, size_y=0.5, energy=4, color=COOL)
+
+
 def shot_arm_volar(q):
     # palm up, held above the backdrop: buckle, strap and pods on the volar side
     arm, band, c = arm_shot(q, az=-105, el=42, dist=0.44, arm_roll=180, pitch=4, curl=40, fstop=4.0, yaw_sweep=180 - 105,
@@ -1111,7 +1127,7 @@ def shot_band_product(q):
     tgt = rc + Vector((0, 0, -0.012))
     camera(orbit(tgt, 38, 16, 0.31), tgt, lens=85, fstop=5.6, focus=c)
     sweep(color=(0.018, 0.018, 0.018), depth=0.9, height=1.0, radius=0.35, origin=(0, BAND_Y, 0), yaw=math.radians(180 + 38))
-    # narrow warm key (spread-limited so it pools on the band and pedestal), rims to cut the silhouette
+    # small warm key, two thin rims to cut the silhouette out of the charcoal
     area('key', c + Vector((-0.30, -0.25, 0.40)), c, size=0.35, energy=3.0, color=(1.0, 0.92, 0.82))
     area('fill', c + Vector((0.5, -0.4, 0.2)), c, size=1.0, energy=0.6, color=(0.94, 0.97, 1.0))
     area('rim', c + Vector((0.3, 0.5, 0.3)), c, size=0.06, size_y=0.3, energy=2.5, color=(1.0, 0.98, 0.96))
@@ -1467,6 +1483,8 @@ SHOTS = {
     'hero_arm': (shot_hero_arm, {}, (1638, 2048)),
     'hero_arm_wide': (shot_hero_arm_wide, {}, (2048, 1152)),
     'hero_crop': (shot_hero_crop, {}, (1638, 2048)),
+    'hero_dark': (shot_hero_dark, {}, (1638, 2048)),
+    'hero_dark_wide': (shot_hero_dark, {'wide': True}, (2048, 1152)),
     'flatlay': (shot_flatlay, {}, (2048, 1152)),
     'pods_inside': (shot_pods_inside, {}, (1638, 2048)),
     'arm_volar': (shot_arm_volar, {}, (1638, 2048)),
@@ -1480,6 +1498,37 @@ SHOTS = {
 }
 
 
+TT_FRAMES = 135          # 4.5 s at 30 fps
+
+
+def turntable(frames, quick, samples=0):
+    """band_product look, the band spins once about the pedestal axis with a cosine ease (seamless loop)."""
+    reset()
+    MATS.clear()
+    setup_render(1080, 1350, samples or (32 if quick else 256), quick)
+    bpy.context.scene.render.resolution_percentage = 50 if quick else 100
+    bpy.context.scene.render.use_persistent_data = True
+    shot_band_product(quick)
+    cam = bpy.context.scene.camera
+    cam.data.dof.aperture_fstop = 11.0                    # keep the whole ring sharp while it turns
+    rig = bpy.data.objects['rig']
+    piv = link(bpy.data.objects.new('turntable', None))
+    piv.location = (0, BAND_Y, 0)
+    bpy.context.view_layer.update()
+    rig.parent = piv
+    rig.matrix_parent_inverse = piv.matrix_world.inverted()
+    out = os.path.join(BUILD, 'turntable')
+    os.makedirs(out, exist_ok=True)
+    for i in frames:
+        t = i / TT_FRAMES
+        piv.rotation_euler.z = 2 * math.pi * (0.5 - 0.5 * math.cos(math.pi * t))
+        p = os.path.join(out, 'f_%04d.png' % i)
+        bpy.context.scene.render.filepath = p
+        bpy.ops.render.render(write_still=True)
+        vignette(p, VIGNETTE['amount'])
+        log('turntable frame', i)
+
+
 def main():
     argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
     ap = argparse.ArgumentParser()
@@ -1487,8 +1536,13 @@ def main():
     ap.add_argument('--quick', action='store_true')
     ap.add_argument('--samples', type=int, default=0)
     ap.add_argument('--save-blend', action='store_true')
+    ap.add_argument('--turntable', default='', help='frames start:stop:step (exclusive stop)')
     a = ap.parse_args(argv)
     os.makedirs(OUT, exist_ok=True)
+    if a.turntable:
+        st, sp, sd = (int(x) for x in a.turntable.split(':'))
+        turntable(range(st, sp, sd), a.quick, a.samples)
+        return
     for name in a.shots.split(','):
         fn, kw, (w, h) = SHOTS[name]
         reset()

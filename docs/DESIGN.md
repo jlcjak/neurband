@@ -1,3 +1,6 @@
+> **This is the rev A design record** (16 channels, ESP32-S3 Wi-Fi, 54 × 34 mm board), kept for history.
+> The current design is **rev C**: see [rev_c/README.md](rev_c/README.md) and the top-level README.
+
 # neurband — design notes (iteration 1)
 
 A minimal, first-principles copy of Meta's surface-EMG wristband: the sEMG-RD research
