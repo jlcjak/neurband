@@ -1,13 +1,13 @@
 # Electrode flex layout — rev B
 
-Source: `archive/neurband_electrodes_revB/gen_flex_pcb.py`. This is a passive, two-layer **polyimide flex**, not a rigid PCB. Main-board connector: **Hirose FH26W-39S-0.3SHW(60)** on the main board's bottom, skin-facing side. The old 40-contact, 0.5 mm interface is not compatible.
+Source: `.archive/neurband_electrodes_revB/gen_flex_pcb.py`. This is a passive, two-layer **polyimide flex**, not a rigid PCB. Main-board connector: **Hirose FH26W-39S-0.3SHW(60)** on the main board's bottom, skin-facing side. The old 40-contact, 0.5 mm interface is not compatible.
 
 ## Regeneration
 
 ```sh
-uv venv archive/neurband_electrodes_revB/.venv
-uv pip install --python archive/neurband_electrodes_revB/.venv/bin/python -r archive/neurband_electrodes_revB/requirements.txt
-archive/neurband_electrodes_revB/.venv/bin/python archive/neurband_electrodes_revB/gen_flex_pcb.py --verify --render
+uv venv .archive/neurband_electrodes_revB/.venv
+uv pip install --python .archive/neurband_electrodes_revB/.venv/bin/python -r .archive/neurband_electrodes_revB/requirements.txt
+.archive/neurband_electrodes_revB/.venv/bin/python .archive/neurband_electrodes_revB/gen_flex_pcb.py --verify --render
 ```
 
 Python 3.13+, pinned NumPy, **pyclipper 1.4.0**, and the official KiCad Library Tools are in `requirements.txt`. KiCad CLI 10.99.0-bp.4 refills/saves the boards and checks DRC. `rsvg-convert` converts the layer plots to PNG. `--sizes M` selects one size. `TAIL_LENGTH`, `STIFFENER_LENGTH`, and `PITCHES` are the geometry parameters.
@@ -105,7 +105,7 @@ The fabrication JSON's 0.4 mm thickness option remains a quoting proxy. Order as
 
 `--verify` rejects every DRC violation (warnings included), unconnected item and schematic-parity discrepancy. It also measures actual filled GND copper in a 6 × 30 mm review window at every pod and rejects any window below 10 mm². DRC alone can miss a shield island deleted by the zone filler. This is a gross-loss check, not an electromagnetic shielding specification.
 
-Reports and measurements are under `archive/neurband_electrodes_revB/build/`. Top/bottom copper PNGs for all four sizes, plus M's covered skin/outer 3D views, are under `renders/`. The 3D viewer's green is a visualization, not a colour/material prescription. Current native files, projects, custom rules, `neurband.pretty`, pinned dependencies and generator are all in the electrode-board folder. The clean previous 40-contact checkpoint is archived under `build/rev-a-16mm/`, not used by rev B.
+Reports and measurements are under `.archive/neurband_electrodes_revB/build/`. Top/bottom copper PNGs for all four sizes, plus M's covered skin/outer 3D views, are under `renders/`. The 3D viewer's green is a visualization, not a colour/material prescription. Current native files, projects, custom rules, `neurband.pretty`, pinned dependencies and generator are all in the electrode-board folder. The clean previous 40-contact checkpoint is archived under `build/rev-a-16mm/`, not used by rev B.
 
 ENIG is suitable for prototype evaluation but its thin gold wears. Confirm skin compatibility, hard-gold alternatives, cleaning and optional dome/pogo attachment before prolonged use. This is a passive high-impedance interconnect, not Meta's per-pod amplified architecture: bench-test noise and motion artefacts.
 

@@ -6,4 +6,4 @@ Everything current is in [`rev_c/`](rev_c/): one FreeCAD script per part (`modul
 
 Design notes: [docs/mech/mechanical_c.md](../docs/mech/mechanical_c.md). Build guide:
 [docs/build/assembly.md](../docs/build/assembly.md). The rev A/B mechanics are in
-[archive/mech_revAB](../archive/mech_revAB/).
+[.archive/mech_revAB](../.archive/mech_revAB/).

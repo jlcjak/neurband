@@ -5,7 +5,7 @@ small watch face (31.9 × 34.3 × 9.9 mm) on a band of 8 electrode pods. It keep
 research band (bipolar gold electrodes 20 mm apart along the forearm, a 24-bit front end with µV-level noise,
 2 kHz data) and drops everything that only costs money.
 
-Rev A (16 channels, Wi-Fi, 54 × 34 mm board) and rev B (compact 16-channel, unfinished) are in `archive/`;
+Rev A (16 channels, Wi-Fi, 54 × 34 mm board) and rev B (compact 16-channel, unfinished) are in `.archive/`;
 their reasoning is in [`../DESIGN.md`](../DESIGN.md).
 
 ## Block diagram

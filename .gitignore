@@ -31,18 +31,18 @@ mech/**/logs/
 # regenerable CAD outputs (scripts are the source; run the .py to rebuild)
 *.FCStd
 mech/rev_c/fit_*.step
-archive/mech_revAB/fit_*.step
-archive/mech_revAB/band_*.step
-archive/mech_revAB/housing_assy.step
-archive/mech_revAB/main_board.step
-archive/mech_revAB/renders/
-archive/mech_revAB/logs/
+.archive/mech_revAB/fit_*.step
+.archive/mech_revAB/band_*.step
+.archive/mech_revAB/housing_assy.step
+.archive/mech_revAB/main_board.step
+.archive/mech_revAB/renders/
+.archive/mech_revAB/logs/
 extra/wrists/*.step
 # local-only backups (working copies, layout build backups): never published
-archive/local/
+.archive/local/
 # bulky intermediate layout artefacts
-archive/**/renders/layers/
-archive/**/build/
+.archive/**/renders/layers/
+.archive/**/build/
 # tool state / generated
 .backplane/
 .backplane.json

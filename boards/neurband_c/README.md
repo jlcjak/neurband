@@ -12,4 +12,4 @@
 | `layout/*.md`, `layout/preorder_release.json`, `layout/XUNPU_*` | Evidence: RF geometry, J1 connector review, release checks |
 
 Layout notes: [docs/layout/main_c_layout.md](../../docs/layout/main_c_layout.md). The scripts used while
-laying it out are in [archive/neurband_c_layout_scripts](../../archive/neurband_c_layout_scripts/).
+laying it out are in [.archive/neurband_c_layout_scripts](../../.archive/neurband_c_layout_scripts/).

@@ -1,15 +1,15 @@
 # neurband mechanical design (first iteration)
 
 Mechanical CAD for the 16-channel bipolar sEMG wristband. All parts are FreeCAD Python scripts in
-`archive/mech_revAB/` (wrist models in `extra/wrists/`). Each script has its dimensions as named parameters at
+`.archive/mech_revAB/` (wrist models in `extra/wrists/`). Each script has its dimensions as named parameters at
 the top, uses millimetres with Z up and the front facing -Y, checks `shape.isValid()`, and writes
-`<part>.FCStd`, a coloured `<part>.step` and a log in `archive/mech_revAB/logs/`.
+`<part>.FCStd`, a coloured `<part>.step` and a log in `.archive/mech_revAB/logs/`.
 
 ```
 QT_QPA_PLATFORM=offscreen timeout 300 /usr/bin/freecad mech/<part>.py      # coloured STEP
 ```
 Build order: `extra/wrists/wrist.py`, `pod_shell.py`, `electrode_flex.py`, `housing.py`, `strap.py`,
-`fit_band.py`. The fit numbers below are written to `archive/mech_revAB/fit_results.json`.
+`fit_band.py`. The fit numbers below are written to `.archive/mech_revAB/fit_results.json`.
 
 ## 1. Concept
 
@@ -77,16 +77,16 @@ circumferences. The open gap is what makes our layout work.
 
 | Part | File | Material / process | Qty (fab file) | Notes |
 |---|---|---|---|---|
-| Module housing base | `archive/mech_revAB/housing_base.step` | PA12, MJF, black (SLA tough resin also OK) | 2 | body 63.6 (across the wrist, x -21.4..+42.2) x 39.0 x 10.0 mm, walls 1.6 mm, floor 1.4 mm. 38 mm R44 seat keel with the strap lugs under its ends. Two M2 bosses for H1/H2, 4 support bosses, tail slot at the distal wall. No wall openings (the cell is charged outside the module) |
-| Module housing lid | `archive/mech_revAB/housing_lid.step` | PA12, MJF, black | 2 | snap-off lid with a lip and beads (removed for charging and for access to the programming pads and J2), 2 posts clamp the J1-end corners, 2.4 mm pin hole over the BOOT button |
-| Pod shell | `archive/mech_revAB/pod_shell.step` | PA12, MJF, grey | 36 (2 bands + 4 spare) | 7.0 x 34.0 x 4.25 mm, no end walls (the tail leaves at the shell end; the flex is located with a jig), electrode reliefs, snap channel for 20 mm webbing. The same part is used for every size |
-| Strap ring | `archive/mech_revAB/strap_ring.step` | PA12, MJF, black | 4 | 21.5 x 3.2 mm opening |
-| Strap keeper | `archive/mech_revAB/strap_keeper.step` | TPU 95A, FDM, black | 4 | holds the folded-back tail |
-| Electrode flex | `archive/mech_revAB/electrode_flex_<S..XL>.step` | polyimide 0.2 mm, ENIG/gold domes | - | **visual only**; the real flex lives in `boards/` |
-| Strap webbing | `archive/mech_revAB/strap_<S..XL>.step` (visual) | 20 mm elastic nylon webbing about 1.3 mm thick, bought | 1 short + 1 long per band | cut lengths in the table below |
+| Module housing base | `.archive/mech_revAB/housing_base.step` | PA12, MJF, black (SLA tough resin also OK) | 2 | body 63.6 (across the wrist, x -21.4..+42.2) x 39.0 x 10.0 mm, walls 1.6 mm, floor 1.4 mm. 38 mm R44 seat keel with the strap lugs under its ends. Two M2 bosses for H1/H2, 4 support bosses, tail slot at the distal wall. No wall openings (the cell is charged outside the module) |
+| Module housing lid | `.archive/mech_revAB/housing_lid.step` | PA12, MJF, black | 2 | snap-off lid with a lip and beads (removed for charging and for access to the programming pads and J2), 2 posts clamp the J1-end corners, 2.4 mm pin hole over the BOOT button |
+| Pod shell | `.archive/mech_revAB/pod_shell.step` | PA12, MJF, grey | 36 (2 bands + 4 spare) | 7.0 x 34.0 x 4.25 mm, no end walls (the tail leaves at the shell end; the flex is located with a jig), electrode reliefs, snap channel for 20 mm webbing. The same part is used for every size |
+| Strap ring | `.archive/mech_revAB/strap_ring.step` | PA12, MJF, black | 4 | 21.5 x 3.2 mm opening |
+| Strap keeper | `.archive/mech_revAB/strap_keeper.step` | TPU 95A, FDM, black | 4 | holds the folded-back tail |
+| Electrode flex | `.archive/mech_revAB/electrode_flex_<S..XL>.step` | polyimide 0.2 mm, ENIG/gold domes | - | **visual only**; the real flex lives in `boards/` |
+| Strap webbing | `.archive/mech_revAB/strap_<S..XL>.step` (visual) | 20 mm elastic nylon webbing about 1.3 mm thick, bought | 1 short + 1 long per band | cut lengths in the table below |
 | Hook-and-loop | - | 20 mm sew-on hook 40 mm + loop 60 mm, bought | per band | hook on the fold-back, loop on the outer face of the long strap |
 | Screws | - | 2x M2 x 6 **nylon** (next to the antenna) | 2 per band | H1/H2 into the base bosses |
-| Main board | `archive/mech_revAB/main_board.step` (kicad-cli export, components included) | from `archive/neurband_main_revA` | - | reference only |
+| Main board | `.archive/mech_revAB/main_board.step` (kicad-cli export, components included) | from `.archive/neurband_main_revA` | - | reference only |
 | Adhesive | - | thin VHB or flexible epoxy | - | flex pods into the shells; shells of pods 4 and 5 onto the housing seat |
 | Cell | - | LiPo 402030 with PCM, JST-SH lead | 1 | 0.4 mm insulating foam under it, on the AFE half of the board |
 
@@ -165,7 +165,7 @@ Wrist model: an elliptical forearm segment from the crease to 70 mm proximal. Wi
 at the crease, becoming rounder toward the elbow (1.29 at the band, 1.18 at 70 mm), and the
 circumference grows 9 % over that length. The model also has a palm block, a finger block and a
 thumb hint. Sizes are given as the circumference at the band. The assemblies are
-`archive/mech_revAB/fit_<size>.step`, and `archive/mech_revAB/band_<S,M,XL>.step` is the same assembly without the wrist.
+`.archive/mech_revAB/fit_<size>.step`, and `.archive/mech_revAB/band_<S,M,XL>.step` is the same assembly without the wrist.
 
 | | S | M | L | XL |
 |---|---|---|---|---|

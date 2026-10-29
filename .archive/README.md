@@ -1,4 +1,6 @@
-# Archive
+# Archive (`.archive/`)
+
+The folder name starts with a dot so Backplane's project and part lists skip it; git and GitHub still show it.
 
 Older work, kept for reference. Nothing here is current or ordered (every fab file here has
 `"order": false`).
