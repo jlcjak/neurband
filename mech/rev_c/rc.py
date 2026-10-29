@@ -33,22 +33,40 @@ TAIL_W = 10.5           # 20 fingers x 0.5 mm, (N+1)*0.5
 TAIL_T = 0.3            # at the stiffened end (connector wants 0.3)
 FLEX_T = 0.2
 
-# ---------------- compliant contact ----------------
-FOAM_D = 6.0            # self-adhesive PU/EVA foam disk behind each 6.5 mm pad (6 mm punch)
-FOAM_T = 1.5            # free thickness
-FOAM_POCKET_D = 6.2     # 1.0+ mm walls to the pod sides and to the module's strap slots
-FOAM_POCKET_H = 0.5     # pocket depth in the shell face -> pad stands FOAM_T - FOAM_POCKET_H proud
+# ---------------- compliant contact (bought: pre-cut round double-sided foam dots) ----------------
+FOAM_D = 6.0            # pre-cut double-sided foam dot, nominal diameter (sourcing: 6 mm dots)
+FOAM_T = 2.0            # dot thickness (sourcing: pre-cut 6 x 2.0 mm double-sided EVA dots); pocket depth follows
+PAD_PROUD = 1.0         # target: pad stands 1.0 mm proud of the shell face when free (~0.65 worn)
+FOAM_POCKET_D = FOAM_D + 0.4                # dot diameter tolerance +/-0.2
+FOAM_POCKET_H = max(FOAM_T - PAD_PROUD, 0.0)  # 1.0 for the 2.0 mm dots (0.5 for 1.5, 0 for 1.0)
+MODULE_POCKET_H = min(FOAM_POCKET_H, 0.6)   # module pods 3/4 + root: floor 1.1 + 0.6 gap to the board leave 0.6 (1.4 proud with 2.0 dots)
 FOAM_PROUD = FOAM_T - FOAM_POCKET_H         # 1.0 mm free, ~0.6-0.7 mm at 2-5 kPa
 STACK = FOAM_PROUD + FLEX_T                  # shell face above the skin at a pad (free foam)
 STACK_LOADED = 0.65 + FLEX_T                 # nominal worn (foam ~35 % compressed)
 
-# ---------------- strap ----------------
-STRAP_W = 22.0          # one continuous 22 mm (7/8 in) elastic woven webbing (slot walls >= 1.0 at R3.4 corners)
-STRAP_T = 1.2           # elastic woven webbing 1.2 mm (thin: the sewn wrap must clear the flex link)
-CHANNEL_W = STRAP_W + 0.4
-CHANNEL_H = 1.4         # clear sleeve height (STRAP_T + 0.2)
-BASE_T = 1.5            # pod shell face -> sleeve floor (0.5 foam pocket + 1.0 floor)
+# ---------------- strap (bought: plain woven elastic webbing) ----------------
+STRAP_W = 20.0          # webbing width (sourcing: 20.0 +/-0.5 mm polyester elastic); sleeves, slides, slots follow
+STRAP_W_TOL = 0.6       # clearance over the nominal width in the pod sleeves and the slide (20.6)
+STRAP_T = 1.5           # webbing thickness, sourced nominal: the fit model uses this
+STRAP_T_MAX = 1.8       # design maximum (sourcing allows 1.2-1.8): every slot and sleeve clears this
+STRAP_T_MIN = 1.2
+CHANNEL_W = STRAP_W + STRAP_W_TOL
+CHANNEL_H = STRAP_T_MAX + 0.1   # clear sleeve height (1.9)
+BASE_T = FOAM_POCKET_H + 1.0  # pod shell face -> sleeve floor (foam pocket + 1.0 floor)
 LIP_T = 1.0             # sleeve rims (>= 1.0 for FDM TPU)
+
+# ---------------- pogo pins (bought; charger clip and SWD jig) ----------------
+POGO_D = 0.68           # P50 barrel diameter (sourcing); plunger 0.48
+POGO_L = 16.2           # overall length, plunger extended (sourcing 16.0-16.35)
+POGO_TRAVEL = 2.6       # full plunger travel
+POGO_WORK = 1.3         # working compression (half travel)
+POGO_F_WORK = 0.74      # N per pin (~75 g, sourcing; taken as the force at the working point)
+POGO_HOLE = 0.72        # printed hole for a glued pin (sourcing: 0.70-0.75; a drop of CA from below)
+POGO_TIP_FREE = 1.7 + POGO_WORK   # charger: tip above the clip's contact face at rest (window depth + working)
+
+# ---------------- cell (bought; sourcing) ----------------
+CELL_MAX = (12.0, 25.0, 4.0)    # 401223-class protected cell, incl. board and tabs (pocket 12.4 x 25.5 x 4.2)
+CELL_FALLBACK = (11.0, 21.0, 4.0)   # 401120-class: held by the cell_spacer
 
 # ---------------- wrist sizes for the fit check ----------------
 SIZES = (145.0, 160.0, 180.0)
@@ -137,7 +155,7 @@ def fillet_edges(shape, r, pick, log=None, tag=''):
     return shape
 
 
-def flex_pod(lift=FOAM_PROUD):
+def flex_pod(lift=FOAM_PROUD, pocket=None):
     """Flex pod (visual) in the pod-local frame with the pads lifted `lift` by the foam
     (FOAM_PROUD free, STACK_LOADED - FLEX_T worn): returns (polyimide, gold pads, foam disks).
     The flex between pads bridges at pad height and ramps down to the face at the pod ends."""
@@ -155,6 +173,7 @@ def flex_pod(lift=FOAM_PROUD):
     for y in PAD_Y:
         gold.append(Part.makeCylinder(PAD_D / 2, 0.04, V(0, y, -lift - FLEX_T - 0.04)))
     foam = []
+    pocket = FOAM_POCKET_H if pocket is None else pocket
     for y in PAD_Y:
-        foam.append(Part.makeCylinder(FOAM_D / 2, lift + FOAM_POCKET_H, V(0, y, -lift)))
+        foam.append(Part.makeCylinder(FOAM_D / 2, lift + pocket, V(0, y, -lift)))
     return poly, gold, foam

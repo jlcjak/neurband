@@ -86,21 +86,24 @@ BAT_W, BAT_L, BAT_T = 12.0, 25.0, 4.0          # 401225, 25 along the arm
 BAT_X0 = -3.5                                  # KiCad x 10.5..22.5: 4.5 mm from the antenna strip. The board's CELL outline (x 11..23) is the +X limit: there the cell touches the proximal +X snap riser and has 0.05 mm to the lid
 BAT_Y0 = Y_B0 + J1_D + 0.15                    # just proximal of J1
 COMP_UNDER_BAT = 1.3                           # TQFP-64 1.2 mm is the tallest part under it
+CELL_POCKET = (12.4, 25.5, 4.2)                # 401223-class cell (<= 12 x 25 x 4 incl. board) + clearance
+CELL_X0 = BAT_X0 - (CELL_POCKET[0] - BAT_W) / 2  # cage inner face on the -X side
+CELL_RIB_Z = 6.2                               # cage ribs come down to here (flank the cell's top 2 mm)
 BAT_TAPE = 0.15
 BAT_SWELL = 0.3
 # ---------------- lid features ----------------
-LP_D, LP_TUBE = 1.6, 3.6                       # light pipe (1.5 mm PMMA rod or clear resin), 1.0 mm tube wall
+LP_D, LP_TUBE = 1.6, 3.6                       # open light hole over D1 (no rod): 1.6 mm hole, guide tube with 1.0 mm wall
 BTN_HOLE_D, BTN_GAP_R = 4.6, 0.15               # flush button cap (4.3 mm) in a 4.6 mm opening (0.15 hairline: MJF/FDM tolerance)
 BTN_FLANGE_D, BTN_FLANGE_T = 6.0, 1.0
 BTN_STEM_D, BTN_GAP = 2.0, 0.15
-NOTCH_W = 3.0
+NOTCH_W, NOTCH_H = 3.0, 1.2
 # ---------------- underside features ----------------
 CHG_WIN = (3.0, 6.0)                           # stadium window (X, Y) to the pads
 CHG_CB = None                                  # (no counterbore: the magnets align the charger)
 CHG_Y = sum(CHG_PADS_Y) / 2
-MAG_D, MAG_T, MAG_SKIN = 3.1, 1.05, 0.35
-MAG_X = 2.1                                    # two through-hole magnets side by side, proximal of the counterbore
-MAG_DY = 6.55                                  # magnet centres at CHG_Y + MAG_DY (>= 1.0 mm web to the window)
+MODULE_EXTRA = R.FOAM_POCKET_H - R.MODULE_POCKET_H   # module pads stand this much prouder (0.4)
+MODULE_POCKET_D = R.FOAM_D + 0.2                 # 6.2: keeps the ulnar strap slot deep enough for the slide's clip
+ROOT_DOT = (0.0, -10.4)                        # one foam dot holds the flex root (between pods 3/4, distal of the spine)
 TAIL_SLOT = (R.TAIL_W + 0.7, 1.8)              # X, Y
 # ---------------- hidden strap lugs (slots in the module ends, integral bars) ----------------
 SLOT_W = R.STRAP_W + 2.8                       # along the arm (webbing 22 + loop 24.4 + clearance)
@@ -109,7 +112,8 @@ SLOT_TOP = 0.7                                 # slot roof: 1.0 mm under the boa
 SLOT_Z_STEP = -0.25                            # below this the slot stops 1.0 mm short of the foam pockets
 SLOT_WALL = 1.0
 BAR_IN, BAR_Z = 0.6, -0.8                      # bar centre (outer face flush), height: clip under the 1.0 mm roof, links >= R2.2
-BAR_T, BAR_H = 1.3, 1.6                        # integral PA12 bar section (X x Z), stadium (<= 5 N)
+BAR_T, BAR_H = 1.3, 1.6                        # integral PA12 bar section (X x Z), stadium; the centre rib halves the span (20 N)
+BAR_RIB = 1.2                                  # centre rib from the bar to the slot's back wall (two ~10.8 mm spans)
 J2_RELIEF = ((23.2, 28.2), (24.4, 26.8))       # KiCad x, y under the J2 battery pads (1.0 mm wall left to the lid)
 
 YC = (Y_MIN + Y_MAX) / 2
@@ -194,21 +198,49 @@ def capsule_xz(p0, p1, r, y0, y1):
     return c.fuse(b).removeSplitter()
 
 
+def rfuse(a, b, log=None, tag=''):
+    """fuse that checks the result gained volume; retries as a fuzzy boolean (OCC sometimes returns the
+    input unchanged when faces nearly coincide)."""
+    v0, vb = a.Volume, b.Volume
+    out = a.fuse(b)
+    if out.Volume < v0 + 0.05 * vb:
+        for tol in (1e-4, 1e-3, 1e-2):
+            out = a.fuse([b], tol)
+            if out.Volume >= v0 + 0.05 * vb:
+                if log:
+                    log(f"  fuse {tag}: fuzzy {tol} needed")
+                break
+    return out
+
+
 def build_base(log=None):
     full = body(log)
-    b = full.common(ucyl(R_U + H_BASE))
+    # hidden lug slots: a block inside each X end (slot roof = board ledge, inner and side walls).
+    # The base is one intersection of the body with (below the parting) + both block boxes, and the
+    # cavity is cut without the blocks: fusing the blocks in afterwards dropped the ulnar one (OCC).
+    bxs = []
+    for sx in (-1, 1):
+        xe = end_x(sx)
+        xa, xb_ = sorted((xe - sx * (WALL + 0.01), xe - sx * (SLOT_D + SLOT_WALL)))
+        bxs.append(R.box(xa, xb_, -SLOT_W / 2 - SLOT_WALL, SLOT_W / 2 + SLOT_WALL, -10, Z_PCB))
+    keep = ucyl(R_U + H_BASE).fuse(bxs).removeSplitter()
+    b = full.common(keep)
     # square bottom edge on the distal wall across the tail slot (no floor behind it there): the
     # perimeter blend propagates round the whole loop, which would thin that wall to 0.4 mm
     fill = R.box(-6.8, 6.8, Y_MIN, Y_MIN + WALL, -6, H_BASE).common(prism(OUT_W, OUT_L, PLAN_R)).common(ucyl(R_U + H_BASE)).cut(ucyl(R_U))
     b = b.fuse(fill).removeSplitter()
     lid_zone = full.cut(ucyl(R_U + H_BASE))
     cav = cavity(log)
+    for bx in bxs:
+        cav = cav.cut(bx)
     b = b.cut(cav)
+    blks = [bx.common(full) for bx in bxs]
+    b = b.removeSplitter()
     # bosses inside the floor behind the pod 3/4 foam pockets: >= 1.0 mm behind each pocket
     for sgn in (-1, 1):
         pl = pod_place(sgn)
         for y in R.PAD_Y:
-            bo = Part.makeCylinder(R.FOAM_POCKET_D / 2 + 0.6, R.FOAM_POCKET_H + 0.7, V(0, y, 0.3))   # local z 0.3..1.5
+            bo = Part.makeCylinder(MODULE_POCKET_D / 2 + 0.6, R.MODULE_POCKET_H + 0.7, V(0, y, 0.3))   # local z 0.3..1.6
             bo.Placement = pl.multiply(bo.Placement)
             b = b.fuse(bo)
     b = b.removeSplitter()
@@ -222,6 +254,8 @@ def build_base(log=None):
     ring_hi = ring_hi.cut(R.box(LEAD_GATE_X0, 30, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
     tongue = ring_lo.fuse(ring_hi).removeSplitter().cut(ucyl(R_U + FLOOR - 0.01))   # above it: TONGUE_CLR to the lid wall
     tongue = tongue.cut(R.box(-TAIL_CUT, TAIL_CUT, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
+    for blk in blks:          # no overlapping volumes in the fuse (the ulnar block was lost otherwise)
+        tongue = tongue.cut(blk)
     b = b.fuse(tongue)
     for x0, x1, yf, sy, zb in snaps():       # tongue risers with a square snap groove (1.0+ all round)
         y0, y1 = sorted((yf - sy * c, yf - sy * TONGUE_T))
@@ -237,15 +271,11 @@ def build_base(log=None):
     # board standoffs
     for x, y in STANDOFFS:
         b = b.fuse(Part.makeCylinder(STANDOFF_D / 2, Z_PCB - z_u(abs(x)) - 0.6, V(x, y, z_u(abs(x)) + 0.6)))
-    # hidden lug slots: a block inside each X end (slot roof = board ledge, inner and side walls)
     for sx in (-1, 1):
-        xe = end_x(sx)
-        xa, xb_ = sorted((xe - sx * (WALL + 0.01), xe - sx * (SLOT_D + SLOT_WALL)))
-        blk = R.box(xa, xb_, -SLOT_W / 2 - SLOT_WALL, SLOT_W / 2 + SLOT_WALL, -10, Z_PCB).common(full)
-        b = b.fuse(blk)
-    b = b.removeSplitter()
-    for sx in (-1, 1):
-        b = b.cut(slot_void(sx))
+        # centre rib: leave it standing when the slot is cut (no separate fuse: more robust boolean)
+        xr0, xr1 = sorted((bar_x(sx) - sx * BAR_T / 2, sx * (R_U * math.sin(POD_TH) + MODULE_POCKET_D / 2 + 1.0) - sx * 0.3))
+        rib = R.box(xr0, xr1, -BAR_RIB / 2, BAR_RIB / 2, BAR_Z - BAR_H / 2, BAR_Z + BAR_H / 2)
+        b = b.cut(slot_void(sx).cut(rib))
         # integral bar (stadium section) across the slot
         xc = bar_x(sx)
         bar = R.box(xc - BAR_T / 2, xc + BAR_T / 2, -SLOT_W / 2 - 0.01, SLOT_W / 2 + 0.01, BAR_Z - BAR_H / 2 + BAR_T / 2, BAR_Z + BAR_H / 2 - BAR_T / 2)
@@ -261,20 +291,17 @@ def build_base(log=None):
     for sgn in (-1, 1):
         pl = pod_place(sgn)
         for y in R.PAD_Y:
-            p = Part.makeCylinder(R.FOAM_POCKET_D / 2, R.FOAM_POCKET_H + 0.6, V(0, y, -0.6))
+            p = Part.makeCylinder(MODULE_POCKET_D / 2, R.MODULE_POCKET_H + 0.6, V(0, y, -0.6))
             p.Placement = pl.multiply(p.Placement)
             b = b.cut(p)                                 # starts below the curved underside: no feathered skin
-        for y in R.HOLE_Y:
-            pin = Part.makeCylinder(0.525, 0.55 - 0.525 + 0.3, V(0, y, -0.55 + 0.525))
-            pin = pin.fuse(Part.makeSphere(0.525, V(0, y, -0.55 + 0.525)).common(Part.makeCylinder(0.525, 0.525, V(0, y, -0.55))))
-            pin.Placement = pl.multiply(pin.Placement)
-            b = b.fuse(pin)
     # tail slot through the floor next to the distal wall
     b = b.cut(R.box(-TAIL_SLOT[0] / 2, TAIL_SLOT[0] / 2, Y_MIN + WALL, Y_MIN + WALL + TAIL_SLOT[1], -10, FLOOR + 2))
     # charge window + locating counterbore + magnet pockets (from inside)
     b = b.cut(stadium_z(CHG_WIN[0], CHG_WIN[1], -10, 20, 0, CHG_Y))
-    for sx in (-1, 1):   # through holes: magnets glued in flush with the underside (no thin skin)
-        b = b.cut(Part.makeCylinder(MAG_D / 2, 10, V(sx * MAG_X, CHG_Y + MAG_DY, -5)))
+    # flex-root foam dot at the apex: pocket from below (like the pads'), boss inside for 1.0 behind it
+    rx, ry = ROOT_DOT
+    b = b.fuse(Part.makeCylinder(MODULE_POCKET_D / 2 + 0.6, R.MODULE_POCKET_H + 0.7, V(rx, ry, 0.3)))
+    b = b.cut(Part.makeCylinder(MODULE_POCKET_D / 2, R.MODULE_POCKET_H + 0.6, V(rx, ry, -0.6)))
     # parting-line groove (lower half)
     b = b.cut(groove())
     return b.removeSplitter()
@@ -286,7 +313,7 @@ def slot_void(sx):
     xe = end_x(sx)
     xa, xb_ = sorted((xe + sx * 2, xe - sx * SLOT_D))
     upper = R.box(xa, xb_, -SLOT_W / 2, SLOT_W / 2, SLOT_Z_STEP, SLOT_TOP)
-    x_low = sx * (R_U * math.sin(POD_TH) + R.FOAM_POCKET_D / 2 + 1.0)
+    x_low = sx * (R_U * math.sin(POD_TH) + MODULE_POCKET_D / 2 + 1.0)
     la, lb = sorted((xe + sx * 2, x_low))
     return upper.fuse(R.box(la, lb, -SLOT_W / 2, SLOT_W / 2, -10, SLOT_Z_STEP + 0.01)).removeSplitter()
 
@@ -356,14 +383,25 @@ def build_lid(log=None):
     # flush button: round opening for the separate cap (button_cap), hairline gap
     x, y = SW1
     l = l.cut(Part.makeCylinder(BTN_HOLE_D / 2, 20, V(x, y, 0)))
+    # cell cage: two ribs on the crown flank the cell's long sides (12.4 mm pocket, the cell is not taped)
+    for x0, x1 in ((CELL_X0 - 1.0, CELL_X0), (CELL_X0 + CELL_POCKET[0], CELL_X0 + CELL_POCKET[0] + 1.0)):
+        l = l.fuse(R.box(x0, x1, BAT_Y0 + 0.2, Y_MAX - WALL - 0.7, CELL_RIB_Z, 20).common(body()).cut(ucyl(R_U + H_BASE)))
     # pry notch at the proximal parting line
     zp = H_BASE
-    l = l.cut(R.box(-NOTCH_W / 2, NOTCH_W / 2, Y_MAX - WALL - 0.1, Y_MAX + 1, zp - 0.1, zp + 0.6))
+    l = l.cut(R.box(-NOTCH_W / 2, NOTCH_W / 2, Y_MAX - WALL - 0.1, Y_MAX + 1, zp - 0.1, zp + NOTCH_H - 0.1))   # also the charge clip's key
     l = l.cut(groove())
     return l.removeSplitter()
 
 
 # ---------------- internals (visual + clash check) ----------------
+def build_cell_spacer():
+    """Spacer for the shorter fallback cell (401120 class, ~21 mm): fills the cage from the cell's
+    proximal end to the lid's proximal wall, so that cell is held as firmly as the 25 mm one."""
+    y0 = BAT_Y0 + R.CELL_FALLBACK[1] + 0.2
+    y1 = Y_MAX - WALL - 0.15
+    return R.box(CELL_X0 + 0.3, CELL_X0 + CELL_POCKET[0] - 0.3, y0, y1, Z_BAT - 0.4, Z_BAT + BAT_T - 0.6).common(cavity_raw())
+
+
 def board_placeholder():
     pcb = R.rrect(PCB_W, PCB_L, 1.0, PCB_T, Z_PCB, PCB_W / 2 - J1_KX, Y_B0 + PCB_L / 2)
     parts = []
@@ -440,7 +478,7 @@ def tail_shape():
 def flex_on_module(lift=R.FOAM_PROUD):
     """Flex pods 3/4 (+ pads, foam) on the underside and the spine link between them."""
     poly, gold, foam = [], [], []
-    p0, g0, f0 = R.flex_pod(lift)
+    p0, g0, f0 = R.flex_pod(lift + MODULE_EXTRA, pocket=R.MODULE_POCKET_H)
     for sgn in (-1, 1):
         pl = pod_place(sgn)
         for src, dst in ((p0, poly), (g0, gold), (f0, foam)):
@@ -462,10 +500,8 @@ def internals():
     pcb, parts, src = board()
     bat, swell = battery()
     tail, tl = tail_shape()
-    mags = Part.makeCompound([Part.makeCylinder(1.5, 1.0, V(sx * MAG_X, CHG_Y + MAG_DY, z_u(MAG_X) + 0.02)) for sx in (-1, 1)])
-    lp = Part.makeCylinder(0.75, 20, V(D1[0], D1[1], Z_PCB_TOP + 1.3)).common(body())     # flush with the lid
     cap = build_button_cap()
-    return dict(pcb=pcb, parts=parts, src=src, bat=bat, swell=swell, tail=tail, tail_len=tl, mags=mags, lp=lp, cap=cap)
+    return dict(pcb=pcb, parts=parts, src=src, bat=bat, swell=swell, tail=tail, tail_len=tl, cap=cap)
 
 
 if not getattr(sys, 'neurband_lib', False):
@@ -499,7 +535,7 @@ if not getattr(sys, 'neurband_lib', False):
     }
     log("  clash mm3: " + json.dumps(checks))
     xa = BAT_X0 - ANT_X[1]
-    log(f"  cell edge to antenna strip {xa:.1f} mm; magnets to antenna strip {0 - 1.5 - ANT_X[1]:.1f} mm")
+    log(f"  cell edge to antenna strip {xa:.1f} mm; no metal in the module apart from the board, cell and J1")
     with open(os.path.join(R.HERE, 'logs', 'module_checks.json'), 'w') as f:
         json.dump(dict(checks=checks, board=I['src'], tail_len=I['tail_len']), f, indent=1)
     R.save('module_base', [('module_base', base, R.C_HOUSING)], log)
@@ -509,9 +545,12 @@ if not getattr(sys, 'neurband_lib', False):
                            ('lipo', I['bat'], R.C_LIPO), ('tail', I['tail'], R.C_FLEX),
                            ('flex_pods_3_4', Part.makeCompound(fpoly), R.C_FLEX),
                            ('pads', Part.makeCompound(fgold), R.C_GOLD), ('foam', Part.makeCompound(ffoam), R.C_FOAM),
-                           ('magnets', I['mags'], R.C_METAL), ('button_cap', I['cap'], R.C_HOUSING),
-                           ('light_pipe', I['lp'], (0.92, 0.92, 0.90))], log)
+                           ('button_cap', I['cap'], R.C_HOUSING)], log)
     R.save('button_cap', [('button_cap', I['cap'], R.C_HOUSING)], log)
+    spacer = U.check(build_cell_spacer(), 'cell_spacer', log)
+    log("  cell spacer vs lid / parts / base mm3:", clash(spacer, lid), clash(spacer, I['parts']), clash(spacer, base))
+    R.save('cell_spacer', [('cell_spacer', spacer, R.C_HOUSING)], log)
+    R.fab('cell_spacer', 'neurband rev C cell spacer (only for the shorter 401120-class fallback cell)', spacer, 2, 'mjf', 'pa12', 'gray', log)
     R.fab('module_base', 'neurband rev C module base (chassis, carries pods 3/4)', base, 3, 'mjf', 'pa12', 'gray', log)
     R.fab('module_lid', 'neurband rev C module lid (crowned shell)', lid, 3, 'mjf', 'pa12', 'gray', log)
     R.fab('button_cap', 'neurband rev C flush button cap', I['cap'], 4, 'mjf', 'pa12', 'gray', log)

@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C charging clip (2 x P50 pogo pins, no magnets)",
+  "source": "charge_clip.step",
+  "qty": 2,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 2.687,
+    "area_cm2": 18.89,
+    "size_x_mm": 25.6,
+    "size_y_mm": 18.77,
+    "size_z_mm": 14.04
+  },
+  "min_wall_mm": 1.0
+}

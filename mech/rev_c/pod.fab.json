@@ -2,19 +2,19 @@
   "kind": "3dp",
   "name": "Electrode pod shell rev C, TPU (6 per band)",
   "source": "pod.step",
-  "qty": 16,
+  "qty": 14,
   "options": {
     "process": "fdm",
     "material": "tpu",
     "color": "black"
   },
   "features": {
-    "volume_cm3": 0.507,
-    "area_cm2": 8.11,
-    "size_x_mm": 32.11,
-    "size_y_mm": 9.11,
-    "size_z_mm": 4.47
+    "volume_cm3": 0.629,
+    "area_cm2": 8.93,
+    "size_x_mm": 32.12,
+    "size_y_mm": 9.12,
+    "size_z_mm": 4.94
   },
-  "notes": "TPU 95A, print on its side; 6 per band + spares; 6.0 x 1.5 mm double-sided foam discs bought separately",
+  "notes": "TPU 95A, print on its side; 6 per band, 12 for two bands + 2 spares; 6 x 2.0 mm EVA foam dots bought separately (docs/build/sourcing.md)",
   "min_wall_mm": 1.0
 }

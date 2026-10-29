@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C cell spacer (only for the shorter 401120-class fallback cell)",
+  "source": "cell_spacer.step",
+  "qty": 2,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "gray"
+  },
+  "features": {
+    "volume_cm3": 0.174,
+    "area_cm2": 2.11,
+    "size_x_mm": 11.8,
+    "size_y_mm": 3.88,
+    "size_z_mm": 3.8
+  },
+  "min_wall_mm": 3.8
+}

@@ -22,17 +22,42 @@ build order: pod.py, module.py, strap.py, charge_puck.py, fit.py, assembly.py
 ![band front](../../mech/rev_c/renders/band_assembly.front.png)
 ![on the 160 mm wrist](../../mech/rev_c/renders/fit_160.iso.png)
 
+## 0. Easy-assembly redesign (2026-10-29): what changed
+
+The band was redesigned for the fewest bought items and the fewest, most foolproof steps. The board
+and flex interface is unchanged. All named dimensions are parameters in `rc.py`; the sourced
+values (`docs/build/sourcing.md`) are set there.
+
+| Area | Before | Now |
+|---|---|---|
+| Strap | 22 mm hook-and-loop elastic, ulnar end sewn round a loop, radial end folded back with a sewn 40 mm hook tab | **Plain 20 x 1.5 mm woven elastic** (`STRAP_W` 20, `STRAP_T` 1.5 nominal, every slot and sleeve clears `STRAP_T_MAX` 1.8). **One closed loop, slipped over the hand**: both ends locked round the same printed **`strap_slide`**, a two-bar slide clipped onto the hidden bar; the tail tip tucks under the friction bar and the loaded strand pinches it (sec. 5). No sewing, hook-and-loop or glue |
+| Module strap bars | 1.3 x 1.6 mm integral bar over a 24.8 mm span (about 5 N) | Same bar over a 22.8 mm slot, plus a **1.2 mm centre rib** back to the slot wall: two 10.8 mm spans, rated about 20 N. The slide's C-clip is split round the rib |
+| Pods | 3.9 mm tall, 1.0 mm locating pins, 6.2 x 0.5 mm foam pockets | **4.9 mm** tall (sleeve 20.6 x 1.9, 1.0 mm pockets for **6 x 2.0 mm pre-cut EVA dots**: pads 1.0 mm proud). **No pins**: the bonding jig locates the flex |
+| Module underside | Pins, 6.2 x 0.5 pockets, 2 magnet through-holes | No pins or magnets. 0.6 mm pockets (the floor plus the 0.6 mm gap to the board leave no more), so the module pads stand 1.4 mm proud. A seventh dot holds the **flex root** (pocket at (0, -10.4)) |
+| Flex bonding | Hole punch, needles, transfer tape | **`bond_jig`**: a printed plate with 16 pins through the flex holes, fences that locate the six pods and the base, ledges and stops that set the press depth, and an R42 saddle for the module section |
+| Charger | Magnetic puck, 4 magnets, 2.0 x 6 mm pogo pins | **`charge_clip`**: snaps onto the module's proximal end; a key in the pry notch makes it fit one way only. **2 P50 pogo pins** (0.68 mm, glued with a drop of CA) on VCHG/GND, 2 x 0.74 N preload. No magnets anywhere |
+| Light pipe | 1.5 mm PMMA rod | **None**: the 1.6 mm hole and its guide tube are open over D1 |
+| Cell | Tape on the TQFP, foam pad; 401225 | **401223-class** (at most 12 x 25 x 4 mm incl. board) in a **12.4 x 25.5 mm cage**: two ribs under the lid. The shorter 401120 fallback cell takes the printed `cell_spacer`. Its own leads go straight to J2 (no splice) |
+| SWD | Wires or a bought pogo clip | **`swd_jig`**: a board nest with 5 P50 pins on TP1-TP5. At 1.27 mm pitch the pins lean +/-12 deg alternately so the printed webs stay >= 1.0 mm |
+| Adhesives | Foam tape, transfer tape, Kapton, CA, textile glue | **The foam dots only**, plus a drop of CA for each pogo pin; Kapton only to insulate |
+
+Why the slides sit at the module and no closure buckle is used: from the hidden bar to the pod 2/5
+sleeve there is 8.1-9.3 mm (`fit.py`). A tri-glide or ladder lock for 1.5-1.8 mm webbing needs 9-12 mm,
+but the two-bar slide needs 6.0 mm. A buckle in the volar gap would need a second webbing piece and
+two more parts. The closed loop stretches over the hand (the gap between pods 1 and 8 opens) and is
+set to the wrist once, by pulling a slide's tail.
+
 ## 1. Summary
 
 | | |
 |---|---|
 | Module | **31.9 x 34.3 x 9.9 mm** (across x along the arm x thickness at the apex). R3.4 plan corners; the crowned lid has R2.5 blends and the underside is a R42 hollow. The body edges hang 3.1 mm lower, 13.0 mm overall. There are no external lugs: the strap enters hidden slots in the two end faces. The button is a flush disc and the light pipe a flush dot. It stands 10.5-10.8 mm above the skin |
-| Strap | **One continuous 22 x 1.2 mm elastic woven webbing** (loop-fabric face) around the whole outside. Two identical slim printed loops snap onto the hidden integral bars. The ulnar end is sewn round one loop's far bar; the radial end passes through the other loop and folds back with a 40 mm hook tab. Opens fully |
-| Pods | 6 TPU pods, 9.0 x 32.0 x 3.9 mm with 1.0 mm minimum walls. They cover the whole 30 mm flex paddle, so no flex shows, and their ends taper to 2.0 mm beyond the band edges. The webbing slides through a captive edge sleeve; only the soft tapered pod ends show beyond the band. Pods 3 and 4 sit in the module underside |
-| Contact | Each 6.5 mm gold pad sits on a 6.0 x 1.5 mm self-adhesive foam disk in a 6.2 x 0.5 mm pocket, so it stands 1.0 mm proud (about 0.65 mm when worn). P-N spacing is 20 mm |
+| Strap | **One closed loop of plain 20 x 1.5 mm woven elastic** round the whole outside, slipped over the hand. Each end is locked round an identical printed two-bar slide clipped onto the hidden integral bar (tail tip tucked under the friction bar, pinched by the loaded strand); the length is set once at the slides |
+| Pods | 6 TPU pods, 9.0 x 32.0 x 4.9 mm with 1.0 mm minimum walls (no pins). They cover the whole 30 mm flex paddle, so no flex shows, and their ends taper to 2.0 mm beyond the band edges. The webbing slides through a captive edge sleeve; only the soft tapered pod ends show beyond the band. Pods 3 and 4 sit in the module underside |
+| Contact | Each 6.5 mm gold pad sits on a pre-cut 6 x 2.0 mm double-sided EVA dot in a 6.4 x 1.0 mm pocket, so it stands 1.0 mm proud (about 0.65 mm when worn); the module's pads in 0.6 mm pockets stand 1.4 mm proud. P-N spacing is 20 mm |
 | Sizes | One size. A wrist of 145 / 160 / 180 mm leaves a 17 / 32 / 52 mm gap between pods 1 and 8 on the volar-ulnar side, which the band bridges. The electrodes cover 89 / 81 / 72 % of the circumference |
-| Materials | MJF PA12 (natural grey or dyed black) for the module base, lid, button cap and strap loop. TPU 95A for the pods (own FDM printer, on their side, or MJF TPU). Bought webbing, foam and hook tape |
-| Charging | The board's bottom pads VCHG/GND are reached through a 1.7 mm deep window in the module underside, with 2 magnets and a printed pogo puck. Skin cannot reach the pads, so the band cannot charge while worn |
+| Materials | MJF PA12 for the module base, lid, button cap, strap slides, charge clip, cell spacer and SWD jig. TPU 95A for the pods (own FDM printer, on their side). The bonding jig is FDM PLA/PETG. Bought: webbing, foam dots, cell, 7 P50 pins, a USB cable |
+| Charging | The board's bottom pads VCHG/GND are reached through a 1.7 mm deep window in the module underside by a printed clip with 2 P50 pogo pins that snaps onto the module's proximal end (keyed by the pry notch). Skin cannot reach the pads, so the band cannot charge while worn |
 | Printability | Every printed part has walls of at least 1.0 mm, measured on the exported STEPs (`wallcheck.py`, sec. 8) |
 | Mass (estimate) | About 5 g of printed parts, plus the board, the 401225 cell (about 3 g), the webbing and the flex: roughly 15 g |
 
@@ -207,46 +232,60 @@ bending, so an FDM base is for fit tests. Per-part settings and the tolerance ch
 **Pressure.** The load on a pod is T x (wrap angle). About 0.4 N of strap tension gives about
 3 kPa per pad; a firmly closed band (1-2 N) gives about 7-15 kPa.
 
-## 5. Strap (`strap.py` -> `strap_loop.step`; the webbing is a swept band in the assemblies)
+## 5. Strap (`strap.py` -> `strap_slide.step`; the webbing is a swept band in the assemblies)
 
-![loop](../../mech/rev_c/renders/strap_loop.iso.png)
+![slide](../../mech/rev_c/renders/strap_slide.iso.png)
 
-**Chosen: one continuous 22 x 1.2 mm elastic woven webbing** with a loop-fabric face
-(off-the-shelf 7/8 in elastic hook-and-loop band; plain elastic webbing plus 110 mm of sew-on
-loop tape also works). Keep it at 1.2-1.4 mm: the wraps round the loops' far bars pass just over the
-spine links.
-- **Ulnar end:** fixed, sewn round the far bar of a slim loop snapped onto the hidden ulnar bar.
-- **Around the wrist:** the webbing runs through the six pod sleeves and across the gap.
-- **Radial end:** it passes through the identical loop on the radial side. Each loop is
-  24.4 x 6.4 x 3.8 mm, with 1.0 mm side links and a 1.0 mm C-clip.
-- The clip's 80 deg opening points up, away from the strap pull, so tension seats the clip on the
-  bar. It snaps on with 0.14 mm interference over the bar's 1.3 mm side.
-- The ulnar loop is the same part turned over. The webbing turns
-  round the loop's far bar and folds back over its own outer face, closing with a 22 x 40 mm hook
-  tab.
-- The fold-back is 77 / 63 / 45 mm on 145 / 160 / 180 mm wrists. The whole band opens by peeling
-  the tab and pulling the end out of the loop.
+**One closed loop of plain woven elastic**, 20.0 x 1.5 mm (`STRAP_W`, `STRAP_T`; 1.2-1.8 mm allowed,
+so every slot and sleeve clears `STRAP_T_MAX` 1.8). No hook-and-loop, no sewing, no glue.
+- **Slides.** The ends are anchored by two identical printed `strap_slide`s. Each is a split C-clip on
+  the module's hidden bar (as before), a 1.9 x 20.4 mm slot and a 2.2 x 2.4 mm friction bar. The ulnar
+  one is the same part turned over. It is 7.9 x 22.4 x 3.4 mm and reaches 6.0 mm from the hinge (8.1-9.3
+  mm are free to the pod 2/5 sleeve).
+- **Locking path** (`strap.lock_paths`, modelled in `fit.py` since 2026-10-29). Each end:
+  - comes from the pods **under** the friction bar;
+  - goes **up** through the slot and **over** the bar toward the pods;
+  - goes **round the bar's far end and back under it**, between the bar and the loaded strand;
+  - stops with its tip at the slot.
 
-Why 22 mm: the module's strap slots must keep 1.0 mm walls beside the straight part of the end
-faces. Slot half-width + 1.0 mm cannot exceed the straight half-length (17.15 mm minus the plan
-corner radius). For a 25 mm band (27.4 mm slot) that would need corners of R2.4 or less, a boxy
-module. The 22 mm band (24.8 mm slot) allows R3.4.
+  The loaded strand bends up into the slot round the tail tip and pinches the tip against the bar's
+  corner. The clamping force grows with the band tension, so it self-locks. That is on top of about
+  360 deg of wrap friction (capstan factor e^(-0.3 x 2 pi) = 0.15 with mu about 0.3).
+  - The earlier CAD wrapped a plain ring round the bar and laid the tail back along the outside of
+    the band. That holds by wrap friction only and slips unless the tail is held.
+  - Each lock uses 14.1 mm of webbing.
+  - To set the length: untuck the tip, pull or feed webbing, trim so the tucked tip just reaches the
+    slot, and tuck it again.
+- **Slide pose.** The slide pivots freely on its clip, so under load it swings until the loaded strand
+  points at the hinge axis. That is `LOCK_SWING`, 41 deg outward of the hinge-to-pod-sleeve line
+  (`fit.py` places it there).
+  - This lifts the bar away from the module-edge flex link. Two layers fit under the bar with 1.5-1.9
+    mm to the link, where the unswung bar had room for one.
+  - The band runs straight from the pod 2/5 sleeve to the slide.
+  - The clip's opening is set to `CLIP_OPEN_DEG` = 130 - `LOCK_SWING` = 89 deg in the slide frame. On
+    the swung slide it still faces the slot roof, and the bar bears 10 deg from its edge, as before.
+  - Clearances on 145-180 mm wrists (`fit_results.json`):
+    - locking path vs. slide, module, pods and flex: 0.0 mm3;
+    - locking path to the flex 1.48-1.87 mm, to the module 1.23-1.52 mm, to the pods 1.95-2.74 mm;
+    - slide vs. module: 0.0 mm3.
+- **Wearing.** The loop is set once to the wrist and slipped over the hand. The gap between pods 1 and
+  8 opens and the pods slide on the webbing, so the flex is never stretched.
+- **Strength at 20 N band tension.** Friction bar: about 1.5 T = 30 N over 20.4 mm, M = wL/10 = 61 N mm,
+  S = 1.94 mm3, 32 MPa against about 48 MPa for MJF PA12. The module's hidden bar now has a centre rib:
+  two 10.8 mm spans carry 10 N each, 25-39 MPa depending on end fixity. The slide's clip snaps on with
+  0.14 mm interference and its bearing point sits 10 deg from the opening edge, as before. **Physical
+  pull test required** for the slide's grip (webbing and friction) and the clip retention.
+- **Cut list** (`fit_results.json`): **218 mm** of webbing, rounded to 220 in the guide. That is the
+  180 mm wrist's 187.5 mm tip to tip plus 30 mm to hold while tucking.
+  - Tip to tip after trimming: 155 / 169 / 188 mm on 145 / 160 / 180 mm wrists.
+  - Between the slides through the pods: 127 / 141 / 159 mm.
 
-The cost is that the 32 mm pods show about 5 mm of their tapered TPU ends at each band edge; the
-flex stays covered. The band presses the centre 22 mm of each pod, and the stiffer 1.0 mm-wall
-TPU shell spreads it to the outer pads.
+  Heat-seal the cut ends.
 
-Alternatives considered:
-1. Two-piece webbing with a printed buckle ring at the gap (the previous version). Rejected: it
-   puts a visible buckle on the volar side and breaks the continuous look.
-2. An off-the-shelf nylon sport loop with spring bars. It is 2-3 mm thick and would need steel
-   spring bars next to the antenna.
-3. A printed TPU band with tang buckle. It is not elastic and adjusts in steps.
-4. Shock-cord tensioner (Meta sEMG-RD style). The most uniform load, but cord and cord lock look
-   technical.
-
-**Cut list (from `fit_results.json`):** 2 strap loops; webbing **226 mm**, including the 12 mm sewn loop round
-the ulnar loop's far bar and a 45 mm fold-back at 180 mm. Hook tape 22 x 40 mm.
+Why not a tri-glide at the ulnar end and a ladder lock at the radial end: either needs 9-12 mm of free
+webbing beside the hidden bar, and there is only 8.1-9.3 mm. A buckle in the volar gap would need a
+second webbing piece and two more parts. Slipping on a pre-set elastic loop is the simplest one-hand
+"closure".
 
 ## 6. Fit check (`fit.py` -> `fit_results.json`, `fit_145.step`, `fit_180.step`; `assembly.py` -> `fit_160.step`, `band_assembly.step`)
 
@@ -258,8 +297,9 @@ The wrist model is the rev A/B ellipse forearm (`extra/wrists/wrist.py`), now al
 - the module rests centred on the pads of pods 3 and 4, with the foam at its worn compression;
 - the free pods sit 18 mm apart along the flex, tangent to the wrist, and are tilted to follow
   the forearm taper (the module tilts 2.7-3.4 deg);
-- the webbing is taut, modelled as the convex hull of the hidden ulnar bar, the pod sleeves, the
-  skin across the gap and the loop's far bar, then swept as one smooth B-spline band;
+- the webbing is taut, modelled as the convex hull of the pod sleeves, the skin across the gap and the
+  point where the loaded strand meets each slide's locking path, then swept as one smooth B-spline
+  band; at each slide the locking path is swept separately (sec. 5);
 - collisions are CAD Boolean volumes.
 
 | | 145 mm | 160 mm | 180 mm |
@@ -269,18 +309,20 @@ The wrist model is the rev A/B ellipse forearm (`extra/wrists/wrist.py`), now al
 | Gap centre from the dorsal centre (90 = ulnar apex, 180 = volar centre) | 137 deg | 141 deg | 145 deg |
 | Electrode coverage (pod 1 to pod 8 arc / circumference) | 88.6 % (128.4 mm) | 80.5 % (128.9 mm) | 71.8 % (129.3 mm) |
 | Pod collisions (shell-shell, shell-module, CAD mm3) | 0.0 / 0.0 | 0.0 / 0.0 | 0.0 / 0.0 |
-| Spine bend radius, min free link (mm); module-edge links (free, under the loops) | 10.51; 2.46 | 11.81; 2.28 | 13.44; 2.42 |
-| Module seat gap underside-skin: centre / edge (mm) | 0.61 / 1.63 | 0.73 / 1.3 | 0.85 / 0.97 |
+| Spine bend radius, min free link (mm); module-edge links (free, under the slides) | 10.51; 3.03 | 11.82; 2.71 | 13.45; 2.54 |
+| Module seat gap underside-skin: centre / edge (mm) | 1.02 / 2.05 | 1.14 / 1.71 | 1.26 / 1.38 |
 | Module tilt following the forearm taper | 2.72 deg | 3.0 deg | 3.37 deg |
-| Strap loop far bar clearance to skin (mm) | 2.19 | 2.11 | 2.03 |
+| Strap slide friction bar clearance to skin (mm) | 5.48 | 5.41 | 5.32 |
 | Module / pod shells vs. skin (CAD mm3); strap inner face to skin, min (mm) | 0.0 / 0.0; 1.11 | 0.0 / 0.0; -0.33 | 0.0 / 0.0; -0.48 |
-| Strap vs. pods / module; loop vs. module / pods (CAD mm3) | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0 |
-| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.41, 0.88, 0.78, 1.26, 0.79, 0.87 | 1.59, 0.73, 0.63, 1.26, 0.84, 0.96 | 1.63, 0.61, 0.50, 1.27, 0.98, 1.01 |
-| Strap load max / min | 1.8 | 2.54 | 3.26 |
-| Strap tension for 3 kPa on an average pad (N) | 0.39 | 0.4 | 0.44 |
-| Strap path ulnar bar -> loop (mm); fold-back (mm) | 125.0; 77.1 | 138.7; 63.4 | 157.0; 45.0 |
+| Strap vs. pods / module; slide vs. module / pods; locking path vs. slide / pods (CAD mm3) | 0.0 / 0.0; 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0; 0.0 / 0.0 | 0.0 / 0.0; 0.0 / 0.0; 0.0 / 0.0 |
+| Strap load per pod, relative (pods 1, 2, 5, 6, 7, 8) | 1.25, 1.10, 1.06, 1.11, 0.70, 0.78 | 1.41, 0.97, 0.94, 1.09, 0.73, 0.87 | 1.42, 0.91, 0.87, 1.07, 0.84, 0.89 |
+| Strap load max / min | 1.79 | 1.93 | 1.70 |
+| Strap tension for 3 kPa on an average pad (N) | 0.34 | 0.34 | 0.37 |
+| Webbing between the slides (mm); tip to tip incl. both locks (mm) | 127.2; 155.3 | 141.0; 169.1 | 159.4; 187.5 |
 | Pads pressed into the rigid wrist model (taper; foam/skin take it, CAD mm3) | 11.505 | 12.222 | 13.344 |
 | Strap vs. flex links (CAD mm3) | 0.0 | 0.0 | 0.0 |
+
+Redesign re-run (2026-10-29, with the locking path and the swung slides): all interferences are 0.0, including the untilted-pod webbing check. The pads-into-rigid-wrist volume is by design. Module-edge links bend at R2.54 mm or more and free links at R10.5 mm or more. The module seat rises 0.4 mm (prouder module pads). The band now runs straight from the pod 2/5 sleeves to the swung slides, so pods 2/5 carry 0.87-1.10 of the mean load (before, 0.50-0.88) and the spread falls to 1.7-1.9:1.
 
 Notes:
 - **Gap and the ulna.** The flex chain is 133 mm long, so the gap absorbs the 35 mm size range.
@@ -315,14 +357,20 @@ Notes:
 
 ## 8. Parts, fab files and cost
 
-| Part | File | Process / material | Qty (fab) | Size mm | Volume cm3 |
-|---|---|---|---|---|---|
-| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 7.8 | 1.56 |
-| Module lid | `mech/rev_c/module_lid.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 11.1 | 1.95 |
-| Button cap | `mech/rev_c/button_cap.step` | MJF PA12, grey | 4 | 6.0 x 6.0 x 3.7 | 0.06 |
-| Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 32.1 x 9.1 x 4.5 | 0.51 |
-| Strap loop | `mech/rev_c/strap_loop.step` | MJF PA12, black | 5 (2 per band) | 24.4 x 6.8 x 3.8 | 0.22 |
-| Charger puck | `mech/rev_c/charge_puck.step` | MJF PA12 or FDM PETG | 2 | 30.1 x 26.1 x 7.1 | 3.65 |
+| Part | File | Process / material | Qty (fab) | Notes |
+|---|---|---|---|---|
+| Module base | `mech/rev_c/module_base.step` | MJF PA12 | 3 | hidden bars with centre ribs, no magnets or pins, root-dot pocket |
+| Module lid | `mech/rev_c/module_lid.step` | MJF PA12 | 3 | open 1.6 mm LED hole, cell cage ribs, 3.0 x 1.2 mm pry/key notch |
+| Button cap | `mech/rev_c/button_cap.step` | MJF PA12 | 4 | |
+| Strap slide | `mech/rev_c/strap_slide.step` | MJF PA12, black | 5 (2 per band) | replaces the strap loop |
+| Cell spacer | `mech/rev_c/cell_spacer.step` | MJF PA12 | 2 | only for the 401120-class fallback cell |
+| Pod shell | `mech/rev_c/pod.step` | FDM TPU 95A, black | 14 (6 per band + 2) | 4.9 mm tall, no pins |
+| Charge clip | `mech/rev_c/charge_clip.step` | MJF PA12, black | 2 | replaces the magnetic puck; 2 P50 pins |
+| Bonding jig | `mech/rev_c/bond_jig.step` | FDM PLA/PETG (or MJF) | 1 | 142.6 x 46.5 x 5.6 mm; print once |
+| SWD jig | `mech/rev_c/swd_jig.step` | MJF PA12 | 1 | 36.7 x 35.5 x 18 mm; 5 P50 pins at +/-12 deg |
+
+Fit views: `mech/rev_c/charge_clip_fit.step`, `bond_jig_fit.step`, `swd_jig_fit.step`. The magnetic
+puck (`charge_puck`) and the sewn strap loop (`strap_loop`) are removed.
 
 The fab files are `mech/rev_c/<part>.fab.json` (kind 3dp; volume, area and size measured from the
 FreeCAD shapes, plus `min_wall_mm` from the wall check).
@@ -333,66 +381,75 @@ FreeCAD shapes, plus `min_wall_mm` from the wall check).
 where it leaves through a roughly opposite face, so acute rims, such as the lid's edge where the
 curved parting meets the wall at 21 deg, are not reported as walls.
 
-| Part | Process | Min wall measured (mm) | 1st percentile (mm) | Samples | Design minima |
-|---|---|---|---|---|---|
-| module_base | MJF PA12 | **0.98** | 1.00 | 6063 | walls 1.1, floor 1.1, 1.0 behind the pod 3/4 foam pockets, tongue 1.3 (1.0 behind the 0.3 snap groove, a 1.0 lip above it even under the lead-in chamfer), slot side walls and roof 1.0, magnets in through holes. The 0.98 spots are the distal wall's square bottom edge across the tail slot, unchanged |
-| module_lid | MJF PA12 | **0.98** | 1.00 | 4147 | walls 1.1, crown 1.0, light-pipe tube 1.0, square snap ribs 0.35 x 1.0 on the 1.1 wall |
-| button_cap | MJF PA12 | **1.00** | 1.00 | 339 | flat-topped 4.3 mm disc, flange 6.0 x 1.0, stem 2.0 |
-| strap_loop | MJF PA12 | **1.00** | 1.00 | 838 | C-clip 1.0 (80 deg opening), side links 1.0, far bar 1.3 x 1.6 |
-| charge_puck | MJF PA12 / FDM PETG | **1.00** | 1.29 | 1577 | magnet pocket walls >= 1.5, pin-hole web 1.1 (staggered pins), solid body |
-| pod | FDM TPU 95A | **1.00** | 1.00 | 1485 | floor behind the foam 1.0, sleeve rims 1.0, foam-pocket-to-side 1.1 |
+| Part | Process | Min wall measured (mm) | 1st percentile (mm) | Samples |
+|---|---|---|---|---|
+| module_base | MJF PA12 | **0.98** | 1.00 | 6452 |
+| module_lid | MJF PA12 | **0.98** | 1.00 | 4742 |
+| button_cap | MJF PA12 | **1.00** | 1.00 | 339 |
+| strap_slide | MJF PA12 | **1.00** | 1.00 | 1291 |
+| cell_spacer | MJF PA12 | **3.80** | 3.80 | 480 |
+| charge_clip | MJF PA12 | **1.00** | 1.00 | 1208 |
+| pod | FDM TPU 95A | **1.00** | 1.00 | 1578 |
+| bond_jig | FDM PLA/PETG | **1.00** | 1.00 | 12277 |
+| swd_jig | MJF PA12 | **1.43** | 1.43 | 497 |
 
-Bought parts per band (specs in [assembly.md](../build/assembly.md) sec. 1):
-- 22 mm (7/8 in) elastic woven webbing with a loop face (0.25 m) and a 22 mm sew-on hook tab;
-- double-sided (both faces adhesive) foam tape, 1.5-1.6 mm (24 discs: 18 for the pods, 6 for the module);
-- 4 N52 3 x 1 mm magnets, 2 x 2.0 x 6 mm pogo pins and a USB lead;
-- 1.5 mm PMMA fibre;
-- a protected 401225-class LiPo, at most 4.0 x 12.0 x 25.0 mm overall including its protection board;
-- 30 AWG PTFE or Kynar wire (battery leads), thin double-sided tape, Kapton tape, a soft foam pad.
+The 0.98 mm spots on the base and lid are the unchanged distal-wall edges (tessellation level).
 
-Together these are about 6-10 EUR.
+Bought parts per band (exact specs from `docs/build/sourcing.md`):
+- plain woven polyester elastic, 20.0 +/-0.5 mm wide, 1.5 mm thick (1.2-1.8 OK): 0.21 m;
+- pre-cut round double-sided EVA foam dots, 6 mm x 2.0 mm: 25 (18 pods, 6 module, 1 flex root);
+- protected 401223-class LiPo, about 130 mAh, at most 12.0 x 25.0 x 4.0 mm including its board and tabs,
+  with two wire leads of at least 30 mm (fallback 401120 class, about 4 x 10-11 x 20-21 mm, with the
+  printed spacer);
+- P50 pogo pins (0.68 mm barrel, 0.48 mm plunger, 16.0-16.35 mm, 2.6 mm travel, about 75 g): 2 for the
+  charge clip, 5 for the SWD jig (once per builder);
+- a USB cable to cut (5 V and GND);
+- Kapton tape (insulation only) and CA glue (one drop per pogo pin, the only glue).
+
+Gone: hook-and-loop webbing and hook tape, 4 magnets, 2.0 x 6 mm pogo pins, PMMA fibre, foam sheet,
+transfer and double-sided tape, 30 AWG wire, heat-shrink, foam pad, textile glue, thread, the 6 mm
+punch and the alignment needles.
 
 **Cost.** MJF PA12 from the fab is roughly 1.5-3 USD per part (the per-part minimum
 dominates), so the 5 PA12 parts per band (base, lid, cap, 2 loops) cost about 8-15 USD. The six TPU pods on your own FDM
 printer use about 1.5 g of TPU, well under 0.10 EUR. These are estimates; take the live quote
 from the fab files.
 
-## 9. Assembly
+## 9. Assembly (summary; the full guide is [docs/build/assembly.md](../build/assembly.md))
 
-The full sequence, with images, is in **[docs/build/assembly.md](../build/assembly.md)**. The steps
-that drive the mechanics:
+1. **Flash** the bare board in the SWD jig (Pico on the five pins).
+2. **Cell.** Solder its own leads flat onto J2 (VBAT = BAT +). They run under the board in the 1.0 mm
+   relief and round the distal +X corner through the lead gate. Kapton over the joints.
+3. **Flex.** Lay it pads-down on the bonding jig, holes over the 16 pins. Peel the dots onto the 18
+   pod pockets and the 7 base pockets. Press each pod into its fence until it stops. Feed the tail up
+   through the base's floor slot and press the base into its fence.
+4. **Book fold.** Base upright, board upright above its distal end, tail into J1, latch closed, fold the
+   board down. The cell lies beside the module during the fold, then goes into the lid's cage on the
+   board, lead end against J1. The 30 mm leads are enough: the route needs 16-22 mm.
+5. **Close.** Button cap in, lid on (four catches).
+6. **Strap.** Clip both slides onto the hidden bars. Thread the webbing up through one slide, through
+   pods 2, 1, 8, 7, 6, 5 and the other slide. At each slide: under the friction bar, up the slot, over the
+   bar, round its end and the tip tucked back under it. Set the length, trim the tips to reach the slots.
+7. **Charge** with the clip on the proximal end: it fits one way only.
 
-1. **Flash first.** SWD (TP1-TP5) and the battery pads (J2) are on the board's underside and cannot be
-   reached once the board sits on the slot roofs. Flash and bench-test the bare board, then solder two
-   40 mm, 30 AWG leads flat onto J2. Each lap joint must stay under 0.5 mm in the 1.0 mm J2 relief.
-2. **Magnets.** Glue the base magnets in first, with opposite poles out. The base then sets the puck's
-   magnets: they snap onto the base's magnets through cling film, and the base is lowered onto the puck
-   until the glue cures.
-3. **Flex.** Fit 24 double-sided foam discs. Bond the flex to the base pockets and to each pod, sighting
-   the holes onto the pins with needles. Tape the flex root to the underside as the tail's strain relief.
-4. **Book fold.** The tail goes up through the floor slot and stands upright. Hold the board upright
-   above the distal end, J1's mouth down, and lower it onto the tail. Close the latch and fold the board
-   down onto the slot roofs. The leads wrap the distal edge through the lead gate.
-5. **Cell.** Tape it on the ADS1298 against J1's back, splice its leads to the board leads one at a
-   time, and add a soft foam pad on top against rattle.
-6. **Lid.** Put the light pipe in (cut flush with the tube's inner end, 0.3 mm above D1) and the button
-   cap, then snap the lid on. Open it with a pick at the proximal pry notch.
-7. **Strap.** Sew (or glue) the webbing round the far bar of one loop and snap it onto the ulnar bar,
-   with the clip's gap facing up. Thread the webbing through the six pod sleeves. Snap the second loop
-   onto the radial bar, pass the end through it, fold back and press the hook tab.
-8. **Wear and charge.** Wear the module on the back of the wrist, about 25 mm above the crease. To
-   charge, take the band off and lay it module-down on the puck.
+Old guide (rev C.1) versus now: 12 top-level steps and about 45 hand operations become 7 steps and
+about 25 operations. Gone are punching 24 discs, needle alignment, two sewing jobs, gluing 4 magnets
+by polarity, pre-wiring 30 AWG leads, two splices and cutting and polishing a light pipe.
 
 ## 10. Open issues
 
 - **J3 position** must move to (14, 6)/(14, 9) on the board (agreed, not yet in the 03:12 PCB).
 - **Antenna.** The plastic-only region (KiCad x 0..5.65, y 11.65..27) is kept free of metal by
-  the module (integral bars, magnets at x 10.4/17.6). Pod 3's flex lies below it (pod 4 in the flex's
-  own numbering). Tune with the band worn.
-- **Pod load spread** is up to 3.3:1 on 180 mm wrists; pods 2 and 5 next to the module carry the
-  least. A 0.5-1 mm shim in their sleeves evens it out.
-- **Strap bars are integral PA12** (about 5 N). If a bar ever cracks, drill 1.6 mm and use a
-  1.5 mm steel spring bar, on the radial side only.
+  the module (integral bars; no magnets or pins any more). Pod 3's flex lies below it (pod 4 in the
+  flex's own numbering). Tune with the band worn.
+- **Pod load spread** is 1.7-1.9:1 with the swung slides (pods 7 and 1 are the extremes). The slide
+  swing and the locking grip are both from the model: check them in the first build's pull test
+  ([assembly.md](../build/assembly.md), "Physical tests"). If a slide cannot swing (for example, it
+  rubs on the slot roof), the bar sits lower and the second webbing layer under it presses on the
+  flex edge link.
+- **Strap bars are integral PA12** with a centre rib (about 20 N, sec. 5). If a bar ever cracks, drill
+  1.6 mm and use a 1.5 mm steel spring bar. Pull-test the slides on the first build
+  ([assembly.md](../build/assembly.md), "Physical tests").
 - **Module size:** 31.9 x 34.3 mm, set by the 28.7 mm board and the 25 mm cell.
 - **Foam choice and pressure.** Measure contact impedance per channel against strap tension
   (signal-chain review sec. 2).
@@ -407,6 +464,15 @@ that drive the mechanics:
     where the cell touches the proximal +X snap riser and has 0.05 mm to the lid. On a rev D, the
     "CELL" label (now under U2) and the outline segments under U1/U2 could move to where they stay
     visible after assembly, and the flex tail could get a matching pin-1 mark.
-- **Pod names.** This document and `fit.py` number the pods in the mirrored order of the real flex
-  (`docs/layout/flex_c_layout.md`, "Pod under the main-board antenna"). The pods are identical, so the
-  mechanics and assembly are unaffected; only the channel names differ.
+- **Pod order is mirrored in the fit.** This document and `fit.py` number the pods in the mirrored
+  order of the real flex (`docs/layout/flex_c_layout.md`, "Pod under the main-board antenna"). The
+  mirror is geometric, not only a matter of names:
+  - `fit.py`, and so `band_assembly.step`, puts two free pods on the ulnar (-X) side and four on the
+    radial side. The real flex has pods 1-2 radial (the button side) and 5-8 ulnar.
+  - So the real band's pod ring is the mirror image of the CAD one, and the volar gap sits on the
+    radial side.
+  - The fit numbers do not change, because the wrist section is an ellipse. Only the module's 0.35 mm
+    `CX_OFF` is asymmetric.
+  - The build guide and animation mirror the ring (`render/nb_blender.mirror_ring`).
+  - To fix it at the source, mirror `layout()` in `fit.py`: swap the sign of the pod 3/4 positions
+    and of the pod walk, and swap the slide-to-pod pairing (2/5) and the edge-link sides.

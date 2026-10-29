@@ -6,9 +6,9 @@ the skin. z = 0 is the shell face the flex paddle (7.1 x 30) lies on; the skin i
 - Soft rounded pebble, 9.0 x 32.0 x 3.9 mm (covers the whole 30 mm paddle), ends tapering to
   2.0 mm beyond the band edges, all walls >= 1.0 mm (1.0 floor behind the foam, 1.0 rims), R1.2 top blends, R0.8 face blends (strain relief where
   the flex spine leaves at +/-X, y -7..+0.6).
-- Compliant contact: 7.0 x 0.5 mm pockets behind the pads (y = -10/0/+10) hold 6.6 x 1.5 mm foam
-  disks -> pads stand 1.0 mm proud (about 0.65 mm worn). Two 1.0 mm pins at y = +/-5 locate the
-  flex's 1.2 mm holes during bonding (0.2 mm clearance, not a press fit).
+- Compliant contact: pockets behind the pads (y = -10/0/+10) for pre-cut round double-sided foam
+  dots (rc.FOAM_D x rc.FOAM_T); the pocket depth puts the pads 1.0 mm proud (about 0.65 mm worn).
+  No pins: the bonding jig locates the flex by its 1.2 mm holes and the pod by its outline.
 - Captive edge sleeve for the continuous 25 mm webbing: a 25.4 x 1.6 mm slot through the pod
   (along X) whose roof is open over the middle 22.4 mm. The fabric stays visible on the outside;
   two 1.5 mm rounded rims hold its edges. The webbing slides freely, so its stretch never
@@ -63,12 +63,7 @@ def build(log=None):
     # foam pockets behind the pads
     for y in R.PAD_Y:
         s = s.cut(Part.makeCylinder(FOAM_POCKET_D / 2, FOAM_POCKET_H, V(0, y, 0)))
-    # locating pins with domed tips
-    for y in R.HOLE_Y:
-        p = Part.makeCylinder(PIN_D / 2, PIN_H - PIN_D / 2 + 0.01, V(0, y, -PIN_H + PIN_D / 2))
-        p = p.fuse(Part.makeSphere(PIN_D / 2, V(0, y, -PIN_H + PIN_D / 2)).common(
-            Part.makeCylinder(PIN_D / 2, PIN_D / 2, V(0, y, -PIN_H))))
-        s = s.fuse(p)
+    # (no locating pins: the bonding jig's pins go through the flex holes; mech/rev_c/bond_jig.py)
     return s.removeSplitter()
 
 
@@ -84,6 +79,7 @@ if not getattr(sys, 'neurband_lib', False):
     R.save('pod_with_flex', [('pod', shell, R.C_POD), ('foam', Part.makeCompound(foam), R.C_FOAM),
                              ('flex', poly, R.C_FLEX), ('pads', Part.makeCompound(gold), R.C_GOLD),
                              ('webbing', web, R.C_STRAP)], log)
-    R.fab('pod', 'Electrode pod shell rev C, TPU (6 per band)', shell, 16, 'fdm', 'tpu', 'black', log,
-          extra={"notes": "TPU 95A, print on its side; 6 per band + spares; foam disks 6.6 x 1.5 mm bought separately"})
+    R.fab('pod', 'Electrode pod shell rev C, TPU (6 per band)', shell, 14, 'fdm', 'tpu', 'black', log,
+          extra={"notes": "TPU 95A, print on its side; 6 per band, 12 for two bands + 2 spares; "
+                          "6 x 2.0 mm EVA foam dots bought separately (docs/build/sourcing.md)"})
     R.finish(log)

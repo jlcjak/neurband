@@ -403,7 +403,7 @@ BAND_MAT = {
     'flex': 'flex', 'flex_pods_3_4': 'flex', 'tail': 'flex', 'pads': 'gold', 'foam': 'foam',
     'strap_long': 'strap', 'strap_short': 'strap', 'strap_loops': 'strap', 'lipo': 'lipo',
     'magnets': 'nickel', 'strap_bars': 'nylon', 'light_pipe': 'pmma', 'main_board': 'fr4',
-    'board_parts': 'black', 'button_cap': 'housing', 'strap': 'strap', 'strap_loop': 'pod',
+    'board_parts': 'black', 'button_cap': 'housing', 'strap': 'strap', 'strap_loop': 'pod', 'strap_slide': 'pod',
 }
 MODULE_KINDS = {'module_base', 'module_lid', 'main_board', 'board_parts', 'lipo', 'light_pipe',
                 'magnets', 'strap_bars'}
@@ -446,7 +446,10 @@ def band_material(k, housing='graphite'):
     }[band_class(k)]()
 
 
-def load_band(path=None, housing='graphite'):
+MIRROR_RING = True     # show the pod ring in the real flex's order (see mirror_ring)
+
+
+def load_band(path=None, housing='graphite', mirror=None):
     objs = import_glb(path or os.path.join(BUILD, 'band_assembly.glb'), bake=True)
     for o in objs.values():
         k = kind(o.name)
@@ -455,7 +458,64 @@ def load_band(path=None, housing='graphite'):
             add_weave_attr(o)
         setmat(o, band_material(k, housing))
         smooth(o, math.radians(35))
+    if MIRROR_RING if mirror is None else mirror:
+        mirror_ring(list(objs.values()))
     return objs
+
+
+RING_KINDS = ('pod_shells', 'flex', 'foam', 'pads')
+STRAP_END_KINDS = ('strap_lock_a', 'strap_tail_a', 'strap_lock_b', 'strap_tail_b')
+
+
+def mirror_ring(objs, cx=0.00035, ang_blend=(49.0, 53.0)):
+    """The fitted band (mech/rev_c/fit.py, band_assembly.step) numbers its pods mirrored: pods 1-2 sit
+    on its -X (ulnar) side, while the real flex has pods 1-2 radial (+X_mech) and 5-8 ulnar
+    (docs/layout/flex_c_layout.md). The wrist section in fit.py is an ellipse, so the mirrored band is
+    the same fit. Mirror the ring parts about X = 0 (pads, pods and tail centre) and the webbing too,
+    but where it wraps the module-mounted slides (within ang_blend deg of the dorsal centre) about
+    X = CX_OFF, the slides' centre.
+    Mirrors the (baked) mesh data; returns the mirrored objects."""
+    Mx = Matrix.Scale(-1, 4, (1, 0, 0))
+    out = []
+    for o in objs:
+        k = o.get('kind', kind(o.name))
+        if k in RING_KINDS or is_strap(k):
+            o.data.transform(o.matrix_world)
+            o.matrix_world = Matrix.Identity(4)
+            o.data.transform(Mx)
+            o.data.flip_normals()
+            if is_strap(k):
+                V = verts_np(o, world=False)
+                th = np.degrees(np.abs(np.arctan2(V[:, 0], V[:, 2])))
+                u = np.clip((ang_blend[1] - th) / (ang_blend[1] - ang_blend[0]), 0, 1)
+                w = u * u * (3 - 2 * u)
+                V[:, 0] += 2 * cx * w
+                o.data.vertices.foreach_set('co', V.ravel())
+                if 'weave' in o.data.attributes:
+                    o.data.attributes.remove(o.data.attributes['weave'])
+                add_weave_attr(o)
+            o.data.update()
+            out.append(o)
+    bpy.context.view_layer.update()
+    return out
+
+
+def pod_numbers(pods, z_axis=0.0):
+    """real flex numbers of the six free pods (after mirror_ring): radial (+X) side 2, 1 from the module,
+    ulnar (-X) side 5, 6, 7, 8. Returns {object name: number}."""
+    ang = {}
+    for o in pods:
+        mn, mx = bbox([o])
+        c = (mn + mx) / 2
+        ang[o.name] = math.degrees(math.atan2(c[0], c[2] - z_axis))
+    pos = sorted([n for n in ang if ang[n] > 0], key=lambda n: ang[n])
+    neg = sorted([n for n in ang if ang[n] <= 0], key=lambda n: -ang[n])
+    num = {}
+    for n, k in zip(pos, (2, 1)):
+        num[n] = k
+    for n, k in zip(neg, (5, 6, 7, 8)):
+        num[n] = k
+    return num
 
 
 def load_module(housing='graphite'):

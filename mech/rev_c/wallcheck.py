@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals() els
 import FreeCAD, Part
 
 V = FreeCAD.Vector
-PARTS = [p for p in os.environ.get('WALL_PARTS', 'module_base,module_lid,button_cap,strap_loop,charge_puck,pod').split(',')]
+PARTS = [p for p in os.environ.get('WALL_PARTS', 'module_base,module_lid,button_cap,strap_slide,charge_clip,cell_spacer,pod,bond_jig,swd_jig').split(',')]
 RAY = 8.0           # longest wall considered
 GRID = 0.6          # mm between samples (approx.)
 MAX_PER_FACE = 120

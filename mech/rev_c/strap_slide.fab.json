@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C strap slide (2 per band, clips onto the hidden bars, anchors the webbing ends)",
+  "source": "strap_slide.step",
+  "qty": 5,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 0.264,
+    "area_cm2": 5.68,
+    "size_x_mm": 22.43,
+    "size_y_mm": 7.91,
+    "size_z_mm": 3.41
+  },
+  "min_wall_mm": 1.0
+}

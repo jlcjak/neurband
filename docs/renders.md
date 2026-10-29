@@ -12,13 +12,13 @@ current files.
 | `hero_arm_wide.png` | 16:9, 2048 x 1152 | Low side view of the same pose, with the hand leading into the frame and contact shadows under the fingertips. |
 | `hero_crop.png` | 4:5 | Tight 3/4 forearm crop. The module fills the frame. |
 | `hero_dark.png`, `hero_dark_wide.png` | 4:5, 16:9 | Moody variant of the hero pose. Deep charcoal sweep with a faint gradient, a warm key, and cool rims that are light-linked to the arm and band only, so the backdrop stays dark. f/2.8. |
-| `arm_volar.png` | 4:5 | Palm up, held above the backdrop. Shows the strap, buckle side and pods on the volar wrist. |
+| `arm_volar.png` | 4:5 | Palm up, held above the backdrop. Shows the webbing loop and the pods on the volar wrist. |
 | `flatlay.png` | 16:9 | Top-down flat-lay of the band laid open, skin side up: all 8 pods with their gold pads, and the module underside with the charge window. |
 | `pods_inside.png` | 4:5 | Close-up into the closed band: gold pads on the pods and under the module. |
 | `band_product.png` | 4:5 | The band alone, closed, on a pedestal against a deep charcoal backdrop. Graphite PA12, satin pods, amber flex. |
 | `band_bone.png` | 16:9 | Bone-white housing variant on a warm grey sweep. |
 | `xray.png` | 16:9 | Clear-resin housing showing the LiPo, the main board, the J1 FPC connector and the flex tail U-turn. |
-| `exploded.png` | 4:5 | Module exploded along its stack: lid, cell, main board, base (with magnets and strap bars), pods 3/4 flex, foam and pads. |
+| `exploded.png` | 4:5 | Module exploded along its stack: lid, cell, main board, base (with its hidden strap bars), pods 3/4 flex, foam dots and pads. |
 | `pcb_top.png` | 16:9 | Main board top macro: black mask, ENIG, the KiCad 3D models. |
 | `pcb_pair.png` | 16:9 | Main board top and bottom side by side. The bottom shows the VCHG/GND charge pads and the SWD pads. |
 | `flex_detail.png` | 16:9 | Electrode flex close-up, skin side up: ENIG pads on amber polyimide. |
@@ -33,6 +33,11 @@ The look is meant to be restrained:
 
 There are no text overlays, flares or glow effects.
 
+Every band shot shows the pod ring in the real flex's order, with pods 1-2 on the radial (button) side
+and 5-8 ulnar. `nb_blender.load_band` mirrors the ring parts of `band_assembly.step` for this
+(`mirror_ring`; set `MIRROR_RING = False` for the raw CAD order). Each slide is drawn as the CAD
+places it: swung in line with the band, with the webbing end locked round its friction bar.
+
 ## Regenerate
 
 ```
@@ -45,35 +50,76 @@ python3 render/make_renders.py --social --no-export --shots hero_crop,pods_insid
                                                # 16:9 versions for social posts, subject centred -> render/out/social/
 ```
 
-### Assembly animation and build-guide images (`render/assembly_anim.py`)
+### Assembly animation (`render/assembly_anim.py`)
 
 ```
-python3 render/assembly_anim.py                 # re-export inputs, 720 frames on GPUs 0,1, captions, MP4 + GIF (~15 min)
+python3 render/assembly_anim.py                 # re-export inputs, 733 frames on GPUs 0,1, captions, MP4 + GIF (~15 min)
 python3 render/assembly_anim.py --no-export     # reuse render/build/*.glb
 python3 render/assembly_anim.py --quick         # half size, 16 spp preview -> render/build/assembly_quick_out/
-python3 render/assembly_anim.py --stills        # the images of docs/build/assembly.md -> docs/build/img/*.jpg
-python3 render/assembly_anim.py --encode-only   # redo captions and encoding from existing frames
+python3 render/assembly_anim.py --encode-only   # redo captions, cross-fade and encoding from existing frames
+blender -b --python render/assembly_anim.py -- --scene ring --quick --times 9.4,16.2   # debug stills
 ```
 
-- Output: `docs/media/assembly.mp4` (1920 x 1080, 24 s at 30 fps, H.264 CRF 20, about 7 MB) and
-  `docs/media/assembly.gif` (720 px wide, 10 fps, 64 colours with ordered dither, about 9.6 MB: the moving
-  camera leaves little for GIF to reuse between frames, so a wider or faster GIF goes over 10 MB). The images go to `docs/build/img/` (11 stills, 1600 x 1000 JPEG, 160 spp; `j1_marks` is the close-up of J1's DOWN and pin-1 marks).
-- The scene reuses the `nb_blender.py` helpers and look: the band GLB, the real KiCad board placed with
-  `module.k2m`, the warm-grey sweep and the `studio()` lights. 40 spp per frame with OptiX denoising,
-  about 2 s a frame on an RTX 3090.
-- The parts come in in build order: flex, foam discs, pods, base, board, cell, light pipe and cap, lid,
-  ulnar loop, webbing, radial loop and fold-back. Each part flies in along its own radial or the module's
-  +Z direction and fades in with an Object Info alpha mixed into every material. The webbing is
-  revealed along the strap by a `rev` attribute, the angle from the ulnar loop.
-- Two parts are modelled in the script:
-  - the **flex tail**, a ribbon whose free length stays 8.24 mm while the board folds down on it (the
-    "book" fold of the guide);
-  - the two **30 AWG battery leads** round the board's distal +X corner through the base's lead gate.
-- The five webbing solids (band, fold-back, sewn end, two wraps) are fused in
-  `band_assembly.step`. The script therefore rebuilds them with `mech/rev_c/fit.py` (160 mm wrist)
-  under FreeCAD into `render/build/strap_pieces.glb`.
-- Captions are drawn on the frames afterwards with PIL (Noto Sans, dark grey, fading in and out), so the
-  3D frames stay clean. ffmpeg encodes the MP4 and a palette GIF.
+- **Output.** `docs/media/assembly.mp4` (1920 x 1080, 24 s at 30 fps, H.264 CRF 20) and
+  `docs/media/assembly.gif` (720 px wide, 8 fps, 64 colours with ordered dither, about 9.4 MB; at 10 fps it
+  goes over 10 MB).
+- **Two scenes, cross-faded at 6.6-7.0 s.** Each is rendered in its own `blender -b` process per GPU,
+  to `render/build/assembly/j_NNNN.png` and `r_NNNN.png`.
+  - The **jig** scene (`guide_figures.jig_scene`) covers the bonding jig. The flat KiCad flex lies
+    pads-down on the pins, bent onto the saddle and with its tail turned up. The foam dots drop into
+    the pods and the base, which are pocket-up. Each part turns over and presses into its fence.
+  - The **ring** scene (`ring_scene`) is the band as fitted on the 160 mm wrist. The board comes down
+    onto the upright tail and book-folds. Then come the cell, the button cap and the lid. Next, the two
+    slides clip on, the webbing loop is revealed from slide A round to slide B and the tails pull.
+    Last, the charge clip slides on from the proximal end and off again.
+- **The pod order is mirrored.** `fit.py` (and so `band_assembly.step`) puts pods 1-2 on the ulnar
+  side. The real flex has them radial (`docs/layout/flex_c_layout.md`). The ring parts are therefore
+  mirrored about the module's X = 0 (`nb_blender.mirror_ring`). The fit's wrist section is an ellipse,
+  so the fit itself is unchanged.
+- **Modelled in the script:**
+  - the flex tail, a ribbon of constant free length while the board folds on it;
+  - the cell's leads round the distal +X corner through the lead gate;
+  - the USB lead.
+- **The webbing pieces.** The five webbing solids (loop, two wraps, two tails) are fused in
+  `band_assembly.step`. The script rebuilds them with `mech/rev_c/fit.py` under FreeCAD into
+  `render/build/strap_pieces.glb`.
+- **Rendering.** 40 spp with OptiX denoising: about 2 s a frame for the jig and 3 s for the ring on an
+  RTX 3090.
+- **Captions** are drawn afterwards with PIL (Noto Sans, on a soft pill), so the 3D frames stay clean.
+
+### Build-guide figures (`render/guide_figures.py`)
+
+```
+python3 render/guide_figures.py                     # all 12 figures: Blender on GPUs 0,1, then PIL (~3 min)
+python3 render/guide_figures.py --only s3_bond,xsec # some figures (stale images are only removed on a full run)
+python3 render/guide_figures.py --annotate-only     # redo the PIL annotations from render/build/guide/
+python3 render/guide_figures.py --quick             # 40 % size, 16 spp -> render/build/guide_quick_out/
+python3 render/guide_figures.py --xsec              # also rebuild the cross-section solids (FreeCAD)
+```
+
+- **Output.** `docs/build/img/*.jpg`, 1600 x 1000 JPEG q88, readable at 900 px wide:
+  - `hero`, `exploded`, `xsec` and `strap_path`;
+  - one figure per step, `s1_swd` ... `s8_charge`.
+
+  On a full run, any other file in `docs/build/img/` is deleted.
+- **The Blender pass** (128 spp, OptiX denoise) uses the docs/media look. It reuses
+  `assembly_anim.ring_scene` and `jig_scene`, and adds three scenes of its own: the SWD jig with the
+  board, the board bottom-up with the cell, and the module alone with a see-through charge clip.
+  - For each figure it writes the raw render, a highlight mask and the 2D positions of its anchor
+    points and paths, all to `render/build/guide/`. The mask is the highlighted part, emissive, with
+    holdout on everything else.
+  - The cross-section (`xsec`) comes from `render/build/guide_xsec.glb`. FreeCAD builds it from
+    `mech/rev_c`: pod, flex with spine links, pads, worn foam dots, webbing and a 30 mm skin slab, cut
+    at the middle pad.
+- **The PIL pass** draws the annotations:
+  - the step badge and title;
+  - thin leader lines with white dot anchors;
+  - Noto Sans labels, de-overlapped in side columns, with a light stroke;
+  - orange motion arrows;
+  - an orange outline round the highlighted part;
+  - for `s6_strap`, a 2D side section of the slide's threading.
+
+  The label text and placement are in `SPEC` at the end of the script.
 
 The turntable frames are split across the GPUs (even and odd frames) and written to
 `render/build/turntable/`. ffmpeg then encodes `render/out/turntable.mp4` (libx264) and

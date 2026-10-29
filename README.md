@@ -17,9 +17,9 @@ from first principles to record data good enough to train gesture models, and ch
 | Electrodes | 24 dry 6.5 mm ENIG gold pads on a 2-layer polyimide flex, foam-backed, 1 mm proud |
 | Radio | nRF52832, BLE 5 2M PHY, printed antenna; 2 kSPS × 8 ch, 16-bit stream |
 | IMU | LSM6DSL accel + gyro, 208 Hz |
-| Power | 100 mAh LiPo, ~10 h streaming; magnetic charger that only fits when the band is off the wrist |
+| Power | 401223-class LiPo, about 130 mAh, ~12 h streaming (estimate); printed charge clip with two pogo pins that only fits when the band is off the wrist |
 | Module | 31.9 × 34.3 × 9.9 mm, ~15 g total, one size for 145–180 mm wrists |
-| Cost | ≈ $280–330 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
+| Cost | ≈ $290–350 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
 ## Gallery
 
@@ -88,27 +88,33 @@ typing, fluent handwriting.
 
 ## Build one
 
-**Step-by-step build guide, with images and a 24 s assembly animation:
-[docs/build/assembly.md](docs/build/assembly.md)** (what to order, printing, gluing, bring-up, assembly,
-strap, charging, troubleshooting).
+**Build guide: [docs/build/assembly.md](docs/build/assembly.md)**: the shopping list, the prints, eight
+illustrated steps, troubleshooting and the tests to run on a first band. There is also a 24 s
+[assembly animation](docs/media/assembly.mp4).
 
-A first prototype costs around $300 (≈ $280–330 for five main boards with two assembled, five electrode flexes,
+A first prototype costs around $300 (≈ $290–350 for five main boards with two assembled, five electrode flexes,
 the prints and the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)). Most of it is the ADS1298 and the
 fab's assembly fees.
 
-1. **Order** the assembled main board and the prints with **Buy it** (`boards/neurband_c/ORDERING.md`,
-   `mech/rev_c/*.fab.json`), and the electrode flex from a flex-PCB service
-   (`boards/neurband_c_flex/ORDERING.md`). The pods are TPU on your own FDM printer. Buy the off-the-shelf bits in
-   [docs/rev_c/cost.md](docs/rev_c/cost.md) (LiPo 401225, magnetic charge pins, nRF52840 dongle, Pico as SWD probe,
-   22 mm elastic webbing, foam discs).
-2. **Assemble**: foam discs under each pad, pods onto the flex, flex tail into J1 (contacts toward the board),
-   cell onto the battery pads, close the module. Follow [docs/build/assembly.md](docs/build/assembly.md);
-   design details are in [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
-3. **Flash** `firmware_c/` (Zephyr) over SWD with any CMSIS-DAP probe; follow the bring-up checklist in
-   [docs/firmware_c.md](docs/firmware_c.md) (ADC ID, test signal, shorted-input noise, then skin).
-4. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
+1. **Order** three things:
+   - the assembled main board and the prints, with **Buy it** in Backplane
+     (`boards/neurband_c/ORDERING.md`, `mech/rev_c/*.fab.json`);
+   - the electrode flex, from a flex-PCB service (`boards/neurband_c_flex/ORDERING.md`);
+   - about EUR 60 of off-the-shelf parts ([docs/build/sourcing.md](docs/build/sourcing.md)): 20 mm
+     elastic, 6 mm foam dots, a 401223 LiPo, pogo pins, a Pico 2 as the SWD probe and an nRF52840
+     dongle.
+2. **Build** it in eight steps, with no sewing, magnets or tape other than Kapton:
+   - flash the bare board in the printed SWD jig;
+   - solder the cell;
+   - bond the flex and pods in the printed bonding jig;
+   - fold the tail into J1;
+   - close the module;
+   - thread the webbing loop through the two slides.
+
+   Design details are in [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
+3. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
    `python3 -m analysis collect basic --out data/s1`.
-5. **Check and train**: `python3 -m analysis report data/*.npz`, `python3 -m analysis train data/*.npz`.
+4. **Check and train**: `python3 -m analysis report data/*.npz`, `python3 -m analysis train data/*.npz`.
    Try the whole pipeline without hardware: `python3 -m analysis synth /tmp/nb`.
 
 **Safety.** Wear it only while it runs on its own battery. Never connect a charger, USB cable, debugger or

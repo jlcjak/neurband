@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C SWD flashing jig (5 x P50 pogo pins on TP1-TP5)",
+  "source": "swd_jig.step",
+  "qty": 1,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "white"
+  },
+  "features": {
+    "volume_cm3": 21.26,
+    "area_cm2": 54.95,
+    "size_x_mm": 36.7,
+    "size_y_mm": 35.5,
+    "size_z_mm": 18.0
+  },
+  "min_wall_mm": 1.43
+}
