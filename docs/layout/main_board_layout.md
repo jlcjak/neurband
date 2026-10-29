@@ -1,6 +1,6 @@
 # Main board rev B layout
 
-Canonical PCB: `boards/neurband_main/neurband_main.kicad_pcb`. Coordinates below are millimetres in the **top view**, +X right, +Y down. Bottom-side coordinates are still expressed in that same top-view frame; do not mirror them a second time.
+Canonical PCB: `archive/neurband_main_revB/neurband_main.kicad_pcb`. Coordinates below are millimetres in the **top view**, +X right, +Y down. Bottom-side coordinates are still expressed in that same top-view frame; do not mirror them a second time.
 
 ## Outline and assembly
 
@@ -40,7 +40,7 @@ Verified transform from stock-footprint local coordinates to the board top view:
 - FPC width **12.0 ±0.05 mm**, total reinforced mating thickness **0.20 ±0.03 mm**, including adhesive/stiffener. Use the specified staggered/interdigitated fingers, not 39 uniform rectangular fingers.
 - Closed connector height **1.0 ±0.1 mm**. Open reference 1.9 mm at 135°; actuator sweep reference **2.3 mm at 90°**. Reserve at least that operating volume plus tolerance and finger/tool access.
 
-The verified stock FH26 copper land pattern is compatible with FH26W. The stock paste apertures equal the copper; the assembly stencil must instead follow Hirose's drawing: 0.1 mm stencil, 0.23 × 0.65 mm odd apertures, 0.23 × 0.55 mm even apertures, 0.9 × 0.3 mm retention apertures, including the drawing's odd-aperture offset. See [connector review](../../boards/neurband_main/layout/FH26W-review.md). No electrode-flex files were changed by this layout work.
+The verified stock FH26 copper land pattern is compatible with FH26W. The stock paste apertures equal the copper; the assembly stencil must instead follow Hirose's drawing: 0.1 mm stencil, 0.23 × 0.65 mm odd apertures, 0.23 × 0.55 mm even apertures, 0.9 × 0.3 mm retention apertures, including the drawing's odd-aperture offset. See [connector review](../../archive/neurband_main_revB/layout/FH26W-review.md). No electrode-flex files were changed by this layout work.
 
 ### Antenna, battery and height allowances
 
@@ -60,6 +60,6 @@ This is an active routing revision, **not manufacturing sign-off**. The most rec
 
 ## Reuse and rev A
 
-Rev A is preserved under `archive/neurband_main_revA/`: 54 × 34 mm, four layers, 1.6 mm, top-only assembly, ESP32-S3 and the old 40-way connector. Rev B reuses its ADS supply/reference grouping, decoupling rationale, probe-pad convention and DRC limits, but not its one-sided placement or obsolete radio/connector footprints. The new C3 footprint has **53 unique electrical pin numbers / 61 physical pad objects**, including nine islands sharing GND pad 49; see [module review](../../boards/neurband_main/layout/ESP32-C3-MINI-1-review.md).
+Rev A is preserved under `archive/neurband_main_revA/`: 54 × 34 mm, four layers, 1.6 mm, top-only assembly, ESP32-S3 and the old 40-way connector. Rev B reuses its ADS supply/reference grouping, decoupling rationale, probe-pad convention and DRC limits, but not its one-sided placement or obsolete radio/connector footprints. The new C3 footprint has **53 unique electrical pin numbers / 61 physical pad objects**, including nine islands sharing GND pad 49; see [module review](../../archive/neurband_main_revB/layout/ESP32-C3-MINI-1-review.md).
 
 Battery/wireless operation only while worn. No charger, programmer or grounded bench instrument may remain connected to skin-contact hardware. DRC does not establish electrical noise, bias-loop stability, radio coexistence or body-contact safety.

@@ -30,16 +30,16 @@ mech/**/logs/
 .venv/
 # regenerable CAD outputs (scripts are the source; run the .py to rebuild)
 *.FCStd
-mech/fit_*.step
-mech/band_*.step
-mech/housing_assy.step
-mech/main_board.step
 mech/rev_c/fit_*.step
-mech/renders/
+archive/mech_revAB/fit_*.step
+archive/mech_revAB/band_*.step
+archive/mech_revAB/housing_assy.step
+archive/mech_revAB/main_board.step
+archive/mech_revAB/renders/
+archive/mech_revAB/logs/
 extra/wrists/*.step
-# rev A/B working folders: identical copies live in archive/
-boards/neurband_main/
-boards/neurband_electrodes/
+# local-only backups (working copies, layout build backups): never published
+archive/local/
 # bulky intermediate layout artefacts
 archive/**/renders/layers/
 archive/**/build/

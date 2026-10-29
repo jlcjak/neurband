@@ -9,7 +9,7 @@ This revision of the board has two ADS1298, the ESP32-S3 and a BOOT/marker butto
 IMU, no battery divider and no status LED; status is reported only as text over UDP or serial.
 
 Code: `firmware/` (PlatformIO, Arduino on ESP32-S3) and `host/` (Python 3 recorder, plotter, tests).
-The pin map is in `firmware/include/config.h`, copied from `boards/neurband_main/gen_main_sch.py`.
+The pin map is in `firmware/include/config.h`, copied from `archive/neurband_main_revA/gen_main_sch.py`.
 All ADS1298 register values below come from `docs/datasheets/ads1298.txt` (TI SBAS459K).
 
 ## Build and flash

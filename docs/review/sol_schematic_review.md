@@ -1,6 +1,6 @@
 # neurband schematic review — Sol
 
-Review only; 2026-10-25. Generator locations: `boards/neurband_main/gen_main_sch.py`, `boards/neurband_electrodes/gen_electrodes_sch.py`. Sources: both generators, exported schematic netlists, rendered main schematic, local ADS1298 datasheet and [Meta research](../research/meta_semg_research.md). No hardware measurements; “good dry-electrode data” remains a bench acceptance criterion.
+Review only; 2026-10-25. Generator locations: `archive/neurband_main_revB/gen_main_sch.py`, `archive/neurband_electrodes_revB/gen_electrodes_sch.py`. Sources: both generators, exported schematic netlists, rendered main schematic, local ADS1298 datasheet and [Meta research](../research/meta_semg_research.md). No hardware measurements; “good dry-electrode data” remains a bench acceptance criterion.
 
 ## Decision
 

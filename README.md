@@ -127,7 +127,7 @@ grounded instrument while the pads touch skin. This is a research prototype, not
 | `sim/` | ngspice AFE simulations and the forearm EMG forward model |
 | `render/` | Blender pipeline for the images (`python3 render/make_renders.py`) |
 | `docs/` | design notes, reviews, science, layout and mechanical docs |
-| `archive/` | rev A (16 ch, ESP32, 54 × 34 mm) and rev B (compact 16 ch, unfinished) |
+| `archive/` | older work: rev A (16 ch, ESP32, 54 × 34 mm) and rev B boards, rev A/B mechanics, the rev C layout scripts |
 | `tools/` | the small Python KiCad schematic generator used for every schematic |
 
 ## Status and next steps
