@@ -87,39 +87,61 @@ blender -b --python render/assembly_anim.py -- --scene ring --quick --times 9.4,
   RTX 3090.
 - **Captions** are drawn afterwards with PIL (Noto Sans, on a soft pill), so the 3D frames stay clean.
 
-### Build-guide figures (`render/guide_figures.py`)
+### Assembly-manual figures (`render/guide_figures.py`, `render/manual_figs.py`)
 
 ```
-python3 render/guide_figures.py                     # all 12 figures: Blender on GPUs 0,1, then PIL (~3 min)
-python3 render/guide_figures.py --only s3_bond,xsec # some figures (stale images are only removed on a full run)
-python3 render/guide_figures.py --annotate-only     # redo the PIL annotations from render/build/guide/
-python3 render/guide_figures.py --quick             # 40 % size, 16 spp -> render/build/guide_quick_out/
-python3 render/guide_figures.py --xsec              # also rebuild the cross-section solids (FreeCAD)
+python3 render/guide_figures.py                 # every figure (hero + 0.1 ... 9.1) and the PDF (~5 min)
+python3 render/guide_figures.py --only 3.5      # one figure (or a list: --only 3.5,4.1); stale files are kept
+python3 render/guide_figures.py --annotate-only # redo the 2D pass (labels, arrows, insets) from render/build/guide/
+python3 render/guide_figures.py --pdf           # only docs/build/neurband_build_manual.pdf from docs/build/assembly.md
+python3 render/guide_figures.py --xsec          # also rebuild the pod cross-section solids (FreeCAD)
 ```
 
-- **Output.** `docs/build/img/*.jpg`, 1600 x 1000 JPEG q88, readable at 900 px wide:
-  - `hero`, `exploded`, `xsec` and `strap_path`;
-  - one figure per step, `s1_swd` ... `s8_charge`.
+- **Output.**
+  - `docs/build/img/m<part>-<n>_<name>.png`, one per figure 0.1 ... 9.1. They are about 1400 px
+    wide and readable at 900 px.
+  - `docs/build/img/hero.jpg`, the Cycles beauty shot.
+  - `docs/build/neurband_build_manual.pdf`: A4, built from `assembly.md` with python-markdown and
+    headless Chromium; images as JPEG; a page break before each part.
 
   On a full run, any other file in `docs/build/img/` is deleted.
-- **The Blender pass** (128 spp, OptiX denoise) uses the docs/media look. It reuses
-  `assembly_anim.ring_scene` and `jig_scene`, and adds three scenes of its own: the SWD jig with the
-  board, the board bottom-up with the cell, and the module alone with a see-through charge clip.
-  - For each figure it writes the raw render, a highlight mask and the 2D positions of its anchor
-    points and paths, all to `render/build/guide/`. The mask is the highlighted part, emissive, with
-    holdout on everything else.
-  - The cross-section (`xsec`) comes from `render/build/guide_xsec.glb`. FreeCAD builds it from
-    `mech/rev_c`: pod, flex with spine links, pads, worn foam dots, webbing and a 30 mm skin slab, cut
-    at the middle pad.
-- **The PIL pass** draws the annotations:
-  - the step badge and title;
-  - thin leader lines with white dot anchors;
-  - Noto Sans labels, de-overlapped in side columns, with a light stroke;
-  - orange motion arrows;
-  - an orange outline round the highlighted part;
-  - for `s6_strap`, a 2D side section of the slide's threading.
+- **The look.** It is one technical-illustration system, chosen for clarity, not beauty:
+  - Blender Workbench, with studio light, object outlines and cavity shading, orthographic cameras
+    and a light neutral background;
+  - one colour per part, the same in every figure (`COL`; legend in 0.1);
+  - the parts being added get an orange outline, made from a second, flat mask render;
+  - assembled context is drawn normally or ghosted (pale and see-through), and parts not yet
+    relevant are hidden.
+- **The scenes are built from the CAD:**
+  - `assembly_anim.ring_scene`: the band, module, KiCad board, flex tail ribbon, leads and charge
+    clip;
+  - `jig_scene`: the bonding jig with the flat KiCad flex, pods, base and dots;
+  - the SWD jig with the board; the charge clip; `guide_xsec.glb` for the pod section;
+  - the arm (`nb_blender.build_arm`) for 7.1.
 
-  The label text and placement are in `SPEC` at the end of the script.
+  Each figure function in `manual_figs.py` poses the parts, renders one or more shots (plus close-up
+  shots for the circular insets) and records the 2D position of every labelled point.
+- **The 2D pass** (PIL, Noto Sans) composes each figure from its spec (`SPECS` in
+  `manual_figs.py`):
+  - title bar and panels;
+  - leader lines with dot anchors, and numbered circles;
+  - dashed travel arrows and motion arcs;
+  - circular zoom insets;
+  - section diagrams drawn to the CAD dimensions: pin lean, pins on the test pads, the J2 joint, a
+    seated dot, a pod on its ledges, the J1 section, the snap catch, the four-step webbing lock, the
+    length steps, the clip pin height and the charge window.
+
+  Wiring (1.2) and the length steps (6.4) are diagrams only.
+- **Label placement and check.** Each label is placed where its box (with a light backing) stays on
+  the image and clear of other labels, insets and diagrams. Its leader then ends on the nearest edge
+  of that box. After every figure, an automatic check prints `LABEL CHECK` lines for:
+  - a leader crossing a label;
+  - two overlapping labels;
+  - a label off the image;
+  - a label with no free place.
+
+  The current figures pass.
+- **The animation** (`assembly_anim.py`) still uses the Cycles look described above.
 
 The turntable frames are split across the GPUs (even and odd frames) and written to
 `render/build/turntable/`. ffmpeg then encodes `render/out/turntable.mp4` (libx264) and

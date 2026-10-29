@@ -28,8 +28,9 @@ BLENDER = '/usr/bin/blender'
 FREECAD = '/usr/bin/freecad'
 FONT_DIR = '/usr/share/fonts/noto'
 RES = (1600, 1000)
-FIGS = ['hero', 'exploded', 'xsec', 'strap_path', 's1_swd', 's2_cell', 's3_bond', 's4_fold', 's5_close',
-        's6_strap', 's7_wear', 's8_charge']
+sys.path.insert(0, HERE)
+import manual_figs as MF                              # the assembly-manual figures (0.1 ... 9.1)
+FIGS = ['hero'] + MF.IDS
 
 # bonding jig geometry (mech/rev_c/bond_jig.py), mm
 R_U, MOD_PRESS, FLEX_REAL, POD_W, POD_PRESS = 42.0, 1.0, 0.11, 7.1, 0.6
@@ -254,7 +255,7 @@ def mat_foam_light(NB):
 
 
 # ---------------------------------------------------------------- bonding jig scene
-def jig_scene(NB, anim=False):
+def jig_scene(NB, anim=False, tail_up=True):
     import bpy, bmesh
     import numpy as np
     from mathutils import Vector, Matrix
@@ -296,7 +297,7 @@ def jig_scene(NB, anim=False):
         x, y, z = V[:, 0] - 65.0, -V[:, 1] - 35.0, -V[:, 2] + 0.08
         # tail: bend up through the base's floor slot
         s_ = y - TAIL_Y0
-        tl = (s_ > 0) & (np.abs(x) < 5.6)
+        tl = (s_ > 0) & (np.abs(x) < 5.6) & tail_up
         q = np.pi * TAIL_R / 2
         sb = np.clip(s_, 0, q)
         yy = np.where(tl, TAIL_Y0 + TAIL_R * np.sin(sb / TAIL_R) + 0.0, y)
@@ -394,7 +395,7 @@ def jig_scene(NB, anim=False):
         base.color = (1, 1, 1, alpha)
         base.hide_render = alpha < 0.002
         for d in bdots:
-            d.matrix_world = W @ B @ Matrix.Translation((0, 0, drop if phi > 1.5 else -drop)) @ Matrix(d['M_mod'])
+            d.matrix_world = W @ B @ Matrix.Translation((0, 0, -drop if phi > 1.5 else drop)) @ Matrix(d['M_mod'])
             d.color = (1, 1, 1, dot_alpha)
             d.hide_render = dot_alpha < 0.002
         return W
@@ -1011,6 +1012,15 @@ def blender_main(argv):
     os.makedirs(a.out, exist_ok=True)
     for name in a.figs.split(','):
         t0 = time.time()
+        if name in MF.IDS:
+            try:
+                MF.render(name, a.out)
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                NB.log('FAILED', name, e)
+            NB.log('figure', name, '%.0f s' % (time.time() - t0))
+            continue
         NB.reset()
         NB.MATS.clear()
         samples = a.samples or (16 if a.quick else 128)
@@ -1379,6 +1389,59 @@ def annotate(name, src, dst):
     im.convert('RGB').save(dst, quality=88, optimize=True)
 
 
+# ================================================================ PDF of the manual
+PDF_CSS = """
+@page { size: A4; margin: 13mm 13mm 14mm 13mm; }
+body { font-family: 'Noto Sans', sans-serif; font-size: 9.6pt; line-height: 1.38; color: #222; }
+h1 { font-size: 20pt; margin: 0 0 6pt 0; }
+h2 { font-size: 15pt; page-break-before: always; border-bottom: 2px solid #e2602a; padding-bottom: 3pt; }
+h3 { font-size: 11.5pt; margin: 12pt 0 4pt 0; page-break-after: avoid; }
+img { width: 100%; page-break-inside: avoid; page-break-before: auto; }
+p > img { display: block; }
+table { border-collapse: collapse; width: 100%; font-size: 8.4pt; margin: 6pt 0; page-break-inside: auto; }
+th, td { border: 1px solid #ccc; padding: 2.5pt 4pt; vertical-align: top; }
+th { background: #eee; }
+code { font-size: 8.6pt; background: #f2f2f2; padding: 0 2pt; }
+blockquote { border-left: 4px solid #e2602a; margin: 8pt 0; padding: 2pt 10pt; background: #fbf4ef; page-break-inside: avoid; }
+ol, ul { margin: 3pt 0 3pt 0; }
+a { color: #1d4f9a; text-decoration: none; }
+"""
+
+
+def build_pdf(md_path=os.path.join(ROOT, 'docs', 'build', 'assembly.md'),
+              pdf_path=os.path.join(ROOT, 'docs', 'build', 'neurband_build_manual.pdf')):
+    """assembly.md -> HTML (python-markdown) -> PDF (headless Chromium), A4, a page break before each part."""
+    import markdown, tempfile, shutil
+    from PIL import Image
+    md = open(md_path).read()
+    tmpd = tempfile.mkdtemp()
+    os.makedirs(os.path.join(tmpd, 'img'))
+    src_img = os.path.join(os.path.dirname(md_path), 'img')
+    for f in os.listdir(src_img):                      # JPEG copies keep the PDF small
+        im = Image.open(os.path.join(src_img, f)).convert('RGB')
+        im.save(os.path.join(tmpd, 'img', os.path.splitext(f)[0] + '.jpg'), quality=85)
+    md = md.replace('.png)', '.jpg)')
+    import re
+    md = re.sub(r'(?m)^   (?=\S)', '    ', md)              # python-markdown nests lists at 4 spaces (GitHub at 3)
+    md = re.sub(r'(?m)^(    [^\s].*)\n(\d+\. )', r'\1\n\n\2', md)   # a list item after an indented paragraph
+    html = markdown.markdown(md, extensions=['tables', 'toc', 'sane_lists'])
+    base = 'file://' + tmpd + '/'
+    doc = ('<!doctype html><html><head><meta charset="utf-8"><base href="%s"><style>%s</style></head><body>%s</body></html>'
+           % (base, PDF_CSS, html))
+    tmp = os.path.join(tmpd, 'manual.html')
+    open(tmp, 'w').write(doc)
+    for exe in ('chromium', 'chromium-browser', 'google-chrome'):
+        try:
+            subprocess.run([exe, '--headless', '--disable-gpu', '--no-sandbox', '--no-pdf-header-footer',
+                            '--print-to-pdf=' + pdf_path, 'file://' + tmp], check=True, timeout=300,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print('  %s %.1f MB' % (os.path.relpath(pdf_path, ROOT), os.path.getsize(pdf_path) / 1e6))
+            return pdf_path
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            continue
+    print('  no Chromium found: PDF not built')
+
+
 # ================================================================ driver
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1386,10 +1449,15 @@ def main():
     ap.add_argument('--quick', action='store_true')
     ap.add_argument('--samples', type=int, default=0)
     ap.add_argument('--gpus', default='0,1')
+    ap.add_argument('--procs', type=int, default=4, help='parallel Blender processes')
     ap.add_argument('--annotate-only', action='store_true')
     ap.add_argument('--xsec', action='store_true', help='rebuild render/build/guide_xsec.glb')
+    ap.add_argument('--pdf', action='store_true', help='only rebuild docs/build/neurband_build_manual.pdf from assembly.md')
     a = ap.parse_args()
     os.makedirs(LOGS, exist_ok=True)
+    if a.pdf:
+        build_pdf()
+        return
     figs = a.only.split(',') if a.only else FIGS
     src = os.path.join(BUILD, 'guide_quick' if a.quick else 'guide')
     t = time.time()
@@ -1400,13 +1468,15 @@ def main():
             with open(os.path.join(LOGS, 'guide_xsec.log'), 'w') as f:
                 subprocess.run([FREECAD, os.path.abspath(__file__)], stdout=f, stderr=subprocess.STDOUT, env=env, timeout=600)
         gpus = [int(g) for g in a.gpus.split(',')]
-        cost = {'s7_wear': 3, 'exploded': 2, 'hero': 2}
-        parts = [[] for _ in gpus]
+        cost = {'7.1': 3, 'hero': 3, '0.1': 2}
+        nproc = max(1, min(a.procs, len(figs)))
+        parts = [[] for _ in range(nproc)]
         for n in sorted(figs, key=lambda n: -cost.get(n, 1)):
-            j = min(range(len(gpus)), key=lambda i: sum(cost.get(x, 1) for x in parts[i]))
+            j = min(range(nproc), key=lambda i: sum(cost.get(x, 1) for x in parts[i]))
             parts[j].append(n)
         ps = []
-        for g, part in zip(gpus, parts):
+        for k, part in enumerate(parts):
+            g = gpus[k % len(gpus)]
             if not part:
                 continue
             cmd = [BLENDER, '-b', '--python', os.path.abspath(__file__), '--', '--figs', ','.join(part), '--out', src]
@@ -1414,24 +1484,34 @@ def main():
                 cmd.append('--quick')
             if a.samples:
                 cmd += ['--samples', str(a.samples)]
-            ps.append(subprocess.Popen(cmd, stdout=open(os.path.join(LOGS, 'guide_gpu%d.log' % g), 'w'),
+            ps.append(subprocess.Popen(cmd, stdout=open(os.path.join(LOGS, 'guide_p%d.log' % k), 'w'),
                                        stderr=subprocess.STDOUT, env=dict(os.environ, CUDA_VISIBLE_DEVICES=str(g))))
         for p in ps:
             p.wait(timeout=3600)
     dst = os.path.join(BUILD, 'guide_quick_out') if a.quick else IMG
     os.makedirs(dst, exist_ok=True)
     for n in figs:
-        if os.path.exists(os.path.join(src, n + '.json')):
+        if n in MF.IDS:
+            try:
+                out = MF.compose(n, src, dst)
+                print('  %s' % os.path.relpath(out, ROOT))
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                print('  compose failed for', n, e)
+        elif os.path.exists(os.path.join(src, n + '.json')):
             annotate(n, src, os.path.join(dst, n + '.jpg'))
             print('  %s' % os.path.relpath(os.path.join(dst, n + '.jpg'), ROOT))
         else:
             print('  missing render for', n)
     if not a.quick and not a.only:
-        keep = set(n + '.jpg' for n in FIGS)
+        keep = set(['hero.jpg'] + [MF.fname(n) + '.png' for n in MF.IDS])
         for f in glob.glob(os.path.join(IMG, '*')):
             if os.path.basename(f) not in keep:
                 os.remove(f)
                 print('  removed', os.path.relpath(f, ROOT))
+    if not a.quick:
+        build_pdf()
     print('done in %.1f min' % ((time.time() - t) / 60))
 
 

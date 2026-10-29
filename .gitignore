@@ -1,5 +1,6 @@
 # vendor documents (copyrighted; links are in the docs instead)
 *.pdf
+!docs/build/*.pdf
 docs/datasheets/*.txt
 **/*vendor*.png
 **/*catalog*.png
