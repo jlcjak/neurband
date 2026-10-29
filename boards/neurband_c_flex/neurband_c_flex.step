@@ -1,7 +1,7 @@
 ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('KiCad electronic assembly'),'2;1');
-FILE_NAME('neurband_c_flex.step','2026-10-26T04:32:26',('Pcbnew'),(
+FILE_NAME('neurband_c_flex.step','2026-10-29T07:47:24',('Pcbnew'),(
     'Kicad'),'Open CASCADE STEP processor 7.9','KiCad to STEP converter'
   ,'Unknown');
 FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));

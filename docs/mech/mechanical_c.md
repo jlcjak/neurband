@@ -4,6 +4,9 @@ Rev C is a small, clean 8-channel bipolar band. The design language is a premium
 wearable: one **continuous woven band**, a small pebble module and no visible clips, lugs or pins.
 It comes in **one size, worn on 145-180 mm wrists**.
 
+**To build one, follow [docs/build/assembly.md](../build/assembly.md)** (ordering, printing, gluing,
+bring-up, the assembly sequence with images, strap, charging, troubleshooting).
+
 All CAD is in `mech/rev_c/` as FreeCAD scripts, one per part, with the named parameters at the
 top. Units are mm, Z is up and the front faces -Y. Every script checks `isValid()` and writes
 `.FCStd`, a coloured `.step` and a log in `mech/rev_c/logs/`. Rev A/B (`mech/*.py`,
@@ -104,13 +107,30 @@ holds the loop clip is full depth (3.35 mm).
   x 0..2.75 and 25.95..28.7). A 1 mm relief under the J2 battery pads leaves room for the wire
   joints. The separate standoffs were removed because they overlapped the roofs.
 - **Snap:** four square snap features on the +/-Y walls. The X walls carry the slots, and round
-  beads would leave sub-1 mm tips and lips. Each is a local tongue riser, 1.4 mm thick and
-  3.1-4.5 mm long, with a 0.3 x 1.1 mm groove that has at least 1.0 mm of material on all sides.
-  A matching 0.3 x 1.0 mm rib on the lid clicks into it. They sit clear of the cell, J1, the tail
-  and the light pipe. The plain tongue is 1.4 mm thick.
+  beads would leave sub-1 mm tips and lips.
+  - Each is a local tongue riser, 1.3 mm thick and 3.0-4.5 mm long, with a 0.3 x 1.2 mm groove and at
+    least 1.0 mm of material on all sides.
+  - A 1.0 mm tall rib on the lid, 0.35 mm deep, clicks into the groove. Its top sits 0.15 mm below the
+    groove's top, which absorbs height tolerance, so the catch is 0.25 mm.
+  - A 0.3 mm 45 deg lead-in chamfer on the riser's top outer edge cams the lid wall out as the lid goes
+    on. The lip above the groove stays 1.0 mm thick under the chamfer.
+- **Tongue clearance.** Above the parting surface the tongue (1.3 mm) is 0.1 mm clear of the lid's
+  inner wall. Before it was line-to-line, which MJF or FDM tolerance would turn into an interference
+  fit. Below the parting surface the tongue is solid with the wall, so no slit is left.
+- **Clear of J1 for the fold-in.** The tongue is cut back to x = +/-7.5 over the tail U-turn, and the
+  distal snaps start there. J1 is 14.4 mm wide, so the board can be plugged onto its tail standing
+  upright and folded into the base without its connector catching on a riser
+  ([assembly.md](../build/assembly.md) sec. 6.5). With the board flat, the tail has 0.3 mm of slack:
+  it cannot be plugged in that way.
+- **Battery-lead gate.** The tongue is also cut away on the distal wall from x = +10.5 to the +X corner,
+  in front of SW1. The battery pads J2 are on the board's underside. Elsewhere the board edge is 0.2 mm
+  from the tongue and 0.5 mm from the lid wall, and no wire fits there. So the two 30 AWG leads run in the
+  1.0 mm J2 relief, wrap the board's distal edge through the gate, and come up past SW1's outer end to the
+  cell. This is also the hinge line when the board is folded out for re-flashing.
 
 **Lid details.**
-- **Button:** a 4.4 mm PA12 disc (`button_cap`) in a 4.6 mm opening (0.1 mm hairline) over SW1.
+- **Button:** a 4.3 mm PA12 disc (`button_cap`) in a 4.6 mm opening over SW1. The 0.15 mm hairline was
+  0.1 mm, too tight for MJF or FDM tolerance.
   Its flat top sits just below the lowest point of the crown around it, so it reads as a subtle
   flush pad with no knife edge. It is retained by a 6.0 x 1.0 mm flange under the lid, and its
   stem stops 0.15 mm above the switch. It is a separate part, put in from inside before the lid
@@ -126,7 +146,7 @@ holds the loop clip is full depth (3.35 mm).
 | 1.1-1.7 | 0.6 mm gap for bottom pads and wire joints (SWD, battery, charge pads) |
 | 1.7-2.7 | board, 28.7 x 27 x 1.0 mm (`boards/neurband_c/neurband_c.step`) |
 | 2.7-4.7 | parts: J1 FPC and SW1 2.0 mm, TQFP 1.2 mm |
-| 4.15-8.15 (+0.3 swell) | LiPo 401225 on 0.15 mm tape over KiCad x 10.5-22.5, y -3.3..21.7 (the parts under it are at most 1.2 mm), proximal of J1 and clear of the antenna region (x 0..5.65, y 11.65..27) |
+| 4.15-8.15 (+0.3 swell) | LiPo 401225 on 0.15 mm tape over KiCad x 10.5-22.5, y -3.3..21.7 (on the final board the parts under it are at most 1.11 mm: the TQFP; the 0603 caps are 0.92 mm or less), proximal of J1 and clear of the antenna region (x 0..5.65, y 11.65..27) |
 | 8.9-9.9 | lid top |
 
 **Charging, with a safety interlock by geometry (signal-chain review sec. 7).**
@@ -146,13 +166,14 @@ holds the loop clip is full depth (3.35 mm).
 
 **Clash check** (`logs/module_checks.json`, against the real `boards/neurband_c/neurband_c.step`):
 board, parts, cell (including the swell box), tail, button cap, base and lid are all at
-0.00-0.006 mm3, which is tessellation level. The tallest part under the cell is the TQFP at
-1.19 mm, and SW1 (2.0 mm) sits 0.14 mm under the cap stem.
+0.00-0.006 mm3, which is tessellation level. The tallest part under the cell is the TQFP at 1.11 mm (final board STEP, 0603 caps at most 0.92 mm, all under the 1.3 mm limit), and SW1 (2.0 mm) sits 0.14 mm under the cap stem. Measured clearances: cell to lid 0.09 mm at its proximal +X top corner, cell to parts 0.15 mm, cell to the charger IC U4 (1.56 mm tall, outside the cell zone) 0.45 mm, cap to lid 0.15 mm.
 
 **Printing.** MJF PA12 is the recommended process: the snaps, clip and integral bars need its
-toughness, and it needs no supports. On your own FDM printer, print the lid top-down on the bed
-in PETG at 0.12 mm layers. The base needs tree supports under the curved underside. That is fine
-for fit tests.
+toughness, and it needs no supports. On your own FDM printer, stand the base and lid on their proximal
+end faces in PETG at 0.12 mm layers. The crown, the R42 underside and the slot roofs then need no
+supports; only the lid's light-pipe tube does. The integral bars print vertically and are weaker in
+bending, so an FDM base is for fit tests. Per-part settings and the tolerance checks are in
+[assembly.md](../build/assembly.md) sec. 3.
 
 ## 4. Electrode pods and compliant contact (`pod.py` -> `pod.step`, `pod_with_flex.step`)
 
@@ -170,12 +191,17 @@ for fit tests.
   webbing edges. To assemble, thread the webbing through the pods; it cannot pop out and slides
   freely. Nothing protrudes: from outside the pods read as small soft bumps under the band.
 - **Compliant contact** (signal-chain review sec. 2). A 6.2 x 0.5 mm pocket behind each pad
-  (y = -10/0/+10) holds a 6.0 x 1.5 mm self-adhesive PU or EVA foam disk (6 mm punch), so the pad stands
+  (y = -10/0/+10) holds a 6.0 x 1.5 mm **double-sided** adhesive PU or PE foam disc (6 mm punch), so the pad stands
   1.0 mm proud when free and about 0.65 mm when worn. The flex is held only by the adhesive foam
   and floats between the pads (polyimide cannot be forced into a dome).
 - **Locating pins.** Two pins, 1.0 mm diameter and 0.55 mm tall, sit at y = +/-5 in the flex's
-  1.2 mm holes (0.2 mm clearance, not a press fit). They locate the flex during bonding,
-  disengage when worn and act as over-compression stops.
+  1.2 mm holes (0.2 mm clearance, not a press fit).
+  - The free foam stands 1.0 mm proud, so the adhesive meets the flex 0.45 mm before the pins reach
+    the holes. The pins cannot pull a misplaced flex into line.
+  - Sight the holes onto the pins first: rest a needle through each hole on its pin's domed tip, then
+    slide the flex down ([assembly.md](../build/assembly.md) sec. 6.4).
+  - The pins then hold the flex while you press, disengage when worn and stop over-compression. They
+    must stay shorter than the worn foam (0.65 mm), or they would poke the skin through the holes.
 - **Tuning.** If a pod reads poorly, use a thicker or denser foam disk.
 
 **Pressure.** The load on a pod is T x (wrap angle). About 0.4 N of strap tension gives about
@@ -291,7 +317,7 @@ Notes:
 
 | Part | File | Process / material | Qty (fab) | Size mm | Volume cm3 |
 |---|---|---|---|---|---|
-| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 7.4 | 1.58 |
+| Module base | `mech/rev_c/module_base.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 7.8 | 1.56 |
 | Module lid | `mech/rev_c/module_lid.step` | MJF PA12, grey | 3 | 34.5 x 32.1 x 11.1 | 1.95 |
 | Button cap | `mech/rev_c/button_cap.step` | MJF PA12, grey | 4 | 6.0 x 6.0 x 3.7 | 0.06 |
 | Pod shell | `mech/rev_c/pod.step` | TPU 95A (FDM or MJF TPU), black | 16 (2 bands + 4) | 32.1 x 9.1 x 4.5 | 0.51 |
@@ -309,51 +335,60 @@ curved parting meets the wall at 21 deg, are not reported as walls.
 
 | Part | Process | Min wall measured (mm) | 1st percentile (mm) | Samples | Design minima |
 |---|---|---|---|---|---|
-| module_base | MJF PA12 | **0.98** | 1.00 | 6068 | walls 1.1, floor 1.1, 1.0 behind the pod 3/4 foam pockets, tongue 1.4 (1.05 behind the snap groove), slot side walls and roof 1.0, magnets in through holes |
-| module_lid | MJF PA12 | **0.98** | 1.00 | 4159 | walls 1.1, crown 1.0, light-pipe tube 1.0, square snap ribs 0.3 x 1.0 on the 1.1 wall |
-| button_cap | MJF PA12 | **1.00** | 1.00 | 342 | flat-topped 4.4 mm disc, flange 6.0 x 1.0, stem 2.0 |
+| module_base | MJF PA12 | **0.98** | 1.00 | 6063 | walls 1.1, floor 1.1, 1.0 behind the pod 3/4 foam pockets, tongue 1.3 (1.0 behind the 0.3 snap groove, a 1.0 lip above it even under the lead-in chamfer), slot side walls and roof 1.0, magnets in through holes. The 0.98 spots are the distal wall's square bottom edge across the tail slot, unchanged |
+| module_lid | MJF PA12 | **0.98** | 1.00 | 4147 | walls 1.1, crown 1.0, light-pipe tube 1.0, square snap ribs 0.35 x 1.0 on the 1.1 wall |
+| button_cap | MJF PA12 | **1.00** | 1.00 | 339 | flat-topped 4.3 mm disc, flange 6.0 x 1.0, stem 2.0 |
 | strap_loop | MJF PA12 | **1.00** | 1.00 | 838 | C-clip 1.0 (80 deg opening), side links 1.0, far bar 1.3 x 1.6 |
 | charge_puck | MJF PA12 / FDM PETG | **1.00** | 1.29 | 1577 | magnet pocket walls >= 1.5, pin-hole web 1.1 (staggered pins), solid body |
 | pod | FDM TPU 95A | **1.00** | 1.00 | 1485 | floor behind the foam 1.0, sleeve rims 1.0, foam-pocket-to-side 1.1 |
 
-Bought parts per band:
+Bought parts per band (specs in [assembly.md](../build/assembly.md) sec. 1):
 - 22 mm (7/8 in) elastic woven webbing with a loop face (0.25 m) and a 22 mm sew-on hook tab;
-- self-adhesive foam sheet 1.5 mm (18 disks);
+- double-sided (both faces adhesive) foam tape, 1.5-1.6 mm (24 discs: 18 for the pods, 6 for the module);
 - 4 N52 3 x 1 mm magnets, 2 x 2.0 x 6 mm pogo pins and a USB lead;
 - 1.5 mm PMMA fibre;
-- a protected 401225 LiPo.
+- a protected 401225-class LiPo, at most 4.0 x 12.0 x 25.0 mm overall including its protection board;
+- 30 AWG PTFE or Kynar wire (battery leads), thin double-sided tape, Kapton tape, a soft foam pad.
 
 Together these are about 6-10 EUR.
 
-**Cost.** MJF PA12 at JLC3DP-class services is roughly 1.5-3 USD per part (the per-part minimum
+**Cost.** MJF PA12 from the fab is roughly 1.5-3 USD per part (the per-part minimum
 dominates), so the 5 PA12 parts per band (base, lid, cap, 2 loops) cost about 8-15 USD. The six TPU pods on your own FDM
 printer use about 1.5 g of TPU, well under 0.10 EUR. These are estimates; take the live quote
 from the fab files.
 
 ## 9. Assembly
 
-1. Punch 18 foam disks. Stick one into each pod pocket and 6 into the module underside.
-2. Lay the flex skin-side down on a flat plate. Press each pod and the module base on so the pins
-   enter the holes and the foam takes the pads. Hold for 1 min.
-3. Fit the tail and board:
-   1. Thread the tail up through the floor slot and glue the magnets in (N/S).
-   2. Solder the cell leads to J2. Set the board on the slot roofs and standoffs.
-   3. Fold the tail (R1) into J1, fingers down, and close the actuator.
-4. Tape the cell, fit the light-pipe rod and the button cap, and snap the lid on.
-5. Fit the strap:
-   1. Sew the webbing end round the far bar of one strap loop.
-   2. Thread the webbing through the six pod sleeves.
-   3. Snap the two loops onto the hidden bars (ulnar: the sewn one; radial: the empty one).
-6. To wear it, put the module on the back of the wrist about 25 mm above the crease. Pass the end
-   through the loop, pull it just snug and press the hook tab down.
-7. To charge, take the band off and lay it module-down on the puck.
+The full sequence, with images, is in **[docs/build/assembly.md](../build/assembly.md)**. The steps
+that drive the mechanics:
+
+1. **Flash first.** SWD (TP1-TP5) and the battery pads (J2) are on the board's underside and cannot be
+   reached once the board sits on the slot roofs. Flash and bench-test the bare board, then solder two
+   40 mm, 30 AWG leads flat onto J2. Each lap joint must stay under 0.5 mm in the 1.0 mm J2 relief.
+2. **Magnets.** Glue the base magnets in first, with opposite poles out. The base then sets the puck's
+   magnets: they snap onto the base's magnets through cling film, and the base is lowered onto the puck
+   until the glue cures.
+3. **Flex.** Fit 24 double-sided foam discs. Bond the flex to the base pockets and to each pod, sighting
+   the holes onto the pins with needles. Tape the flex root to the underside as the tail's strain relief.
+4. **Book fold.** The tail goes up through the floor slot and stands upright. Hold the board upright
+   above the distal end, J1's mouth down, and lower it onto the tail. Close the latch and fold the board
+   down onto the slot roofs. The leads wrap the distal edge through the lead gate.
+5. **Cell.** Tape it on the ADS1298 against J1's back, splice its leads to the board leads one at a
+   time, and add a soft foam pad on top against rattle.
+6. **Lid.** Put the light pipe in (cut flush with the tube's inner end, 0.3 mm above D1) and the button
+   cap, then snap the lid on. Open it with a pick at the proximal pry notch.
+7. **Strap.** Sew (or glue) the webbing round the far bar of one loop and snap it onto the ulnar bar,
+   with the clip's gap facing up. Thread the webbing through the six pod sleeves. Snap the second loop
+   onto the radial bar, pass the end through it, fold back and press the hook tab.
+8. **Wear and charge.** Wear the module on the back of the wrist, about 25 mm above the crease. To
+   charge, take the band off and lay it module-down on the puck.
 
 ## 10. Open issues
 
 - **J3 position** must move to (14, 6)/(14, 9) on the board (agreed, not yet in the 03:12 PCB).
 - **Antenna.** The plastic-only region (KiCad x 0..5.65, y 11.65..27) is kept free of metal by
-  the module (integral bars, magnets at x 10.4/17.6). Pod 3's flex lies below it. Tune with the
-  band worn.
+  the module (integral bars, magnets at x 10.4/17.6). Pod 3's flex lies below it (pod 4 in the flex's
+  own numbering). Tune with the band worn.
 - **Pod load spread** is up to 3.3:1 on 180 mm wrists; pods 2 and 5 next to the module carry the
   least. A 0.5-1 mm shim in their sleeves evens it out.
 - **Strap bars are integral PA12** (about 5 N). If a bar ever cracks, drill 1.6 mm and use a
@@ -363,3 +398,15 @@ from the fab files.
   (signal-chain review sec. 2).
 - **No sealing** (snap lid). The charge window is open to sweat; wipe it, or conformal-coat the
   board bottom outside the pads.
+- **Board-side wishes for a rev D**, to make assembly easier (the rev C board interface is frozen):
+  - top-side or edge-castellated battery pads near the cell's lead end, which would remove the lead gate
+    and the 0.6 mm joint-height limit;
+  - SWD reachable without taking the board out: top-side pads by the J1 edge, or a BLE DFU bootloader;
+  - the final board's top silkscreen has a **CELL** outline at x 10.5-22.5 (the module's cell position),
+    a vertical **DOWN** mark between J1 and SW1 and J1's pin-1 mark. x 11-23 would be the +X limit,
+    where the cell touches the proximal +X snap riser and has 0.05 mm to the lid. On a rev D, the
+    "CELL" label (now under U2) and the outline segments under U1/U2 could move to where they stay
+    visible after assembly, and the flex tail could get a matching pin-1 mark.
+- **Pod names.** This document and `fit.py` number the pods in the mirrored order of the real flex
+  (`docs/layout/flex_c_layout.md`, "Pod under the main-board antenna"). The pods are identical, so the
+  mechanics and assembly are unaffected; only the channel names differ.

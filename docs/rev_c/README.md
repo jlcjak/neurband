@@ -14,7 +14,7 @@ their reasoning is in [`../DESIGN.md`](../DESIGN.md).
  skin ─ 8 pods × (P, bias, N) gold pads, 6.5 mm, P–N 20 mm
           │ 2-layer polyimide flex, outer GND hatch, 20-pin 0.5 mm tail
           ▼
-  J1 FPC ─ 16 × 4.7 kΩ ─ ADS1298 (8 ch, 24 bit, 4 kSPS, gain 6, internal 2.4 V ref)
+  J1 FPC ─ 16 × 10 kΩ ─ ADS1298 (8 ch, 24 bit, 4 kSPS, gain 6, internal 2.4 V ref)
                           ├─ RLD bias amp: 1 MΩ ‖ 4.7 nF, 100 kΩ → all 8 middle pads
                           └─ RLDREF: 2 × 1 MΩ + 1 µF (filtered AVDD/2)
                           │ SPI (CS, SCK, MOSI, MISO, DRDY, START, PWDN)

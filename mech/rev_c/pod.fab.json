@@ -15,6 +15,6 @@
     "size_y_mm": 9.11,
     "size_z_mm": 4.47
   },
-  "notes": "TPU 95A, print on its side; 6 per band + spares; foam disks 6.6 x 1.5 mm bought separately",
+  "notes": "TPU 95A, print on its side; 6 per band + spares; 6.0 x 1.5 mm double-sided foam discs bought separately",
   "min_wall_mm": 1.0
 }

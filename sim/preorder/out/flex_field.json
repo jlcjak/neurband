@@ -1,0 +1,76 @@
+{
+ "link_on_skin": {
+  "wP": 0.18239016478431658,
+  "wN": 0.18239016478429343
+ },
+ "link_on_skin_return": {
+  "wP": 0.18148741966460108,
+  "wN": 0.17904879697625312
+ },
+ "link_lifted_0.65": {
+  "wP": 0.9992381902904933,
+  "wN": 0.9992381902903602
+ },
+ "pod_solid": {
+  "wP": 7.265787773306729e-09,
+  "wN": 7.265787773308285e-09
+ },
+ "pod_hatch_avg": {
+  "wP": 0.2992876781112398,
+  "wN": 0.4739191918830257,
+  "wP_minmax": [
+   0.11913939598634349,
+   0.4599793697006124
+  ]
+ },
+ "pickup": [
+  {
+   "E0": 10.0,
+   "case": "pod 8 traces: 4 free links on skin",
+   "per_trace_uV": 0.074,
+   "dm_uV": 0.022
+  },
+  {
+   "E0": 10.0,
+   "case": "pod 8 traces: 4 free links lifted 0.65 mm",
+   "per_trace_uV": 0.405,
+   "dm_uV": 0.121
+  },
+  {
+   "E0": 10.0,
+   "case": "pod 5 traces: 1 free link on skin",
+   "per_trace_uV": 0.018,
+   "dm_uV": 0.006
+  },
+  {
+   "E0": 10.0,
+   "case": "pod 8 traces over pods 5-7 under hatch (3 x 7 mm)",
+   "per_trace_uV": 0.053,
+   "dm_uV": 0.047
+  },
+  {
+   "E0": 100.0,
+   "case": "pod 8 traces: 4 free links on skin",
+   "per_trace_uV": 0.739,
+   "dm_uV": 0.222
+  },
+  {
+   "E0": 100.0,
+   "case": "pod 8 traces: 4 free links lifted 0.65 mm",
+   "per_trace_uV": 4.047,
+   "dm_uV": 1.214
+  },
+  {
+   "E0": 100.0,
+   "case": "pod 5 traces: 1 free link on skin",
+   "per_trace_uV": 0.185,
+   "dm_uV": 0.055
+  },
+  {
+   "E0": 100.0,
+   "case": "pod 8 traces over pods 5-7 under hatch (3 x 7 mm)",
+   "per_trace_uV": 0.53,
+   "dm_uV": 0.468
+  }
+ ]
+}

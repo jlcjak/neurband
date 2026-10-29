@@ -1,0 +1,92 @@
+victim,channel,kind,aggressor,cm_fF,uV_100k||10n,uV_1M||10n,uV_1M||1n (adverse)
+/E1P,E1P,electrode (J1 side),VBAT,119.11,0.0231,0.0321,0.2273
+/E1N,E1N,electrode (J1 side),/I2C_SCL,0.82,0.0282,0.0306,0.2741
+/E1N,E1N,electrode (J1 side),/I2C_SDA,0.53,0.0155,0.0168,0.1505
+/E2P,E2P,electrode (J1 side),/I2C_SDA,0.44,0.013,0.0141,0.1261
+/E2P,E2P,electrode (J1 side),VBAT,30.21,0.0059,0.0081,0.0577
+/E3P,E3P,electrode (J1 side),+3V3A,22.49,0.0036,0.0051,0.0358
+/E1N,E1N,electrode (J1 side),VBAT,13.27,0.0026,0.0036,0.0253
+/E1N,E1N,electrode (J1 side),+3V3,2.99,0.0019,0.0027,0.019
+/E1P,E1P,electrode (J1 side),+3V3,2.38,0.0015,0.0021,0.0151
+Net-(RN1B-R2.1),E1N(ads),electrode (ADS side),+3V3A,8.85,0.0016,0.002,0.0143
+/E2P,E2P,electrode (J1 side),/I2C_SCL,0.05,0.0017,0.0019,0.0168
+/E3P,E3P,electrode (J1 side),/IMU_INT,0.12,0.0017,0.0018,0.0162
+Net-(RN1C-R3.1),E2P(ads),electrode (ADS side),+3V3A,7.21,0.0013,0.0017,0.0117
+/E2N,E2N,electrode (J1 side),/I2C_SDA,0.04,0.0012,0.0013,0.012
+/E1P,E1P,electrode (J1 side),/I2C_SCL,0.03,0.0009,0.001,0.0087
+Net-(RN1A-R1.1),E1P(ads),electrode (ADS side),+3V3A,2.47,0.0004,0.0006,0.004
+/E3P,E3P,electrode (J1 side),+3V3,0.54,0.0004,0.0005,0.0035
+/E3N,E3N,electrode (J1 side),+3V3A,1.98,0.0003,0.0004,0.0032
+/E8N,E8N,electrode (J1 side),+3V3A,1.73,0.0003,0.0004,0.0027
+/E2N,E2N,electrode (J1 side),+3V3A,1.27,0.0002,0.0003,0.002
+/E2N,E2N,electrode (J1 side),VBAT,0.95,0.0002,0.0003,0.0018
+Net-(RN4D-R4.1),E8N(ads),electrode (ADS side),+3V3,0.38,0.0003,0.0003,0.0025
+/E3N,E3N,electrode (J1 side),+3V3,0.22,0.0001,0.0002,0.0014
+/E3N,E3N,electrode (J1 side),VBAT,0.73,0.0001,0.0002,0.0014
+/E1P,E1P,electrode (J1 side),+3V3A,0.34,0.0001,0.0001,0.0005
+/E2N,E2N,electrode (J1 side),+3V3,0.12,0.0001,0.0001,0.0007
+/E2P,E2P,electrode (J1 side),+3V3A,0.25,0.0,0.0001,0.0004
+/E4P,E4P,electrode (J1 side),+3V3A,0.27,0.0,0.0001,0.0004
+/E4P,E4P,electrode (J1 side),VBAT,0.25,0.0,0.0001,0.0005
+/E8N,E8N,electrode (J1 side),+3V3,0.08,0.0001,0.0001,0.0005
+/E8N,E8N,electrode (J1 side),VBAT,0.41,0.0001,0.0001,0.0008
+Net-(RN1D-R4.1),E2N(ads),electrode (ADS side),+3V3A,0.46,0.0001,0.0001,0.0007
+/BIAS_E,/BIAS_E,bias/RLD,+3V3A,50.06,0.0,0.0,0.0
+/BIAS_E,/BIAS_E,bias/RLD,/BUTTON,0.45,0.0,0.0,0.0
+/BIAS_E,/BIAS_E,bias/RLD,/IMU_INT,0.06,0.0,0.0,0.0
+/BIAS_E,/BIAS_E,bias/RLD,/SWDCLK,99.69,0.0,0.0,0.0
+/BIAS_E,/BIAS_E,bias/RLD,/SWDIO,0.47,0.0,0.0,0.0
+/BIAS_E,/BIAS_E,bias/RLD,VBAT,45.82,0.0,0.0,0.0
+/E1N,E1N,electrode (J1 side),+3V3A,0.05,0.0,0.0,0.0001
+/E1N,E1N,electrode (J1 side),/SWDCLK,9.37,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),/BUTTON,6.81,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),/SWDCLK,1.84,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),/SWDIO,0.12,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),VCHG,0.09,0.0,0.0,0.0
+/E2N,E2N,electrode (J1 side),/SWDCLK,22.27,0.0,0.0,0.0
+/E2P,E2P,electrode (J1 side),/SWDCLK,31.49,0.0,0.0,0.0
+/E3N,E3N,electrode (J1 side),/SWDCLK,6.43,0.0,0.0,0.0
+/E3N,E3N,electrode (J1 side),/SWDIO,0.17,0.0,0.0,0.0
+/E3P,E3P,electrode (J1 side),/SWDCLK,9.18,0.0,0.0,0.0
+/E3P,E3P,electrode (J1 side),VBAT,0.17,0.0,0.0,0.0003
+/E4N,E4N,electrode (J1 side),VBAT,0.07,0.0,0.0,0.0001
+/E4P,E4P,electrode (J1 side),+3V3,0.02,0.0,0.0,0.0001
+/E4P,E4P,electrode (J1 side),/SWDCLK,1.01,0.0,0.0,0.0
+/E4P,E4P,electrode (J1 side),/SWDIO,0.08,0.0,0.0,0.0
+/E7N,E7N,electrode (J1 side),VBAT,0.03,0.0,0.0,0.0001
+/E8N,E8N,electrode (J1 side),/SWDCLK,0.02,0.0,0.0,0.0
+/E8P,E8P,electrode (J1 side),VBAT,0.03,0.0,0.0,0.0001
+/RLDREF,/RLDREF,bias/RLD,+3V3,235.38,0.0,0.0,0.0001
+/RLDREF,/RLDREF,bias/RLD,+3V3A,233.79,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/ADC_DRDY,0.37,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/ADC_PWDN,0.76,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/ADC_START,1.65,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/BUTTON,66.45,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/CHG_N,43.55,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/IMU_INT,6.81,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/LED,4.86,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/NRST,6.96,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/SWDCLK,38.24,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/SWDIO,9.02,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,VBAT,77.0,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,VCHG,220.89,0.0,0.0,0.0
+/RLD_DRV,/RLD_DRV,bias/RLD,+3V3A,0.05,0.0,0.0,0.0
+/RLD_DRV,/RLD_DRV,bias/RLD,VBAT,0.02,0.0,0.0,0.0
+/RLD_DRV,/RLD_DRV,bias/RLD,VCHG,0.03,0.0,0.0,0.0
+Net-(RN1C-R3.1),E2P(ads),electrode (ADS side),/SWDCLK,0.01,0.0,0.0,0.0
+Net-(RN1D-R4.1),E2N(ads),electrode (ADS side),/SWDCLK,0.12,0.0,0.0,0.0
+Net-(RN2A-R1.1),E3P(ads),electrode (ADS side),+3V3A,0.02,0.0,0.0,0.0
+Net-(RN2A-R1.1),E3P(ads),electrode (ADS side),/SWDCLK,1.17,0.0,0.0,0.0
+Net-(RN2B-R2.1),E3N(ads),electrode (ADS side),/SWDCLK,0.09,0.0,0.0,0.0
+Net-(RN2C-R3.1),E4P(ads),electrode (ADS side),/SWDCLK,0.07,0.0,0.0,0.0
+Net-(RN2D-R4.1),E4N(ads),electrode (ADS side),/SWDCLK,0.48,0.0,0.0,0.0
+Net-(RN3A-R1.1),E5P(ads),electrode (ADS side),/SWDCLK,1.94,0.0,0.0,0.0
+Net-(RN3B-R2.1),E5N(ads),electrode (ADS side),+3V3A,0.02,0.0,0.0,0.0
+Net-(RN3B-R2.1),E5N(ads),electrode (ADS side),/SWDCLK,14.39,0.0,0.0,0.0
+Net-(RN3C-R3.1),E6P(ads),electrode (ADS side),/SWDCLK,0.93,0.0,0.0,0.0
+Net-(RN3D-R4.1),E6N(ads),electrode (ADS side),/SWDCLK,0.09,0.0,0.0,0.0
+Net-(RN4A-R1.1),E7P(ads),electrode (ADS side),/SWDCLK,0.15,0.0,0.0,0.0
+Net-(RN4D-R4.1),E8N(ads),electrode (ADS side),VBAT,0.11,0.0,0.0,0.0002
+Net-(U2-RLDINV),Net-(U2-RLDINV),bias/RLD,+3V3,0.07,0.0,0.0,0.0
+Net-(U2-RLDINV),Net-(U2-RLDINV),bias/RLD,+3V3A,0.39,0.0,0.0,0.0
+Net-(U2-RLDINV),Net-(U2-RLDINV),bias/RLD,VCHG,0.03,0.0,0.0,0.0

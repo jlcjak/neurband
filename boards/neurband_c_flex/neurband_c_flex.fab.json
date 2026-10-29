@@ -12,5 +12,7 @@
     "width_mm": 133.1,
     "height_mm": 38.5,
     "min_drill_mm": 0.3
-  }
+  },
+  "order": false,
+  "note": "Not orderable through the rigid-board flow: this is a 2-layer polyimide flex (coverlay both sides, ENIG, PI stiffener to 0.30 mm at the fingers). Order it from a flex-PCB service with the notes in boards/neurband_c_flex/ORDERING.md; the options above are only a rigid-board placeholder."
 }

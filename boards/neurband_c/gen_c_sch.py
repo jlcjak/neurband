@@ -18,7 +18,7 @@ FP = {
     "C0603": "Capacitor_SMD:C_0603_1608Metric",
     "L0402": "Inductor_SMD:L_0402_1005Metric",
     "LED": "LED_SMD:LED_0603_1608Metric",
-    "RN": "Resistor_SMD:R_Array_Convex_4x0603",
+    "RN": "neurband:R_Array_Convex_4x0603_FabZero",
 }
 # value -> (footprint, MPN, fab part #). Basic/preferred parts unless noted.
 PARTS = {
@@ -27,12 +27,10 @@ PARTS = {
     "R:10k": ("R0402", "0402WGF1002TCE", "C25744"),
     "R:100k": ("R0402", "0402WGF1003TCE", "C25741"),
     "R:1M": ("R0402", "0402WGF1004TCE", "C26083"),
-    "R:4.7k": ("R0402", "0402WGF4701TCE", "C25900"),
     "R:0": ("R0402", "0402WGF0000TCE", "C17168"),
     "C:100nF": ("C0402", "CL05B104KO5NNNC", "C1525"),
     "C:1uF": ("C0402", "CL05A105KA5NQNC", "C52923"),
-    "C:4.7uF": ("C0603", "CL10A475KO8NNNC", "C19666"),
-    "C:10uF": ("C0402", "CL05A106MQ5NUNC", "C15525"),
+    "C:10uF": ("C0603", "CL10A106KP8NNNC", "C19702"),     # 0603 10 V: ~2x the in-circuit C of 0402 6.3 V at 2.4-3.3 V
     "C:22uF": ("C0603", "CL10A226MQ8NRNC", "C59461"),
     "C:4.7nF": ("C0402", "0402B472K500NT", "C1538"),       # basic
     "C:12pF": ("C0402", "0402CG120J500NT", "C1547"),
@@ -49,11 +47,15 @@ def fields(mpn, lcsc):
     return {"MPN": mpn, "LCSC": lcsc}
 
 
-def passive(kind, value, x, y, rot=0, text="right"):
-    _n[kind] += 1
+def passive(kind, value, x, y, rot=0, text="right", ref=None):
+    """ref=None numbers in drawing order; parts added after the first layout get an explicit ref
+    (C33, ...) so existing references, and the UUIDs derived from them, never shift."""
+    if ref is None:
+        _n[kind] += 1
+        ref = f"{kind}{_n[kind]}"
     fp, mpn, lcsc = PARTS[f"{kind}:{value}"]
     lib = {"R": "Device:R_Small_US", "C": "Device:C_Small", "L": "Device:L_Small"}[kind]
-    p = s.add(lib, f"{kind}{_n[kind]}", value if value != "DNP" else "DNP", x, y, rot, footprint=FP[fp],
+    p = s.add(lib, ref, value if value != "DNP" else "DNP", x, y, rot, footprint=FP[fp],
               fields=fields(mpn, lcsc), dnp=(value == "DNP"))
     if rot == 0:
         sx, j = (1.9, "left") if text == "right" else (-1.9, "right")
@@ -73,8 +75,9 @@ def cap_down(x, y, value, gnd=True, text="left"):
     return c
 
 
-def bank(x, y, net, values, pitch=7.62):
-    caps = [passive("C", v, x + i * pitch, y) for i, v in enumerate(values)]
+def bank(x, y, net, values, pitch=7.62, refs=None):
+    refs = refs or [None] * len(values)
+    caps = [passive("C", v, x + i * pitch, y, ref=r) for i, (v, r) in enumerate(zip(values, refs))]
     x_end = x + (len(values) - 1) * pitch
     s.wire([(x - 2.54, y - 2.54), (x_end, y - 2.54)])
     s.wire([(x - 2.54, y + 2.54), (x_end, y + 2.54)])
@@ -91,7 +94,7 @@ COL = {"afe": "40 120 200", "mcu": "200 120 40", "rf": "160 60 160", "pwr": "200
 # ============================================================ electrode connector
 J1X, J1Y = 33.02, 99.06
 j1 = s.add("Connector_Generic:Conn_01x20", "J1", "FPC 20p 0.5mm (electrode flex)", J1X, J1Y, mirror="y",
-           footprint="neurband:XUNPU_FPC-05F-20PH20",
+           footprint="neurband:XUNPU_FPC-05F-20PH20_Centroid",
            fields=fields("FPC-05F-20PH20", "C2856803"))
 j1.ref_at = (J1X, J1Y - 27.94, 0)
 j1.val_at = (J1X, J1Y + 29.21, 0)
@@ -112,7 +115,7 @@ s.text("Pod n: EnP proximal, EnN distal (20 mm apart),\nBIAS_E = middle pad of e
 # ============================================================ ADS1298 (8 channels)
 AX, AY = 152.4, 104.14
 u2 = s.add("Analog_ADC:ADS1298xPAG", "U2", "ADS1298IPAGR", AX, AY,
-           footprint="Package_QFP:TQFP-64_10x10mm_P0.5mm", fields=fields("ADS1298IPAGR", "C527440"))
+           footprint="neurband:TQFP-64_10x10mm_P0.5mm_FabZero", fields=fields("ADS1298IPAGR", "C527440"))
 u2.ref_at = (AX - 15.24, AY - 45.72, 0, "left")
 u2.val_at = (AX + 2.54, AY - 45.72, 0, "left")
 RN = {"n": 0, "u": 0}
@@ -124,8 +127,8 @@ for i in range(8):
         unit = RN["u"] % 4 + 1
         RN["u"] += 1
         cx = x - 2.54 - 3.81
-        r = s.add("Device:R_Pack04_Split", f"RN{RN['n']}", "4.7k", cx, y, 90, unit=unit, footprint=FP["RN"],
-                  fields=fields("4D03WGJ0472T5E", "C1980"))
+        r = s.add("Device:R_Pack04_Split", f"RN{RN['n']}", "10k", cx, y, 90, unit=unit, footprint=FP["RN"],
+                  fields=fields("4D03WGJ0103T5E", "C29718"))
         r.ref_at = (cx, y - 1.0, 0)
         r.fsize = 1.0
         r.hide_value = True
@@ -161,6 +164,8 @@ s.junction(AX, g1y)
 s.wire([(AX, g1y), (AX, g1y + 2.54)])
 s.power("GND", AX, g1y + 2.54)
 bank(184.15, 50.8, "+3V3A", ["1uF", "100nF", "100nF"])
+bank(195.58, 83.82, "+3V3A", ["1uF"], refs=["C33"])
+s.text("C33: local to AVDD1/AVSS1\n(pins 54/53, charge pump)", 201.93, 91.44)
 bank(209.55, 50.8, "+3V3", ["1uF", "100nF"])
 # unused / fixed pins
 for p in ("WCT", "27", "29", "CLK"):
@@ -169,8 +174,8 @@ t1x, t1y, _ = u2.pin("17")
 t2x, t2y, _ = u2.pin("18")
 s.wire([(t1x, t1y), (t1x + 5.08, t1y), (t2x + 5.08, t2y), (t2x, t2y)])
 s.junction(t1x + 5.08, t1y)
-s.wire([(t1x + 5.08, t1y), (t1x + 5.08, t1y - 2.54)])
-s.power("+3V3A", t1x + 5.08, t1y - 2.54, lib="power:+3V3")
+s.wire([(t1x + 5.08, t1y), (t1x + 15.24, t1y)])
+s.power("+3V3A", t1x + 15.24, t1y, lib="power:+3V3")
 rail = []
 for p in ("GPIO1", "GPIO2", "GPIO3", "GPIO4", "DAISY_IN"):
     px, py, _ = u2.pin(p)
@@ -189,7 +194,7 @@ s.wire([(cx_, cy_), (cx_ + 17.78, cy_)])
 s.power("+3V3", cx_ + 17.78, cy_)  # internal 2.048 MHz oscillator
 for p, net in (("SCLK", "SPI_SCK"), ("DIN", "SPI_MOSI"), ("DOUT", "SPI_MISO"), ("~{CS}", "ADC_CS"),
                ("START", "ADC_START"), ("~{DRDY}", "ADC_DRDY"), ("~{PWDN}", "ADC_PWDN"), ("~{RESET}", "ADC_PWDN"),
-               ("RLDIN", "BIAS_E")):
+               ("RLDIN", "RLD_DRV")):
     s.pin_label(u2, p, net)
 # bias (right-leg) drive: 1M || 4.7nF feedback, 100k to the bias pads
 ox, oy, _ = u2.pin("RLDOUT")
@@ -205,16 +210,23 @@ passive("R", "100k", ox + 35.56, oy, 90)
 s.wire([(ox + 30.48, oy), (ox + 33.02, oy)])
 s.wire([(ox + 38.1, oy), (ox + 40.64, oy)])
 s.label("BIAS_E", ox + 40.64, oy, 0)
+# RLDIN (pin 62) sits on the amplifier side of the 100k, never directly on the bias pads (ESD)
+s.label("RLD_DRV", ox + 12.7, oy, 0)
+# 12 pF C0G from the bias bus to GND at the 100k: RF shunt for the 170 mm bias bus (< 0.5 deg RLD margin)
+s.junction(ox + 40.64, oy)
+s.wire([(ox + 40.64, oy), (ox + 40.64, oy + 2.54)])
+cb = passive("C", "12pF", ox + 40.64, oy + 5.08, ref="C34")
+s.power("GND", ox + 40.64, oy + 7.62)
 s.rect(68.58, 35.56, 226.06, 160.02, fill=COL["afe"], title="Analog front end: ADS1298, 8 bipolar channels + bias drive")
-s.text("RN1-RN4: 4x 4.7 kOhm arrays in series with every electrode.", 71.12, 157.48)
+s.text("RN1-RN4: 4x 10 kOhm arrays in series with every electrode (ESD current limit).", 71.12, 157.48)
 
 # ============================================================ nRF52832
 NX, NY = 309.88, 104.14
 u1 = s.add("MCU_Nordic:nRF52832-QFxx", "U1", "nRF52832-QFAA", NX, NY,
-           footprint="Package_DFN_QFN:QFN-48-1EP_6x6mm_P0.4mm_EP4.6x4.6mm", fields=fields("NRF52832-QFAA-R", "C77540"))
+           footprint="neurband:QFN-48-1EP_6x6mm_P0.4mm_EP4.6x4.6mm_FabZero", fields=fields("NRF52832-QFAA-R", "C77540"))
 u1.ref_at = (NX + 7.62, NY - 45.72, 0, "left")
 u1.val_at = (NX + 7.62, NY - 43.18, 0, "left")
-# supply: VDD with 4.7uF + 100nF; DEC1 100nF; DEC4 1uF; DEC2/DEC3 per reference; DCC unused (LDO mode)
+# supply: VDD with 10uF + 100nF; DEC1 100nF; DEC4 1uF; DEC2/DEC3 per reference; DCC unused (LDO mode)
 x, y, _ = u1.pin("13")
 s.wire([(x, y), (x, y - 2.54)])
 s.power("+3V3", x, y - 2.54)
@@ -236,8 +248,8 @@ for k, (pin, val) in enumerate([(p, v) for p, v in NRF_DEC.items() if v]):
     passive("C", val, cx, 55.88)
     s.power("GND", cx, 58.42)
 s.pin_nc(u1, "DCC")
-bank(337.82, 38.1, "+3V3", ["4.7uF", "100nF", "100nF"])
-s.text("VDD: 4.7uF at pin 48,\n100nF at pins 13 and 36", 360.68, 35.56)
+bank(337.82, 38.1, "+3V3", ["10uF", "100nF", "100nF"])
+s.text("VDD: 10uF at pin 48,\n100nF at pins 13 and 36", 360.68, 35.56)
 s.text("nRF DEC caps", 363.22, 45.72)
 # 32 MHz crystal (8 pF load) with 12 pF caps
 xc1 = u1.pin("XC1")
@@ -339,7 +351,7 @@ x, y, _ = cp.pin("2")
 s.wire([(x, y), (x + 7.62, y)])
 s.power("GND", x + 7.62, y)
 u4 = s.add("Battery_Management:MCP73831-2-OT", "U4", "TP4054", 83.82, PY + 25.4,
-           footprint="Package_TO_SOT_SMD:SOT-23-5", fields=fields("TP4054-42-SOT25R", "C32574"))
+           footprint="neurband:SOT-23-5_FabZero", fields=fields("TP4054-42-SOT25R", "C32574"))
 u4.ref_at = (73.66, PY + 15.24, 0, "right")
 u4.val_at = (73.66, PY + 17.78, 0, "right")
 x, y, _ = u4.pin("4")
@@ -357,11 +369,11 @@ s.wire([(x, y), (x + 5.08, y)])
 s.power("VBAT", x + 5.08, y)
 s.pin_label(u4, "STAT", "CHG_N")
 bank(109.22, PY + 5.08, "VCHG", ["1uF"])
-bank(124.46, PY + 5.08, "VBAT", ["4.7uF"])
+bank(124.46, PY + 5.08, "VBAT", ["10uF"])
 s.text("TP4054: PROG 10k -> 100 mA.\nCHG_N low while charging: firmware turns the AFE off\n(never wear the band while it charges).", 68.58, PY + 40.64)
 # LDO: one basic XC6206 3.3 V for everything, RC-filtered branch for the ADS analog supply
 u3 = s.add("Regulator_Linear:XC6206PxxxMR", "U3", "XC6206P332MR", 165.1, PY + 5.08,
-           footprint="Package_TO_SOT_SMD:SOT-23-3", fields=fields("XC6206P332MR-G", "C5446"))
+           footprint="neurband:SOT-23-3_FabZero", fields=fields("XC6206P332MR-G", "C5446"))
 u3.ref_at = (165.1, PY - 2.54, 0)
 u3.val_at = (165.1, PY, 0)
 x, y, _ = u3.pin("VI")
@@ -473,7 +485,7 @@ s.wire([(cx_, cy_), (cx_ - 22.86, cy_), (cx_ - 22.86, rail[0][1] - 5.08)])
 s.power("+3V3", cx_ - 22.86, rail[0][1] - 5.08)
 bank(129.54, 269.24, "+3V3", ["100nF"])
 for i, net in enumerate(("I2C_SDA", "I2C_SCL")):
-    r = passive("R", "4.7k", 147.32 + i * 10.16, 269.24)
+    r = passive("R", "10k", 147.32 + i * 10.16, 269.24)
     s.power("+3V3", r.x, r.y - 2.54)
     s.wire([(r.x, r.y + 2.54), (r.x, r.y + 5.08)])
     s.label(net, r.x, r.y + 5.08, 270)

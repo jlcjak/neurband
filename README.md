@@ -19,7 +19,7 @@ from first principles to record data good enough to train gesture models, and ch
 | IMU | LSM6DSL accel + gyro, 208 Hz |
 | Power | 100 mAh LiPo, ~10 h streaming; magnetic charger that only fits when the band is off the wrist |
 | Module | 31.9 × 34.3 × 9.9 mm, ~15 g total, one size for 145–180 mm wrists |
-| Cost | ≈ $195–240 for a first build incl. flex, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
+| Cost | ≈ $280–330 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
 ## Gallery
 
@@ -50,7 +50,7 @@ see [docs/renders.md](docs/renders.md).
 ```
  skin ─ 8 pods × (P, bias, N) gold pads ─ polyimide flex (GND-shielded) ─ 20-pin FPC
    └─ main board 28.7 × 27 mm, 4 layers, one-sided assembly
-        ADS1298 ─ 16 × 4.7 kΩ inputs, bias amp (1 MΩ‖4.7 nF → all middle pads), filtered AVDD/2 reference
+        ADS1298 ─ 16 × 10 kΩ inputs, bias amp (1 MΩ‖4.7 nF → all middle pads), filtered AVDD/2 reference
           │ SPI
         nRF52832 ─ printed 2.4 GHz antenna ─ BLE ─► nRF52840 USB dongle ─► host/neurband_ble.py ─► .npz
           ├ LSM6DSL IMU, button (wake/marker), LED
@@ -88,16 +88,22 @@ typing, fluent handwriting.
 
 ## Build one
 
-A first prototype can be built for around $200 (≈ $195–240 for two assembled boards, the electrode flex, prints and
-the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)).
+**Step-by-step build guide, with images and a 24 s assembly animation:
+[docs/build/assembly.md](docs/build/assembly.md)** (what to order, printing, gluing, bring-up, assembly,
+strap, charging, troubleshooting).
 
-1. **Order** the main board (assembled) and the electrode flex through the fab files in
-   `boards/neurband_c/` and `boards/neurband_c_flex/` (`*.fab.json`). Print `mech/rev_c/` parts
-   (MJF PA12 / TPU, or PETG/TPU on your own printer). Buy the off-the-shelf bits in
+A first prototype costs around $300 (≈ $280–330 for five main boards with two assembled, five electrode flexes,
+the prints and the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)). Most of it is the ADS1298 and the
+fab's assembly fees.
+
+1. **Order** the assembled main board and the prints with **Buy it** (`boards/neurband_c/ORDERING.md`,
+   `mech/rev_c/*.fab.json`), and the electrode flex from a flex-PCB service
+   (`boards/neurband_c_flex/ORDERING.md`). The pods are TPU on your own FDM printer. Buy the off-the-shelf bits in
    [docs/rev_c/cost.md](docs/rev_c/cost.md) (LiPo 401225, magnetic charge pins, nRF52840 dongle, Pico as SWD probe,
    22 mm elastic webbing, foam discs).
 2. **Assemble**: foam discs under each pad, pods onto the flex, flex tail into J1 (contacts toward the board),
-   cell onto the battery pads, close the module. Details: [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
+   cell onto the battery pads, close the module. Follow [docs/build/assembly.md](docs/build/assembly.md);
+   design details are in [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
 3. **Flash** `firmware_c/` (Zephyr) over SWD with any CMSIS-DAP probe; follow the bring-up checklist in
    [docs/firmware_c.md](docs/firmware_c.md) (ADC ID, test signal, shorted-input noise, then skin).
 4. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
@@ -128,6 +134,7 @@ grounded instrument while the pads touch skin. This is a research prototype, not
 
 - [x] Rev C schematic, main board (DRC 0), flex (DRC 0), mechanics, fit checks on 145/160/180 mm wrists
 - [x] Firmware builds and links for the nRF52832 (Zephyr 4.4.2, 0 warnings, 30 % flash / 94 % RAM); host recorder and analysis pipeline tested on synthetic data
+- [x] Pre-order review and rework: analog coupling/noise ([analog_preorder_review.md](docs/review/analog_preorder_review.md)), on-wrist antenna FDTD simulation ([antenna_sim.md](docs/science/antenna_sim.md)), manufacturing and pick-and-place check against the fab's own footprints ([manufacturing_preorder.md](docs/review/manufacturing_preorder.md)), layout owner's review ([sol_preorder_review.md](docs/review/sol_preorder_review.md)), assembly walk-through ([assembly.md](docs/build/assembly.md))
 - [ ] Build two boards; bench gates: shorted-input noise, mains residual, radio-on noise, bias-loop stability
 - [ ] Antenna tuning (π network on the board), BLE throughput on a real link
 - [ ] First week of recordings with the protocol in `docs/science/data_and_models.md`

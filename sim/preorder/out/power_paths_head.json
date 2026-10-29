@@ -1,0 +1,65 @@
+[
+ {
+  "net": "VBAT",
+  "path": "battery -> LDO input (radio peak ~25 mA)",
+  "R_mohm": 300.3,
+  "I_mA": 25.0,
+  "drop_mV": 7.51
+ },
+ {
+  "net": "VBAT",
+  "path": "battery -> LDO input cap",
+  "R_mohm": 310.0,
+  "I_mA": 25.0,
+  "drop_mV": 7.75
+ },
+ {
+  "net": "VBAT",
+  "path": "battery <-> charger BAT (100 mA charging, off-body)",
+  "R_mohm": 284.6,
+  "I_mA": 100.0,
+  "drop_mV": 28.46
+ },
+ {
+  "net": "+3V3",
+  "path": "LDO out -> C27",
+  "R_mohm": 306.2,
+  "I_mA": 25.0,
+  "drop_mV": 7.65
+ },
+ {
+  "net": "+3V3",
+  "path": "LDO out -> nRF VDD (nearest pin)",
+  "R_mohm": null,
+  "I_mA": 20.0,
+  "drop_mV": null
+ },
+ {
+  "net": "+3V3",
+  "path": "LDO out -> AVDD filter R5",
+  "R_mohm": null,
+  "I_mA": 3.0,
+  "drop_mV": null
+ },
+ {
+  "net": "+3V3",
+  "path": "LDO out -> ADS DVDD",
+  "R_mohm": null,
+  "I_mA": 1.0,
+  "drop_mV": null
+ },
+ {
+  "net": "+3V3",
+  "path": "LDO out -> IMU",
+  "R_mohm": 115.5,
+  "I_mA": 1.0,
+  "drop_mV": 0.12
+ },
+ {
+  "net": "+3V3A",
+  "path": "R5 -> ADS AVDD (nearest pin)",
+  "R_mohm": 69.8,
+  "I_mA": 3.0,
+  "drop_mV": 0.21
+ }
+]

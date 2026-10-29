@@ -45,6 +45,36 @@ python3 render/make_renders.py --social --no-export --shots hero_crop,pods_insid
                                                # 16:9 versions for social posts, subject centred -> render/out/social/
 ```
 
+### Assembly animation and build-guide images (`render/assembly_anim.py`)
+
+```
+python3 render/assembly_anim.py                 # re-export inputs, 720 frames on GPUs 0,1, captions, MP4 + GIF (~15 min)
+python3 render/assembly_anim.py --no-export     # reuse render/build/*.glb
+python3 render/assembly_anim.py --quick         # half size, 16 spp preview -> render/build/assembly_quick_out/
+python3 render/assembly_anim.py --stills        # the images of docs/build/assembly.md -> docs/build/img/*.jpg
+python3 render/assembly_anim.py --encode-only   # redo captions and encoding from existing frames
+```
+
+- Output: `docs/media/assembly.mp4` (1920 x 1080, 24 s at 30 fps, H.264 CRF 20, about 7 MB) and
+  `docs/media/assembly.gif` (720 px wide, 10 fps, 64 colours with ordered dither, about 9.6 MB: the moving
+  camera leaves little for GIF to reuse between frames, so a wider or faster GIF goes over 10 MB). The images go to `docs/build/img/` (11 stills, 1600 x 1000 JPEG, 160 spp; `j1_marks` is the close-up of J1's DOWN and pin-1 marks).
+- The scene reuses the `nb_blender.py` helpers and look: the band GLB, the real KiCad board placed with
+  `module.k2m`, the warm-grey sweep and the `studio()` lights. 40 spp per frame with OptiX denoising,
+  about 2 s a frame on an RTX 3090.
+- The parts come in in build order: flex, foam discs, pods, base, board, cell, light pipe and cap, lid,
+  ulnar loop, webbing, radial loop and fold-back. Each part flies in along its own radial or the module's
+  +Z direction and fades in with an Object Info alpha mixed into every material. The webbing is
+  revealed along the strap by a `rev` attribute, the angle from the ulnar loop.
+- Two parts are modelled in the script:
+  - the **flex tail**, a ribbon whose free length stays 8.24 mm while the board folds down on it (the
+    "book" fold of the guide);
+  - the two **30 AWG battery leads** round the board's distal +X corner through the base's lead gate.
+- The five webbing solids (band, fold-back, sewn end, two wraps) are fused in
+  `band_assembly.step`. The script therefore rebuilds them with `mech/rev_c/fit.py` (160 mm wrist)
+  under FreeCAD into `render/build/strap_pieces.glb`.
+- Captions are drawn on the frames afterwards with PIL (Noto Sans, dark grey, fading in and out), so the
+  3D frames stay clean. ffmpeg encodes the MP4 and a palette GIF.
+
 The turntable frames are split across the GPUs (even and odd frames) and written to
 `render/build/turntable/`. ffmpeg then encodes `render/out/turntable.mp4` (libx264) and
 `turntable.gif` (palettegen and paletteuse).
@@ -102,6 +132,20 @@ Every run does the following:
   gap. Small rigid parts (pods, pads, foam, buckle, and each flex pod and link) move by their
   centroid. The strap unrolls per vertex, and the module stays rigid. Everything off the module then
   drapes down to the table.
+
+### README JPGs
+
+The board shots in `docs/media/` (`pcb_top`, `pcb_pair`, `xray`, `exploded`, `flatlay`) are the
+`render/out/` PNGs scaled to a 1600 px long side (Lanczos) and saved as JPEG quality 88, which matches the
+quantisation tables of the earlier files. These five, the assembly animation and the build-guide images
+were re-rendered on 2026-10-29 from the final main board (`neurband_c.kicad_pcb` SHA-256 766f7908...,
+DRC 0 errors, 52 warnings; CELL outline on the top silkscreen, vertical DOWN mark at J1) and the final
+`mech/rev_c`. The other shots and the turntable are from the inputs below. To redo them:
+
+```
+python3 render/make_renders.py --shots pcb_top,pcb_pair,xray,exploded,flatlay
+python3 render/assembly_anim.py --no-export && python3 render/assembly_anim.py --no-export --stills
+```
 
 ### Inputs used for the current images (2026-10-26, 03:30)
 

@@ -28,7 +28,7 @@
 		(at 0 0)
 		(size 1.2 1.2)
 		(drill 1.2)
-		(layers "*.Cu" "*.Mask")
+		(layers "*.Cu")
 	)
 	(embedded_fonts no)
 )

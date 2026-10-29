@@ -4,22 +4,20 @@ Module frame: X across the wrist (radial +), Y along the arm (distal = -Y), Z up
 the curved underside on the band centre line (y = 0 = pod centre line, strap centre line).
 - Underside: cylinder R_U (axis along Y) hugging the dorsal wrist. It carries flex pods 3 and 4
   (tail between them at x = 0): foam pockets behind their pads and locating pins, like pod.py.
-  So the module itself is two electrode pods; the skin sees only the six pads plus the
-  recessed charge window.
-- Board (28 x 26 x 1.0, all parts on top) lies flat on 4 standoffs, J1 (FPC) on the distal edge
-  facing distal. The flex tail leaves the strip's distal edge (y = -POD_L/2), bends up through a
-  floor slot next to the distal wall (U-turn) and enters J1 heading proximal (fingers on the
-  non-skin side of the flex).
-- LiPo 401225 (4 x 12 x 25) lies on the low parts (TQFP) beside J1, away from the antenna edge
-  (board -X edge, plastic only: no metal within ~5 mm, strap bars are 1.75 mm filament).
-- Charging: 2 pogo pins of the charger press on the board's bottom pads VCHG/GND through a
-  stadium window in the underside, 1.7 mm deep (>= 1.5 mm: skin cannot touch, so it cannot be
-  charged while worn). Two 3 x 1 mm N52 disc magnets in floor pockets pull the charger puck in.
-- Lid: crowned top (R_T) with R2.2 edge fillets, light pipe over D1, a living-hinge button
-  tongue with a stem onto SW1 (top-actuated TS-1088), snap beads, pry notch. A 0.5 x 0.3 mm
-  groove at the parting line is the subtle 'chamfer line'.
-- Strap: two lug ears per side; 20 mm strap loops around 1.75 mm filament bars (no metal near
-  the antenna; standard 1.5 mm spring bars also fit the 1.8 mm holes on the radial side).
+- Board (boards/neurband_c/neurband_c.step, 28.7 x 27 x 1.0, all parts on top) rests on the two
+  strap-slot roofs along its X edges; J1 (front-flip FPC) on the distal edge. The flex tail leaves
+  the strip's distal edge, bends up through a floor slot next to the distal wall (U-turn) and enters
+  J1 heading proximal. It has 0.3 mm of slack with the board flat, so it is plugged in with the board
+  upright above the distal end and the board is folded in (tongue cut back to +/-TAIL_CUT for J1).
+- Battery pads J2 are on the board's underside: a 1.0 mm relief under them and a lead gate (no
+  tongue on the distal wall for x >= LEAD_GATE_X0) let two 30 AWG leads wrap the board edge.
+- LiPo 401225 lies on the TQFP beside J1, away from the antenna edge (board -X edge, plastic only).
+- Charging: 2 pogo pins of the charger puck press on the board's bottom pads VCHG/GND through a
+  stadium window 1.7 mm deep (skin cannot touch: it cannot charge while worn); 2 magnets (N/S).
+- Lid: crowned top (R_T), light pipe tube over D1, round opening for the separate button cap over
+  SW1, four square snap ribs (TONGUE_CLR side clearance, 0.25 mm catch, chamfered lead-in on the
+  base risers), pry notch, parting hairline groove.
+- Strap: hidden slots in the X end faces with integral PA12 bars for the snap-on strap loops.
 Run: QT_QPA_PLATFORM=offscreen timeout 300 /usr/bin/freecad mech/rev_c/module.py
 """
 import os, sys, math, json
@@ -47,7 +45,10 @@ LID_T = 1.0
 IN_FILLET = TOP_FILLET - 1.05
 H_BASE = 2.0              # parting surface: constant height above the underside
 GROOVE_H, GROOVE_D = 0.3, 0.12   # soft parting hairline
-TONGUE_T, TONGUE_H = 1.4, 1.5     # 1.4 tongue carries the 0.35 snap groove (1.05 left); bead on the lid
+TONGUE_T, TONGUE_H = 1.4, 1.5     # tongue zone 1.4 deep inside the lid wall (1.3 of plastic + TONGUE_CLR)
+TONGUE_CLR = 0.1                  # side clearance tongue -> lid inner wall (was 0: line-to-line, no room for MJF/FDM tolerance)
+TAIL_CUT = 7.5                    # tongue cut back over the tail U-turn and J1 (J1 is 14.4 wide): the board can be folded in on its tail
+LEAD_GATE_X0 = 10.5               # battery-lead gate: no tongue on the distal wall from here to the +X corner (leads wrap the board edge)
 BEAD_R, BEAD_LEN = 0.3, 16.0
 # ---------------- board (placeholder until boards/neurband_c/neurband_c.step) ----------------
 BOARD_STEP = os.path.join(R.ROOT, 'boards', 'neurband_c', 'neurband_c.step')
@@ -82,14 +83,14 @@ STANDOFFS = [k2m(*p) for p in STANDOFFS_K]
 STANDOFF_D = 2.0
 # ---------------- battery ----------------
 BAT_W, BAT_L, BAT_T = 12.0, 25.0, 4.0          # 401225, 25 along the arm
-BAT_X0 = -3.5                                  # 4.5 mm from the antenna strip; clear of the crowned lid
+BAT_X0 = -3.5                                  # KiCad x 10.5..22.5: 4.5 mm from the antenna strip. The board's CELL outline (x 11..23) is the +X limit: there the cell touches the proximal +X snap riser and has 0.05 mm to the lid
 BAT_Y0 = Y_B0 + J1_D + 0.15                    # just proximal of J1
 COMP_UNDER_BAT = 1.3                           # TQFP-64 1.2 mm is the tallest part under it
 BAT_TAPE = 0.15
 BAT_SWELL = 0.3
 # ---------------- lid features ----------------
 LP_D, LP_TUBE = 1.6, 3.6                       # light pipe (1.5 mm PMMA rod or clear resin), 1.0 mm tube wall
-BTN_HOLE_D, BTN_GAP_R = 4.6, 0.1                # flush button cap (4.4 mm) in a 4.6 mm opening, clear of the lid edge blend
+BTN_HOLE_D, BTN_GAP_R = 4.6, 0.15               # flush button cap (4.3 mm) in a 4.6 mm opening (0.15 hairline: MJF/FDM tolerance)
 BTN_FLANGE_D, BTN_FLANGE_T = 6.0, 1.0
 BTN_STEM_D, BTN_GAP = 2.0, 0.15
 NOTCH_W = 3.0
@@ -212,15 +213,26 @@ def build_base(log=None):
             b = b.fuse(bo)
     b = b.removeSplitter()
     # tongue (inside the lid wall) with snap beads on the long sides; cut back over the tail riser
-    ring = prism(IN_W, IN_L, PLAN_R - WALL).cut(prism(IN_W - 2 * TONGUE_T, IN_L - 2 * TONGUE_T, PLAN_R - WALL - TONGUE_T))
-    tongue = ring.common(ucyl(R_U + H_BASE + TONGUE_H)).cut(ucyl(R_U + FLOOR - 0.01))
-    tongue = tongue.cut(R.box(-R.TAIL_W / 2 - 1.5, R.TAIL_W / 2 + 1.5, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
+    c = TONGUE_CLR
+    inner = prism(IN_W - 2 * TONGUE_T, IN_L - 2 * TONGUE_T, PLAN_R - WALL - TONGUE_T)
+    ring_lo = prism(IN_W, IN_L, PLAN_R - WALL).cut(inner).common(ucyl(R_U + H_BASE))          # below the parting: one with the wall
+    ring_hi = prism(IN_W - 2 * c, IN_L - 2 * c, PLAN_R - WALL - c).cut(inner).common(ucyl(R_U + H_BASE + TONGUE_H)).cut(ucyl(R_U + H_BASE))
+    # battery-lead gate: no tongue above the parting from LEAD_GATE_X0 to the +X corner (the leads pass
+    # at z >= 1.2, the parting there is at z <= 0.5; below it the tongue stays and keeps the corner wall thick)
+    ring_hi = ring_hi.cut(R.box(LEAD_GATE_X0, 30, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
+    tongue = ring_lo.fuse(ring_hi).removeSplitter().cut(ucyl(R_U + FLOOR - 0.01))   # above it: TONGUE_CLR to the lid wall
+    tongue = tongue.cut(R.box(-TAIL_CUT, TAIL_CUT, Y_MIN - 1, Y_MIN + WALL + TONGUE_T + 0.5, -10, 20))
     b = b.fuse(tongue)
     for x0, x1, yf, sy, zb in snaps():       # tongue risers with a square snap groove (1.0+ all round)
-        y0, y1 = sorted((yf, yf - sy * TONGUE_T))
-        riser = R.box(x0, x1, y0, y1, -5, zb + SNAP_GROOVE_H + 1.0).common(full)
+        y0, y1 = sorted((yf - sy * c, yf - sy * TONGUE_T))
+        zt = zb + SNAP_GROOVE_H + 1.0 + SNAP_CHAMFER          # 1.0 of lip above the groove even under the chamfer
+        riser = R.box(x0, x1, y0, y1, -5, zt).common(full)
+        yo = yf - sy * c                     # riser outer face; SNAP_CHAMFER x 45 deg lead-in on its top outer edge
+        ch = Part.Face(Part.makePolygon([V(x0 - 1, yo + sy * 0.01, zt - SNAP_CHAMFER), V(x0 - 1, yo + sy * 0.01, zt + 0.01),
+                                         V(x0 - 1, yo - sy * SNAP_CHAMFER, zt + 0.01), V(x0 - 1, yo + sy * 0.01, zt - SNAP_CHAMFER)])).extrude(V(x1 - x0 + 2, 0, 0))
+        riser = riser.cut(ch)
         b = b.fuse(riser)
-        g0, g1 = sorted((yf, yf - sy * SNAP_DEPTH))
+        g0, g1 = sorted((yo, yo - sy * SNAP_DEPTH))
         b = b.cut(R.box(x0, x1, g0, g1, zb, zb + SNAP_GROOVE_H))   # groove through the riser (no thin end caps)
     # board standoffs
     for x, y in STANDOFFS:
@@ -279,8 +291,10 @@ def slot_void(sx):
     return upper.fuse(R.box(la, lb, -SLOT_W / 2, SLOT_W / 2, -10, SLOT_Z_STEP + 0.01)).removeSplitter()
 
 
-SNAP_SEGS = ((-10.5, -6.0, 1), (9.0, 12.0, 1), (-10.5, -6.75, -1), (6.75, 10.5, -1))  # (x0, x1, +1 proximal / -1 distal); distal ones start at the tail cut-back
-SNAP_DEPTH, SNAP_GROOVE_H, SNAP_RIB_H = 0.3, 1.1, 1.0
+SNAP_SEGS = ((-10.5, -6.0, 1), (9.0, 12.0, 1), (-11.25, -TAIL_CUT, -1), (TAIL_CUT, LEAD_GATE_X0, -1))  # (x0, x1, +1 proximal / -1 distal); distal ones between the tail cut-back and the lead gate
+SNAP_DEPTH, SNAP_GROOVE_H, SNAP_RIB_H = 0.3, 1.2, 1.0   # groove 0.3 deep x 1.2; rib 1.0 tall, its top 0.15 below the groove top (z tolerance)
+SNAP_RIB_D = TONGUE_CLR + 0.25          # rib depth from the lid face: 0.25 engagement over the 0.1 side clearance, 0.05 short of the groove bottom
+SNAP_CHAMFER = 0.3                      # lead-in on the riser top outer edge (the rib cams the lid wall out by 0.25); 1.0 left at the top edge
 
 
 def snaps():
@@ -330,7 +344,7 @@ def build_lid(log=None):
     cav = cavity(log)
     l = l.cut(cav)
     for x0, x1, yf, sy, zb in snaps():       # square snap ribs on the lid's inner face
-        r0, r1 = sorted((yf + sy * 0.01, yf - sy * SNAP_DEPTH))
+        r0, r1 = sorted((yf + sy * 0.01, yf - sy * SNAP_RIB_D))
         l = l.fuse(R.box(x0 + 0.3, x1 - 0.3, r0, r1, zb + 0.05, zb + 0.05 + SNAP_RIB_H))
     for sx in (-1, 1):
         l = l.cut(slot_void(sx))

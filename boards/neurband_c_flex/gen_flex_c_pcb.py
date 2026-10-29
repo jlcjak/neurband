@@ -175,7 +175,7 @@ class Board:
                   (property "Reference" "H{i}{k}" (at 0 0) (layer "F.Fab") (effects (font (size 0.6 0.6)) (hide yes)))
                   (property "Value" "Alignment 1.2mm" (at 0 0) (layer "F.Fab") (effects (font (size 0.6 0.6)) (hide yes)))
                   (attr through_hole board_only exclude_from_pos_files exclude_from_bom)
-                  (pad "" np_thru_hole circle (at 0 0) (size 1.2 1.2) (drill 1.2) (layers "*.Cu" "*.Mask") (uuid "{self.id()}")))''')
+                  (pad "" np_thru_hole circle (at 0 0) (size 1.2 1.2) (drill 1.2) (layers "*.Cu") (uuid "{self.id()}")))''')
             self.text(str(i),(x,-14),size=0.8)
             self.text(str(i),(x,-14),'B.SilkS',0.8)
         self.footprint('J1','FPC_Tail_20_P0.5mm',(0,self.tip-1.9),'B',[(p,(contact_x(p),0),(0.3,3.2),'rect') for p in range(1,21)])
@@ -186,8 +186,7 @@ class Board:
         self.text('OUTER',(0,9),'B.SilkS',0.8)
         self.text('Optional: 2-3 SMD spring pins, 2 mm heads per round ENIG pad; no paste stencil',(self.xs[4],-19),'F.Fab',0.8)
         stiff=[(-5.25,self.tip-STIFFENER_LENGTH),(5.25,self.tip-STIFFENER_LENGTH),(5.25,self.tip),(-5.25,self.tip)]
-        for a,b in zip(stiff,stiff[1:]+stiff[:1]):
-            self.line(a,b,'User.2',0.1)
+        self.items.append(f'(gr_rect (start {xy(stiff[0])}) (end {xy(stiff[2])}) (stroke (width 0) (type default)) (fill yes) (layer "User.2") (uuid "{self.id()}"))')
         self.text('F-side PI stiffener; total 0.30 +/-0.03 mm',(0,self.tip+3),'User.2',0.7)
         self.text('Root y3..15 captured; bend only y15..stiffener',(0,17),'User.1',0.65)
 
@@ -486,7 +485,7 @@ def library():
     fp.excludeFromPositionFiles=True
     fp.append(Property(name=Property.REFERENCE,text='REF**',at=[0,0],layer='F.Fab'))
     fp.append(Property(name=Property.VALUE,text='Alignment 1.2mm',at=[0,0],layer='F.Fab'))
-    fp.append(Pad(number='',type=Pad.TYPE_NPTH,shape=Pad.SHAPE_CIRCLE,at=[0,0],size=[1.2,1.2],drill=1.2,layers=Pad.LAYERS_NPTH))
+    fp.append(Pad(number='',type=Pad.TYPE_NPTH,shape=Pad.SHAPE_CIRCLE,at=[0,0],size=[1.2,1.2],drill=1.2,layers=['*.Cu']))
     KicadFileHandler(fp).writeFile(str(lib/'Alignment_D1.2mm.kicad_mod'))
     (HERE/'fp-lib-table').write_text('(fp_lib_table (lib (name "neurband_c_flex")(type "KiCad")(uri "${KIPRJMOD}/neurband_c_flex.pretty")(options "")(descr "REV C fabricated contacts")))\n')
 
@@ -681,7 +680,13 @@ def fabrication_metadata(path):
               'min_drill_mm':min(drills)}
     metadata={'kind':'pcb','name':'Electrode flex rev C','source':path.name,'qty':5,
               'options':{'layers':2,'thickness_mm':0.4,'finish':'enig'},'features':features}
-    path.with_suffix('.fab.json').write_text(json.dumps(metadata,indent=2)+'\n')
+    manifest=path.with_suffix('.fab.json')
+    if manifest.exists():
+        previous=json.loads(manifest.read_text())
+        previous['features']=features
+        metadata=previous
+    metadata['order']=False
+    manifest.write_text(json.dumps(metadata,indent=2)+'\n')
     return features
 
 

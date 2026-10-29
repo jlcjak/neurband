@@ -14,8 +14,8 @@ No board, schematic, or flex was changed. This is not the Hirose FH12 footprint.
 ## Sources and authority
 
 1. [LCSC C2856803 product identification](https://www.lcsc.com/product-detail/C2856803.html): manufacturer XUNPU, exact MPN FPC-05F-20PH20, 20 contacts, 0.5 mm pitch, bottom-contact, right-angle SMT, flip-top, 0.3 mm FPC thickness.
-2. [Manufacturer drawing supplied by LCSC](https://datasheet.lcsc.com/datasheet/pdf/3a5d0ddaf61b312ec7a8c470eadfb5fe.pdf?productCode=C2856803), obtained through the product's [datasheet link](https://www.lcsc.com/datasheet/C2856803.pdf). Title block: DongGuan XunPu Electronics Co., Ltd.; `FPC 0.5PH H2.0` front-flip series; part family `FPC-05F-NPH20`; revision A; sheet 1/1. The sheet is parametric: substitute N=20. This is a manufacturer-authored drawing hosted by its distributor, not a guessed substitute or an EasyEDA-only footprint.
-3. [Distributor EasyEDA footprint SVG](https://image.easyeda.com/component_svgs/prod/882c630401bf425abe1cf720e600162b.svg): secondary corroboration only, for pin-number orientation and undimensioned body-to-land registration. Copper dimensions below are from source 2.
+2. [Manufacturer drawing from the fab's stock entry](https://datasheet.lcsc.com/datasheet/pdf/3a5d0ddaf61b312ec7a8c470eadfb5fe.pdf?productCode=C2856803), obtained through the product's [datasheet link](https://www.lcsc.com/datasheet/C2856803.pdf). Title block: DongGuan XunPu Electronics Co., Ltd.; `FPC 0.5PH H2.0` front-flip series; part family `FPC-05F-NPH20`; revision A; sheet 1/1. The sheet is parametric: substitute N=20. This is a manufacturer-authored drawing hosted by its distributor, not a guessed substitute or a library-only footprint.
+3. [The fab library footprint SVG](https://image.easyeda.com/component_svgs/prod/882c630401bf425abe1cf720e600162b.svg): secondary corroboration only, for pin-number orientation and undimensioned body-to-land registration. Copper dimensions below are from source 2.
 
 The PDF has a damaged/circular cross-reference table: the text reader could not parse it, but Poppler rasterized the full sheet successfully. The saved PNG preserves the inspected sheet.
 

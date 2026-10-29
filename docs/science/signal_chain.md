@@ -4,6 +4,8 @@
 
 **Evidence labels:** **P** published/manufacturer result; **C** calculation from stated assumptions; **E** engineering estimate; **A** proposed acceptance criterion, not a standard. **No neurband hardware was measured.** Reviewed the four requested documents and `boards/neurband_c/gen_c_sch.py`, including its 16 input resistors, bias feedback, RC supply branch and charger. Earlier rev A recommendations are not rev C measurements. Changes below are recommendations for the hardware lead; no design files were changed.
 
+> **Update (pre-order rework):** the series resistors are now 10 kΩ (ESD current limit); the resistor noise term rises from about 0.36 to 0.52 µVrms (20–850 Hz), small next to the dry-contact noise. See [analog_preorder_review.md](../review/analog_preorder_review.md).
+
 ## 1. Signal and noise
 
 There is no universal wrist voltage: muscle, posture, electrode location, force and processing bandwidth matter. Do not convert a percentage of MVC **force** directly into a percentage of EMG voltage.

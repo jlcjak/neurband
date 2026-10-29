@@ -44,7 +44,7 @@ References: Hirose's [FH26 series catalog](https://www.hirose.com/product/docume
 
 ### Fabrication capability
 
-The fab publishes [flex capability](https://jlcpcb.com/blog/the-ultimate-guide-to-flexible-pcb) of 3/3 mil (0.0762/0.0762 mm) with 12 µm copper, and 3.5/3.5 mil with 18 µm copper. The nominal 0.10 mm necks and ≥0.1003 mm terminal spacing are within that normal flex feature class; a 0.3 mm connector pitch alone does not require HDI. **The dimensional tolerances still require fab confirmation**: contact-head etch width, adjacent-pitch accuracy, A/B registration, tab outline and finished thickness must all be maintained together. Nominal CAD clearance is not a worst-case tolerance guarantee.
+The fab publishes a flex capability of 3/3 mil (0.0762/0.0762 mm) with 12 µm copper, and 3.5/3.5 mil with 18 µm copper. The nominal 0.10 mm necks and ≥0.1003 mm terminal spacing are within that normal flex feature class; a 0.3 mm connector pitch alone does not require HDI. **The dimensional tolerances still require fab confirmation**: contact-head etch width, adjacent-pitch accuracy, A/B registration, tab outline and finished thickness must all be maintained together. Nominal CAD clearance is not a worst-case tolerance guarantee.
 
 The cable drawing necessarily places the outer heads about 0.16 mm from the tab edge. A named insertion-tab rule allows 0.15 mm edge clearance only for non-zone items intersecting that terminal area. Other copper, including the shield zones, retains the 0.30 mm edge requirement. This is a documented connector geometry constraint, not a waived DRC violation.
 

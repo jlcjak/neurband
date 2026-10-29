@@ -2,7 +2,7 @@
  "module_base": {
   "min_wall_mm": 0.98,
   "p1_wall_mm": 1.0,
-  "samples": 6068,
+  "samples": 6063,
   "thin_spots": [
    [
     0.98,
@@ -18,9 +18,9 @@
    ],
    [
     0.99,
-    14.2,
+    15.2,
     -12.7,
-    1.1
+    0.9
    ]
   ],
   "min_at": [
@@ -33,7 +33,7 @@
  "module_lid": {
   "min_wall_mm": 0.98,
   "p1_wall_mm": 1.0,
-  "samples": 4159,
+  "samples": 4147,
   "thin_spots": [
    [
     0.98,
@@ -136,7 +136,7 @@
  "button_cap": {
   "min_wall_mm": 1.0,
   "p1_wall_mm": 1.0,
-  "samples": 342,
+  "samples": 339,
   "thin_spots": [],
   "min_at": [
    8.4,

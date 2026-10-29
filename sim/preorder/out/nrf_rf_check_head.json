@@ -1,0 +1,310 @@
+{
+ "pins": {
+  "1": {
+   "net": "/DEC1",
+   "x": 11.95,
+   "y": 7.9
+  },
+  "13": {
+   "net": "+3V3",
+   "x": 11.2,
+   "y": 2.75
+  },
+  "30": {
+   "net": "Net-(U1-ANT)",
+   "x": 6.05,
+   "y": 5.5
+  },
+  "31": {
+   "net": "GND",
+   "x": 6.05,
+   "y": 5.9
+  },
+  "32": {
+   "net": "unconnected-(U1-DEC2-Pad32)",
+   "x": 6.05,
+   "y": 6.3
+  },
+  "33": {
+   "net": "/DEC3",
+   "x": 6.05,
+   "y": 6.7
+  },
+  "34": {
+   "net": "Net-(U1-XC1)",
+   "x": 6.05,
+   "y": 7.1
+  },
+  "35": {
+   "net": "Net-(U1-XC2)",
+   "x": 6.05,
+   "y": 7.5
+  },
+  "36": {
+   "net": "+3V3",
+   "x": 6.05,
+   "y": 7.9
+  },
+  "45": {
+   "net": "GND",
+   "x": 10.0,
+   "y": 8.65
+  },
+  "46": {
+   "net": "/DEC4",
+   "x": 10.4,
+   "y": 8.65
+  },
+  "47": {
+   "net": "unconnected-(U1-DCC-Pad47)",
+   "x": 10.8,
+   "y": 8.65
+  },
+  "48": {
+   "net": "+3V3",
+   "x": 11.2,
+   "y": 8.65
+  }
+ },
+ "caps": [
+  {
+   "ref": "C13",
+   "net": "/DEC1",
+   "pin": "1",
+   "pin_to_pad_mm": 1.2,
+   "track_mm": 1.27,
+   "gnd_pad_to_gnd_via_mm": 1.43,
+   "gnd_pad_to_EP_edge_mm": 1.85
+  },
+  {
+   "ref": "C14",
+   "net": "/DEC3",
+   "pin": "33",
+   "pin_to_pad_mm": 2.38,
+   "track_mm": 2.46,
+   "gnd_pad_to_gnd_via_mm": 0.53,
+   "gnd_pad_to_EP_edge_mm": 3.98
+  },
+  {
+   "ref": "C15",
+   "net": "/DEC4",
+   "pin": "46",
+   "pin_to_pad_mm": 1.38,
+   "track_mm": 1.49,
+   "gnd_pad_to_gnd_via_mm": 0.53,
+   "gnd_pad_to_EP_edge_mm": 2.73
+  },
+  {
+   "ref": "C18",
+   "net": "+3V3",
+   "pin": "36",
+   "pin_to_pad_mm": 2.05,
+   "track_mm": 2.94,
+   "gnd_pad_to_gnd_via_mm": 0.53,
+   "gnd_pad_to_EP_edge_mm": 2.73
+  },
+  {
+   "ref": "C10",
+   "net": "+3V3",
+   "pin": "13",
+   "pin_to_pad_mm": 5.25,
+   "track_mm": 14.44,
+   "gnd_pad_to_gnd_via_mm": 0.5,
+   "gnd_pad_to_EP_edge_mm": 5.34
+  },
+  {
+   "ref": "C16",
+   "net": "+3V3",
+   "pin": "48",
+   "pin_to_pad_mm": 1.59,
+   "track_mm": 2.06,
+   "gnd_pad_to_gnd_via_mm": 1.27,
+   "gnd_pad_to_EP_edge_mm": 3.71
+  },
+  {
+   "ref": "C17",
+   "net": "+3V3",
+   "pin": "13",
+   "pin_to_pad_mm": 2.21,
+   "track_mm": 2.49,
+   "gnd_pad_to_gnd_via_mm": 0.5,
+   "gnd_pad_to_EP_edge_mm": 3.28
+  }
+ ],
+ "notes": [],
+ "ep_vias": 0,
+ "C21": {
+  "1": {
+   "net": "Net-(U1-ANT)",
+   "x": 4.7,
+   "y": 5.42
+  },
+  "2": {
+   "net": "GND",
+   "x": 4.7,
+   "y": 6.38
+  },
+  "gnd_pad_to_nearest_GND_via_mm": 0.946,
+  "gnd_pad_to_U1_pin31_mm": 1.433,
+  "F_pour_touching_gnd_pad": 0,
+  "GND_tracks_from_gnd_pad": 4,
+  "gnd_track_reaches_pin31": true,
+  "vias_on_that_gnd_track": []
+ },
+ "L1": {
+  "1": {
+   "net": "Net-(C22-Pad1)",
+   "x": 2.715,
+   "y": 5.5
+  },
+  "2": {
+   "net": "Net-(U1-ANT)",
+   "x": 3.685,
+   "y": 5.5
+  },
+  "ANT_pin_to_L1_mm": 2.36
+ },
+ "C21_ANT_to_pin30_mm": 1.35,
+ "match_keepout_bbox": [
+  2.0,
+  4.8,
+  6.35,
+  6.85
+ ],
+ "match_keepout_layers": [
+  "B.Cu",
+  "In1.Cu",
+  "In2.Cu"
+ ],
+ "copper_under_matching": {
+  "In1.Cu": {
+   "gnd_fill_mm2": 0.0,
+   "tracks": [],
+   "vias": []
+  },
+  "In2.Cu": {
+   "gnd_fill_mm2": 0.0,
+   "tracks": [],
+   "vias": []
+  },
+  "B.Cu": {
+   "gnd_fill_mm2": 0.0,
+   "tracks": [],
+   "vias": []
+  }
+ },
+ "keepout_covers": {
+  "L1": true,
+  "C21": true,
+  "U1.30": true
+ },
+ "rf_feed": {
+  "Net-(U1-ANT)": {
+   "widths": [
+    0.127
+   ],
+   "length_mm": 2.35,
+   "layers": [
+    "F.Cu"
+   ],
+   "nearest_other_copper_mm": {
+    "GND": 0.236,
+    "/IMU_INT": 0.237,
+    "GND pour": 0.317
+   }
+  },
+  "Net-(C22-Pad1)": {
+   "widths": [
+    0.16
+   ],
+   "length_mm": 2.75,
+   "layers": [
+    "F.Cu"
+   ],
+   "nearest_other_copper_mm": {
+    "GND pour": 0.499,
+    "GND": 0.514
+   }
+  },
+  "Net-(AE1-A)": {
+   "widths": [
+    0.16
+   ],
+   "length_mm": 12.21,
+   "layers": [
+    "F.Cu"
+   ],
+   "nearest_other_copper_mm": {
+    "GND": 0.22,
+    "Net-(U1-XC2)": 0.22,
+    "Net-(U4-PROG)": 0.37,
+    "GND pour": 0.499,
+    "Net-(U1-XC1)": 0.58
+   }
+  }
+ },
+ "crystal_nets": {
+  "Net-(U1-XC1)": {
+   "length_mm": 4.72,
+   "layers": [
+    "F.Cu"
+   ],
+   "widths": [
+    0.1
+   ],
+   "vias": 0
+  },
+  "Net-(U1-XC2)": {
+   "length_mm": 8.61,
+   "layers": [
+    "F.Cu"
+   ],
+   "widths": [
+    0.1
+   ],
+   "vias": 0
+  }
+ },
+ "Y1_pads": [
+  {
+   "num": "1",
+   "net": "Net-(U1-XC2)",
+   "x": 4.9,
+   "y": 10.6
+  },
+  {
+   "num": "2",
+   "net": "GND",
+   "x": 4.9,
+   "y": 9.2
+  },
+  {
+   "num": "3",
+   "net": "Net-(U1-XC1)",
+   "x": 3.8,
+   "y": 9.2
+  },
+  {
+   "num": "4",
+   "net": "GND",
+   "x": 3.8,
+   "y": 10.6
+  }
+ ],
+ "C19_gnd_to_gnd_via_mm": 0.63,
+ "C20_gnd_to_gnd_via_mm": 1.09,
+ "other_copper_within_1mm_of_crystal": {
+  "/CHG_N [In2.Cu]": 0.0,
+  "/BUTTON [In2.Cu]": 0.0,
+  "/NRST [B.Cu]": 0.0,
+  "/SWDIO [In2.Cu]": 0.0,
+  "/IMU_INT [B.Cu]": 0.0,
+  "Net-(AE1-A) [F.Cu]": 0.22,
+  "+3V3 [F.Cu]": 0.234,
+  "/DEC3 [F.Cu]": 0.24,
+  "+3V3 [via]": 0.275,
+  "+3V3 [B.Cu]": 0.43,
+  "VCHG [F.Cu]": 0.64
+ },
+ "in1_under_crystal_pct": 85.7
+}
