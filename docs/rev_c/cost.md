@@ -32,17 +32,19 @@ fab's quote before payment.
 | Shipping, main board + prints (one parcel) | $20–30 | import duties/tariffs depend on your country and are not included |
 | **Main-board order** | **~$165–185** | |
 | Electrode flex, 2-layer polyimide, ENIG, PI stiffener, 5 pcs | $25–50 + shipping $15–25 | its own **Buy it** order ([ORDERING.md](../../boards/neurband_c_flex/ORDERING.md)); a flex ships separately from rigid boards |
-| 3D prints: module base, lid, button cap, 2 strap slides, charge clip (MJF PA12) | $15–25 | the six TPU pods and the two jigs can be printed at home (FDM) |
+| 3D prints: module base (with its two strap bars), lid, button cap (MJF PA12) | $15–25 | r2: no strap slides, no charge clip, no SWD jig. The six TPU pods and the two bonding jigs can be printed at home (FDM) |
 | Protected LiPo 401223-class, ~130 mAh (≤ 4 × 12 × 25 mm incl. protection board), ×2 | ~€24 | a "401225" is ~27 mm with its board and does not fit ([sourcing.md](../build/sourcing.md)) |
-| 20 × 1.5 mm woven elastic webbing, 1–2 m | ~€5 | the strap: no hook-and-loop, no sewing |
+| 20 mm one-piece hook-and-loop watch strap (single pass, size L) | ~€11.50 | r2: open strap on the module's two bars, no sewing ([sourcing.md](../build/sourcing.md) §1) |
+| 2-pin magnetic charging connector pair + USB-A pigtail | ~€6 + ~€9 (or an old USB cable) | r2: replaces the printed charge clip ([sourcing.md](../build/sourcing.md) §5) |
 | Pre-cut 6 × 2 mm double-sided foam dots (a pack of ~1000) | ~€13 incl. shipping | the only adhesive in the build |
-| P50 pogo pins, pack of 100 | ~€4 | 2 for the charge clip, 5 for the flashing jig |
 | SWD probe: Raspberry Pi Pico 2 running debugprobe | ~€6 | or the Raspberry Pi Debug Probe, ~€15 |
 | BLE receiver: nRF52840 USB dongle | ~€12 + shipping | or an nRF52840 "SuperMini" board, ~€7 |
-| **Total** | **≈ $290–350** | |
+| **Total** | **≈ $300–360** | |
 
 The first estimate (≈ $195–240) assumed the cheap assembly tier and the flex in the same parcel; the
-pre-order manufacturing review showed neither is possible. The simpler build (no sewing, magnets or glue
-except a drop of CA per pogo pin) needs only six things off the shelf; the cell that really fits
+pre-order manufacturing review showed neither is possible. The r2 mechanics (Nov 2026) swap the elastic
+webbing, two printed strap slides, the printed charge clip, the SWD jig and the pogo pins for a bought
+hook-and-loop strap and a magnetic connector pair: about €15 more off the shelf, three fewer printed
+parts, and no small printed part carries the band's load any more; the cell that really fits
 (401223-class) costs more than the 401225 first assumed. The second
 assembled board and three spare bare boards are included in that price.

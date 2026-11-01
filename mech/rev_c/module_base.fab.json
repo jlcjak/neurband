@@ -1,19 +1,19 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C module base (chassis, carries pods 3/4)",
+  "name": "neurband rev C module base r2 (chassis with two integral strap bars, carries pods 3/4)",
   "source": "module_base.step",
   "qty": 3,
   "options": {
     "process": "mjf",
     "material": "pa12",
-    "color": "gray"
+    "color": "black"
   },
   "features": {
-    "volume_cm3": 1.598,
-    "area_cm2": 32.23,
-    "size_x_mm": 34.5,
-    "size_y_mm": 32.1,
-    "size_z_mm": 7.8
+    "volume_cm3": 4.116,
+    "area_cm2": 51.26,
+    "size_x_mm": 48.1,
+    "size_y_mm": 37.37,
+    "size_z_mm": 10.77
   },
-  "min_wall_mm": 0.98
+  "min_wall_mm": 1.0
 }

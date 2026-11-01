@@ -15,5 +15,7 @@
     "size_y_mm": 18.77,
     "size_z_mm": 14.04
   },
-  "min_wall_mm": 1.0
+  "min_wall_mm": 1.0,
+  "order": false,
+  "notes": "Not ordered (r2: J3 moved to the board corner over pod 4; charging is through the magnetic connector in the base)."
 }

@@ -1,20 +1,17 @@
 """pod.py - rev C electrode pod shell, low-profile TPU (6 per band: pods 1, 2, 5, 6, 7, 8; pods 3
-and 4 sit in the module underside).
+and 4 sit in the module underside). r2: snap-in channel for the 20 mm hook-and-loop strap.
 
 Pod-local frame: X = around the wrist (pod width), Y = along the arm (distal = -Y), Z = away from
 the skin. z = 0 is the shell face the flex paddle (7.1 x 30) lies on; the skin is below (-Z).
-- Soft rounded pebble, 9.0 x 32.0 x 3.9 mm (covers the whole 30 mm paddle), ends tapering to
-  2.0 mm beyond the band edges, all walls >= 1.0 mm (1.0 floor behind the foam, 1.0 rims), R1.2 top blends, R0.8 face blends (strain relief where
-  the flex spine leaves at +/-X, y -7..+0.6).
+- Soft rounded pebble, 9.0 x 32.0 mm (covers the whole 30 mm paddle), ends tapering to 2.0 mm
+  beyond the strap edges, walls >= 1.0 mm (1.0 floor behind the foam, 1.0 lips).
 - Compliant contact: pockets behind the pads (y = -10/0/+10) for pre-cut round double-sided foam
   dots (rc.FOAM_D x rc.FOAM_T); the pocket depth puts the pads 1.0 mm proud (about 0.65 mm worn).
-  No pins: the bonding jig locates the flex by its 1.2 mm holes and the pod by its outline.
-- Captive edge sleeve for the continuous 25 mm webbing: a 25.4 x 1.6 mm slot through the pod
-  (along X) whose roof is open over the middle 22.4 mm. The fabric stays visible on the outside;
-  two 1.5 mm rounded rims hold its edges. The webbing slides freely, so its stretch never
-  loads the flex links (the flex sets the 18 mm pitch). It presses on the whole pad span, so a
-  soft TPU shell still loads all three pads evenly.
-Print: TPU 95A, on its side (the sleeve vertical), no supports; or MJF TPU from a fab.
+- Snap-in channel for the strap (rc.CHANNEL_W x rc.CHANNEL_H, along X): the strap is pressed in
+  from above past two TPU lips (LIP overlap, chamfered lead-in), so it is never threaded and the
+  thick hook end and end cap never have to pass a pod. The strap's tension presses the pod onto the
+  skin through the channel floor; the lips only keep the pod on the strap when the band is off.
+Print: TPU 95A, on its side (the channel vertical), no supports.
 Run: QT_QPA_PLATFORM=offscreen timeout 300 /usr/bin/freecad mech/rev_c/pod.py
 """
 import os, sys
@@ -32,9 +29,10 @@ END_H = 2.0                     # shell height at the tips (ends taper under the
 PLAN_R = 3.6
 H = R.BASE_T + R.CHANNEL_H + R.LIP_T   # 3.9: 1.0 floor behind the foam + sleeve + 1.0 rims
 BASE_T = R.BASE_T               # face -> sleeve floor
-SLEEVE_W = R.CHANNEL_W          # 25.4
-SLEEVE_H = R.CHANNEL_H          # 1.6
-RIM = 1.5                       # rim overlap over each webbing edge
+SLEEVE_W = R.CHANNEL_W          # 20.8
+SLEEVE_H = R.CHANNEL_H          # 2.5
+RIM = 0.8                       # lip overlap over each strap edge (snap-in)
+LEADIN = 0.0                    # (no lead-in chamfer: it thinned the 1.0 mm lips; TPU lips flex enough)
 TOP_FILLET = 0.6                # keeps the 1.0 mm rims >= 1.0 through the blend
 FACE_FILLET = 0.8
 RIM_FILLET = 0.0                # (no rim fillet: keeps the 1.0 mm rims full)
@@ -59,6 +57,10 @@ def build(log=None):
     s = s.cut(R.box(-w, w, -SLEEVE_W / 2, SLEEVE_W / 2, BASE_T, BASE_T + SLEEVE_H))
     yo = SLEEVE_W / 2 - RIM
     s = s.cut(R.box(-w, w, -yo, yo, BASE_T + SLEEVE_H - 0.2, H + 1))
+    for sy in ((-1, 1) if LEADIN > 0 else ()):   # lead-in chamfers so the strap edge cams the lip outward
+        y0 = sy * yo
+        pts = [V(-w, y0, H - LEADIN), V(-w, y0 + sy * LEADIN, H + 0.01), V(-w, y0 - sy * 0.01, H + 0.01), V(-w, y0 - sy * 0.01, H - LEADIN), V(-w, y0, H - LEADIN)]
+        s = s.cut(Part.Face(Part.makePolygon(pts)).extrude(V(2 * w, 0, 0)))
     s = s.removeSplitter()
     # foam pockets behind the pads
     for y in R.PAD_Y:
@@ -74,12 +76,12 @@ if not getattr(sys, 'neurband_lib', False):
     log(f"  pod shell {bb.XLength:.2f} x {bb.YLength:.2f} x {bb.ZLength:.2f} mm (W x L x H incl. pins); "
         f"top {TOP_Z:.2f} above the face, {TOP_Z + R.STACK_LOADED:.2f} above the skin worn")
     poly, gold, foam = R.flex_pod()
-    web = R.box(-6, 6, -R.STRAP_W / 2, R.STRAP_W / 2, BASE_T + 0.1, BASE_T + 0.1 + R.STRAP_T)
+    web = R.box(-6, 6, -R.STRAP_W / 2, R.STRAP_W / 2, BASE_T + 0.05, BASE_T + 0.05 + R.STRAP_T)
     R.save('pod', [('pod', shell, R.C_POD)], log)
     R.save('pod_with_flex', [('pod', shell, R.C_POD), ('foam', Part.makeCompound(foam), R.C_FOAM),
                              ('flex', poly, R.C_FLEX), ('pads', Part.makeCompound(gold), R.C_GOLD),
                              ('webbing', web, R.C_STRAP)], log)
     R.fab('pod', 'Electrode pod shell rev C, TPU (6 per band)', shell, 14, 'fdm', 'tpu', 'black', log,
-          extra={"notes": "TPU 95A, print on its side; 6 per band, 12 for two bands + 2 spares; "
-                          "6 x 2.0 mm EVA foam dots bought separately (docs/build/sourcing.md)"})
+          extra={"notes": "TPU 95A, print on its side (channel vertical), no supports; 6 per band, 12 for two bands + 2 spares; "
+                          "snap-in channel for the 20 mm strap; 6 x 2.0 mm EVA foam dots bought separately (docs/build/sourcing.md)"})
     R.finish(log)

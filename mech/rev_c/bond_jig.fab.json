@@ -1,6 +1,6 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C bonding jig (flex + pods + module base; print once)",
+  "name": "neurband rev C bonding jig stage 1 (flex + six free pods; print once)",
   "source": "bond_jig.step",
   "qty": 1,
   "options": {
@@ -9,11 +9,11 @@
     "color": "white"
   },
   "features": {
-    "volume_cm3": 22.255,
-    "area_cm2": 174.88,
+    "volume_cm3": 21.684,
+    "area_cm2": 166.85,
     "size_x_mm": 142.61,
     "size_y_mm": 46.5,
-    "size_z_mm": 5.56
+    "size_z_mm": 5.55
   },
   "min_wall_mm": 1.0
 }

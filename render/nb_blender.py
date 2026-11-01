@@ -404,9 +404,10 @@ BAND_MAT = {
     'strap_long': 'strap', 'strap_short': 'strap', 'strap_loops': 'strap', 'lipo': 'lipo',
     'magnets': 'nickel', 'strap_bars': 'nylon', 'light_pipe': 'pmma', 'main_board': 'fr4',
     'board_parts': 'black', 'button_cap': 'housing', 'strap': 'strap', 'strap_loop': 'pod', 'strap_slide': 'pod',
+    'mag_connector': 'black', 'mag_contacts': 'gold', 'cell_leads': 'black',
 }
 MODULE_KINDS = {'module_base', 'module_lid', 'main_board', 'board_parts', 'lipo', 'light_pipe',
-                'magnets', 'strap_bars'}
+                'magnets', 'strap_bars', 'mag_connector', 'mag_contacts', 'cell_leads'}
 
 
 def in_module(k):
@@ -446,7 +447,8 @@ def band_material(k, housing='graphite'):
     }[band_class(k)]()
 
 
-MIRROR_RING = True     # show the pod ring in the real flex's order (see mirror_ring)
+MIRROR_RING = os.environ.get('NB_MIRROR', '1') == '1'   # show the pod ring in the real flex's order (see mirror_ring);
+# r2 (open strap): NB_MIRROR=0 for product shots, so the strap's lock and fold stay at the module's matching slots
 
 
 def load_band(path=None, housing='graphite', mirror=None):

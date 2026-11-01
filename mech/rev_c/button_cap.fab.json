@@ -6,14 +6,14 @@
   "options": {
     "process": "mjf",
     "material": "pa12",
-    "color": "gray"
+    "color": "black"
   },
   "features": {
-    "volume_cm3": 0.055,
-    "area_cm2": 1.04,
-    "size_x_mm": 6.0,
-    "size_y_mm": 6.0,
-    "size_z_mm": 3.7
+    "volume_cm3": 0.053,
+    "area_cm2": 0.88,
+    "size_x_mm": 5.46,
+    "size_y_mm": 5.23,
+    "size_z_mm": 4.81
   },
   "min_wall_mm": 1.0
 }

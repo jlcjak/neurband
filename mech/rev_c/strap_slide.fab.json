@@ -15,5 +15,7 @@
     "size_y_mm": 7.91,
     "size_z_mm": 3.41
   },
-  "min_wall_mm": 1.0
+  "min_wall_mm": 1.0,
+  "order": false,
+  "notes": "Not ordered (r2: replaced by the open hook-and-loop strap on the module base's integral bars)."
 }

@@ -14,10 +14,10 @@ HERE = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals() els
 import FreeCAD, Part
 
 V = FreeCAD.Vector
-PARTS = [p for p in os.environ.get('WALL_PARTS', 'module_base,module_lid,button_cap,strap_slide,charge_clip,cell_spacer,pod,bond_jig,swd_jig').split(',')]
+PARTS = [p for p in os.environ.get('WALL_PARTS', 'module_base,module_lid,button_cap,cell_spacer,pod,bond_jig,base_jig').split(',')]
 RAY = 8.0           # longest wall considered
 GRID = 0.6          # mm between samples (approx.)
-MAX_PER_FACE = 120
+MAX_PER_FACE = int(os.environ.get('WALL_MAX_PER_FACE', '60'))   # samples per face (120 is ~4x slower on the r2 base)
 EDGE_MARGIN = 0.3   # mm kept away from face boundaries (corner artefacts)
 OPPOSITE = -0.5     # count a ray only if it exits through a roughly opposite face (a real wall)
 

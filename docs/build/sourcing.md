@@ -1,6 +1,7 @@
 # Sourcing the off-the-shelf parts (rev C)
 
-These are the parts you buy yourself, not the ones the fab fits to the board. All listings were checked
+These are the parts you buy yourself, not the ones the fab fits to the board. Sections 1 and 5 were checked on
+2026-11-01 (r2: open hook-and-loop strap, magnetic charging); the other listings were checked
 on 2026-10-29 from Greece. Prices are in EUR with VAT for the variant the page showed, and they move
 a lot (AliExpress runs 11.11 sales). Delivery dates are the ones the page gave for Greece. "Not
 stated" means the listing does not give that number in its text or photos.
@@ -14,42 +15,47 @@ Notes on the sources:
   the exception: the DronePost 401225 page says it cannot be sent to Greece.
 - German shops charge 19% VAT. When they sell to Greece they usually charge 24%, so add about 4%.
 
-## 1. Elastic webbing (plain, no hook-and-loop)
+## 1. Strap: 20 mm one-piece hook-and-loop strap (r2, Nov 2026)
 
-| Listing | Price | Pack | Width / thickness | Material | Delivery to GR |
+The band is an **open** strap on two thick bars that are part of the module base. A one-piece
+"single pass" hook-and-loop watch strap has the right layout. It has a steel ring sewn on one end, a
+plain end carrying a 44 mm hook tab, and a loop panel in the middle. Cut the ring end off. That end
+then locks round bar A. The hook end goes through bar B and folds back onto the loop panel. Checked
+2026-11-01.
+
+| Pick | Listing | Price | Width / length | Thickness | Construction (from the listing photos) |
 |---|---|---|---|---|---|
-| [AliExpress 1005004884068548: "1/2/3/5M 20-70mm Black **1.5mm Thick** Elastic Band"](https://www.aliexpress.com/item/1005004884068548.html) | 4.78 (shown variant); 4.33 each for 2+ | 1, 2, 3 or 5 m | 20, 25, 30, 38, 50, 60, 70 mm; **1.5 mm thick (stated)** | Polyester (with rubber) | Free over EUR 10; about Nov 22 |
-| [Amazon.de B0BMG7D97F: Mitsy tear-resistant flat elastic, 20 mm x 5 m](https://www.amazon.de/dp/B0BMG7D97F) | 8.59 | 5 m | 20 mm; thickness not stated | 60% PES, 30% natural latex; "tightly woven", edges do not roll | Free over EUR 59 (Nov 21), fastest Nov 10 |
-| [Amazon.de B0CHNPF575: elastic band, 2 cm, black, 5 m](https://www.amazon.de/dp/B0CHNPF575) | 5.10 | 5 m | 20 mm; thickness not stated ("thick") | Polyester and latex; "does not narrow when stretched" | 6.79, Nov 16 |
-| [Amazon.de B07BCKVPSD: The Bead Shop 20 mm flat elastic, black, 8 m](https://www.amazon.de/dp/B07BCKVPSD) | 6.92 | 8 m | 20 mm; thickness not stated ("wide, thick, tightly woven") | Polyester | Free over EUR 59 (Nov 17), fastest Nov 5 |
-| [AliExpress 33021724111: 5 m nylon elastic band, 15-60 mm](https://www.aliexpress.com/item/33021724111.html) | 3.03 (0.61/m) | 5 m | 20 mm option; thickness not stated | Nylon, latex strands | Not captured |
+| **First pick** | [Amazon.de B0CWH1XS7B: watchdives one-piece hook-and-loop strap, black, size L](https://www.amazon.de/dp/B0CWH1XS7B) (green L: [B0CWH4WF3K](https://www.amazon.de/dp/B0CWH4WF3K)) | 11.46 (green 10.40) | 20 mm; **302 mm** (seller drawing, size L) | **Not stated** | Steel rectangular ring X-stitched on one end; plain end with a 44 mm hook tab (258-302 mm from the ring end); 75 mm loop panel 127-202 mm from the ring end; comes with 3 spring bars (not used) |
+| Fallback | [Amazon.de B06XRYRDRR: Eichmüller textile strap with hook-and-loop, black, 20 mm](https://www.amazon.de/dp/B06XRYRDRR) | 12.50 | 20 mm; about 325 mm (fits 175-240 mm watch wrists) | **Not stated** | Steel D-ring sewn on one end, plain end with the hook strip; longer, so better for wrists over 170 mm |
+| Same type, thickness stated | [StrapHabit hook-and-loop single pass](https://straphabit.com/products/hook-and-loop-single-pass-watch-straps) (US) | $29 | 20 mm; 267 mm | **1.5 mm (stated)** | Same layout. Shipping and import VAT make it the dear option |
 
-Other widths:
+Thickness: neither EU listing states it. The same strap type is 1.5 mm (StrapHabit, stated) and
+comparable 20 mm nylon hook-and-loop straps state 1.5-2.0 mm. The CAD takes a **1.3-2.4 mm** band
+and a hook end of up to 3.0 mm:
 
-- **22 mm (7/8 in):** plain sewing elastic this wide is uncommon. Neither the AliExpress nor the
-  Amazon.de searches turned up a single plain 22 mm elastic; 22 mm comes up mostly as watch straps.
-  Haberdashery options are Bohin "soft woven garment elastic, black, 22 mm x 0.80 m" (French brand,
-  sold in EU shops) and Abbey England "Heavy elastic 7/8 in, 22 mm" (UK, saddlery weight and likely
-  thicker than 1.6 mm). Neither states a thickness.
-- **19 mm (3/4 in):** this is the US standard width. In the EU, 20 mm is the stock width.
+- slot B is 3.5 mm;
+- slot A is 4.4 mm (two layers);
+- the pod channels clear 2.5 mm.
 
-Fraying and heat-sealing:
+**Measure the strap with calipers when it arrives** (build guide, step 7.1).
 
-- Cut ends fray: the weft unravels and the latex strands pull back into the weave.
-- Polyester and nylon are thermoplastic. Pass a lighter flame or a hot knife over the cut and the
-  yarn melts into a sealed edge. The latex core does not melt but is held in by the melted yarn.
-- Seal before you sew, and keep the sealed bead small, because it is hard and adds thickness.
-- A drop of fray-stop or textile glue works too.
+How long to cut it: see the table in the build guide (step 7.2). On wrists of 145-165 mm, 10-30 mm
+comes off the ring end and the whole hook tab lands on the loop panel. On a 180 mm wrist, size L is
+just long enough: cut only the ring off, and about 25 of the 44 mm of hook still land on the panel.
+Use the longer fallback for wrists over 170 mm.
 
-## 2. Fallback: hook-and-loop elastic sport-loop watch strap
+Why not these:
 
-| Listing | Price | Widths | Thickness | Hook tab |
-|---|---|---|---|---|
-| [AliExpress 1005012145713607: "20mm 22mm Quick Release Hook Loop Elastic Sailcloth Nylon Watch Strap"](https://www.aliexpress.com/item/1005012145713607.html) | 5.39 | 20 or 22 mm | Not stated | Sewn on (ready-made strap with quick-release bars). One review: "very short and doesn't stretch well". Free over EUR 10, about Nov 22 |
-| [Amazon.de B09YTPMRJY: WOCCI nylon sport strap with hook-and-loop, 18/20/22 mm](https://www.amazon.de/dp/B09YTPMRJY) | Price not shown when checked | 18, 20, 22 mm | Not stated | Sewn on, quick-release bars. Free over EUR 59, Nov 21 |
+- **VELCRO ONE-WRAP 20 mm** (back-to-back hook and loop, 1.35 mm, Velcro TDS_206). It only grips when
+  it is wound round something like a spiral. A strap that goes through a bar and folds back meets
+  itself face to face, hook on hook, so it does not grip.
+- **Apple-style nylon sport loops** ([WOCCI B09YTPMRJY](https://www.amazon.de/dp/B09YTPMRJY), 9.36;
+  [Runostrich B096VLWDW7](https://www.amazon.de/dp/B096VLWDW7), 12.50). Their 240 mm band is too short
+  here. Our band runs about 6 mm off the skin on the pods, so it needs 240-270 mm from the lock to the
+  end of the hook zone.
 
-Expect the loop fabric to be about 1.5-2 mm thick, and about twice that where the hook tab overlaps
-it. These straps are short (made for a watch with lugs), so check the length.
+Fraying and heat-sealing: polyester and nylon are thermoplastic. Pass a lighter flame over the cut and
+the yarn melts into a sealed edge. Keep the bead small, because it has to pass slot A.
 
 ## 3. Double-sided foam dots (24 per band)
 
@@ -97,29 +103,25 @@ The cheap approach is to buy one 401223 (130 mAh) and one 401120 (about EUR 1.75
 and size the pocket for the one you keep. Leads of 40 mm or more are not guaranteed on any of these:
 plan to solder an extension or use short leads. Cut off any plug that comes fitted.
 
-## 5. Pogo pins
+## 5. Magnetic charging connector (r2)
 
-| Listing | Price | Pack | Barrel / plunger | Length | Force | Travel | Notes |
-|---|---|---|---|---|---|---|---|
-| [AliExpress 1005010399046797: "100x P50-B1 Dia 0.68mm Length 16mm 75g"](https://www.aliexpress.com/item/1005010399046797.html) | 4.08 | 100 | 0.68 mm | 16 mm | **75 g** (stated) | Not stated (P50 is about 2.6 mm) | Gold plated (review). Free over EUR 10, about Nov 20 |
-| [Amazon.de B07SG8HMH6: "Pogo Pin 0.68 mm ... P50-B1 ... 16 mm, Pack of 100"](https://www.amazon.de/dp/B07SG8HMH6) | 8.97 | 100 | 0.68 mm barrel, 0.48 mm plunger | 16 mm | Not stated | **2.6 mm** | Stated: mounting hole 0.9 mm, minimum pitch 1.27 mm, 3 A, 50 mOhm. The title says B1 (spear tip), the bullet says J1 (round tip). Free over EUR 59, Nov 21, fastest Nov 5 |
-| [Amazon.de B0988ZMG29: frenma 100 pcs P50-J1](https://www.amazon.de/dp/B0988ZMG29) | 12.56 | 100 | 0.68 / 0.48 mm | 16 mm | Not stated | 2.6 mm | Round tip, kind to pads; min pitch 1.27 mm. Free delivery Nov 7-24 |
-| [AliExpress 1005005322521961: "100PCS P75-A2 B1 E2 E3 D2 J1 ... 1.02mm 16.5mm" (1000+ sold)](https://www.aliexpress.com/item/1005005322521961.html) | 3.94 | 100 | **1.02 mm** | 16.5 mm | Not stated (P75 is typically about 100 g) | Not stated (about 2.6 mm) | Pick the tip as a variant; an R75-3W receptacle variant is also listed. Free over EUR 10, about Nov 20 |
-| [Amazon.de B07SKD8Q42: 100 pcs P75-E2, 1.3 mm conical head](https://www.amazon.de/dp/B07SKD8Q42) | 7.48 | 100 | 1.02 mm | 16.5 mm | Not stated | Not stated | E2 is the larger conical head |
-| [AliExpress 1005003512878045: R50 receptacles (R50-1S/2S/3S/1C/2C/3C/1W/2W/3W)](https://www.aliexpress.com/item/1005003512878045.html) | 4.61 | 100 per lot | OD 0.86 mm, collar 0.95-0.98 mm, **mounting hole 0.90 mm** | 17.5 or 25.9 mm (collar 2.5 or 5.0 mm) | n/a | n/a | Reviews say 1 week to the EU. A P50-B1 75 g variant is in the same listing |
-| [AliExpress 1934077500: 100 pcs R75-3W receptacle for P75](https://www.aliexpress.com/item/1934077500.html) | 11.49 | 100 | Not stated (about 1.36 mm OD) | Not stated | n/a | n/a | |
-| [AliExpress 1005006141500626: ready-made pogo PCB clip, 2.54/2.0/1.5/1.27 mm, 3-10 pins](https://www.aliexpress.com/item/1005006141500626.html) | from 2.10 (2.54 mm 3P); the 1.27 mm 5P variant price was not checked | 1 | 1.27 mm single row is offered | n/a | n/a | n/a | A ready flashing clip, as an alternative to printing a jig |
+The charge pads J3 (5 V, GND) are on the bottom of the board, in the corner above pod 4. They are wired
+to a small 2-pin magnetic connector. Its device half is glued into a pocket in the proximal wall of
+the module base, face flush. The cable half is wired to a USB-A lead.
 
-Which pins for which job:
+| Item | Listing | Price | Details |
+|---|---|---|---|
+| **2-pin magnetic pogo pair, 2.5 mm pitch** (Samzo PR5L4015-2P type), male + female | [Amazon.de B0FXL1C7N1](https://www.amazon.de/dp/B0FXL1C7N1) ("14.5 x 4 mm", 1 pair); 2 pairs: [B0HHMGMGJY](https://www.amazon.de/dp/B0HHMGMGJY) | 6.24 (8.32 for 2 pairs) | Datasheet: [Electrokit 41035992](https://www.electrokit.com/upload/quick/66/56/99e1_41035992.pdf). Female (device side): flat face with 2 flush gold pads between N and S magnets; boss 12.5 x 4.0 x 2.0 mm, flange 14.5 x 4.0 x 2.0 mm, 2 pins 0.7 x 1.5 mm. Male: 2 sprung pins (0.9 mm, 1.1 mm stroke) between 2 magnets. 12 V, 2-3 A |
+| Same pair, EU shops | [Electrokit](https://www.electrokit.com/en/2-pin-female-magnetic-pogo-pin-connector) female 41035992 + male 41035991; [Berrybase 157030](https://www.berrybase.de/en/berrybase-pogo-pin-plug-and-socket-magnetic-2a-dc-with-cable/plug-port-with-lugs/type-2-pin) | 18.50 SEK each; 2.90 | The Berrybase 157026 version comes with 150 mm leads on both halves (easiest cable) |
+| USB-A pigtail for the cable half | [Amazon.de B0DFCFZD9Y](https://www.amazon.de/dp/B0DFCFZD9Y) (12 pcs), or cut an old USB cable | 9.36 | Red (5 V) and black (GND) only |
+| 30 AWG silicone or PTFE wire | any, e.g. Kynar wire-wrap wire | about 5 | J3 to the connector (2 x 45 mm), the five one-time SWD wires, and the cell lead extensions if needed |
 
-- **Flashing jig (1.27 mm pitch):** use P50. With 0.68 mm barrels at 1.27 mm pitch, 0.7-0.75 mm
-  holes leave about 0.5 mm of wall between pins. That is printable in resin or MJF, but marginal on
-  FDM. R50 receptacles need 0.9 mm holes, which leaves 0.37 mm walls, so at 1.27 mm glue the bare
-  pins in instead. P75 (1.02 mm) leaves 0.25 mm and does not work at 1.27 mm. Use a round (J1) or
-  crown tip on flat pads; the spear (B1) marks them.
-- **Charger (2 pins at 3.0 mm pitch):** either family fits. P75 is stiffer and less fragile in a
-  puck that gets handled. Use J1 or E2 tips on the pads.
-- **Both from one pack:** a P50-J1 100-pack does both jobs.
+No ready-made USB cable matches this pair. One half must be wired to USB. A smaller connector
+(under 10 mm) was not found on 2026-11-01. This one costs the module about 2.7 mm of length at the
+proximal end.
+
+Pogo pins (P50) are **no longer needed**. The SWD jig and the printed charge clip are retired. The
+bare board is flashed once through five soldered wires, then updated over Bluetooth.
 
 ## 6. SWD probe
 
@@ -143,7 +145,7 @@ The Debug Probe comes with its cables. A bare Pico needs debugprobe firmware and
 | "SuperMini / nice!nano / Pro Micro nRF52840" | [AliExpress search](https://www.aliexpress.com/w/wholesale-nrf52840-supermini.html) | about 6.60-11 per board | USB-C, Adafruit UF2 bootloader (nice!nano build); quality varies by seller |
 | Makerdiary nRF52840 MDK USB Dongle | [digikey.gr](https://www.digikey.gr/en/products/detail/seeed-technology-co-ltd/113990714/10290291) | 27.52 | USB-A, UF2 |
 
-## 8. Magnets and Kapton
+## 8. Kapton (and the magnets, no longer needed)
 
 | Item | Listing | Price | Notes |
 |---|---|---|---|
@@ -157,8 +159,7 @@ The Debug Probe comes with its cables. A bare Pico needs debugprobe firmware and
 
 | Part | Design to |
 |---|---|
-| Webbing | 20.0 mm wide (+/- 0.5), 1.5 mm thick (allow 1.2-1.8). Sleeve or slot about 20.6 x 1.9 mm. Do not rely on 22 mm plain elastic being available |
+| Strap | 20.0 mm wide (+/- 0.5); band 1.3-2.4 mm thick (2.0 nominal in the fit model); hook end up to 3.0 mm. Slot A 4.4 mm (pinch lock, two layers), slot B 3.5 mm, both 20.8 mm long; pod channels 20.8 x 2.5 mm with 0.8 mm snap-in lips |
 | Foam dot | 6 mm round, 2.0 mm free height (EVA craft dot), or punched from 1.1-2.0 mm tape |
 | LiPo | Pocket 4.2 x 12.4 x 25.5 mm for a cell of at most 4.0 x 12.0 x 25.0, with leads leaving one 12 mm end. Assume leads may be only about 30 mm long and that the cell can be as small as 4 x 10 x 21 mm (401020) |
-| Pogo pins | P50: 0.68 mm barrel, 0.48 mm plunger, 16.0-16.35 mm long, 2.6 mm travel, about 75 g. Holes 0.70-0.75 mm for bare pins (glued), or 0.90 mm for R50 receptacles. P75 if used in the charger: 1.02 mm barrel, 16.5 mm long |
-| Magnets | 3.0 x 1.0 mm discs |
+| Magnetic connector | Device half: boss 12.5 x 4.0 x 2.0 (in a 2.0 mm wall window, 0.15 mm clearance), flange 14.5 x 4.0 x 2.0 behind the wall, pins toward the board, under the cell's overhang |

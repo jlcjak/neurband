@@ -15,5 +15,7 @@
     "size_y_mm": 35.5,
     "size_z_mm": 18.0
   },
-  "min_wall_mm": 1.43
+  "min_wall_mm": 1.43,
+  "order": false,
+  "notes": "Not ordered (r2: SWD pads moved; the bare board is flashed once by soldering five thin wires to TP1-TP5)."
 }

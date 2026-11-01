@@ -37,55 +37,47 @@
    "3-2": -0.21
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 3.03,
-   "4-5": 8.53
+   "3-2": 3.24,
+   "4-5": 2.93
   },
   "module_seat_gap_mm": {
    "centre": 1.02,
    "min": 1.02,
    "max": 2.11,
-   "edge": 2.05
+   "edge": 2.02
   },
-  "loop_clear_of_skin_mm": 5.48,
+  "bar_clear_of_skin_mm": 3.12,
   "strap_load_rel": {
-   "1": 1.25,
-   "2": 1.1,
-   "5": 1.06,
-   "6": 1.11,
-   "7": 0.7,
-   "8": 0.78
+   "1": 1.7,
+   "2": 0.24,
+   "5": 0.55,
+   "6": 1.51,
+   "7": 0.95,
+   "8": 1.06
   },
-  "strap_load_max_min": 1.79,
-  "strap_tension_for_3kPa_N": 0.34,
-  "strap_path_mm": 127.2,
-  "loop_set_length_mm": 127.2,
-  "webbing_tip_to_tip_mm": 155.3,
-  "lock_path_mm": [
-   14.1,
-   14.1
-  ],
+  "strap_load_max_min": 7.15,
+  "strap_tension_for_3kPa_N": 0.47,
+  "strap_bar_to_bar_mm": 120.4,
+  "strap_cap_to_fold_mm": 196.5,
+  "strap_needed_mm": 245.5,
+  "strap_lock_A_mm": 50.6,
+  "strap_tail_modelled_mm": 57.8,
   "strap_min_clear_to_skin_mm": 1.56,
-  "lock_clearance_mm": {
-   "a": 1.63,
-   "b": 1.48
-  },
-  "lock_to_module_mm": 1.52,
-  "lock_to_pods_mm": 2.74,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
-   "strap_vs_module": 0.0,
-   "lock_vs_slides": 0.0,
-   "lock_vs_pods": 0.0,
-   "lock_layers": 1.962,
-   "strap_vs_pods_untilted": 0.0,
-   "loop_vs_module": 0.0,
-   "strap_vs_flex": 0.0,
-   "loop_vs_pods": 0.0,
+   "band_ends_vs_module": 0.0,
+   "band_run_vs_module": 0.0,
+   "tail_vs_module": 0.0,
+   "band_vs_pods_untilted": 6.923,
+   "tail_vs_pods_untilted": 33.238,
+   "strap_vs_flex": 15.4,
+   "module_vs_flex_links": 2.378,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
    "pads_vs_wrist": 12.865
-  }
+  },
+  "strap_to_module_min_mm": 0.49
  },
  "160": {
   "wrist_mm": 160.0,
@@ -125,55 +117,47 @@
    "3-2": -0.12
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 2.71,
-   "4-5": 2.78
+   "3-2": 3.92,
+   "4-5": 2.72
   },
   "module_seat_gap_mm": {
    "centre": 1.14,
    "min": 1.14,
    "max": 1.75,
-   "edge": 1.71
+   "edge": 1.7
   },
-  "loop_clear_of_skin_mm": 5.41,
+  "bar_clear_of_skin_mm": 2.64,
   "strap_load_rel": {
-   "1": 1.41,
-   "2": 0.97,
-   "5": 0.94,
-   "6": 1.09,
-   "7": 0.73,
-   "8": 0.87
+   "1": 1.55,
+   "2": 0.14,
+   "5": 1.35,
+   "6": 1.2,
+   "7": 0.8,
+   "8": 0.96
   },
-  "strap_load_max_min": 1.93,
-  "strap_tension_for_3kPa_N": 0.34,
-  "strap_path_mm": 141.0,
-  "loop_set_length_mm": 141.0,
-  "webbing_tip_to_tip_mm": 169.1,
-  "lock_path_mm": [
-   14.1,
-   14.1
-  ],
+  "strap_load_max_min": 11.14,
+  "strap_tension_for_3kPa_N": 0.38,
+  "strap_bar_to_bar_mm": 133.0,
+  "strap_cap_to_fold_mm": 209.1,
+  "strap_needed_mm": 258.1,
+  "strap_lock_A_mm": 50.6,
+  "strap_tail_modelled_mm": 56.2,
   "strap_min_clear_to_skin_mm": -0.28,
-  "lock_clearance_mm": {
-   "a": 1.72,
-   "b": 1.79
-  },
-  "lock_to_module_mm": 1.39,
-  "lock_to_pods_mm": 2.3,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
    "pods_vs_module": 0.0,
-   "strap_vs_module": 0.0,
-   "lock_vs_slides": 0.0,
-   "lock_vs_pods": 0.0,
-   "lock_layers": 1.962,
-   "strap_vs_pods_untilted": 0.0,
-   "loop_vs_module": 0.0,
-   "strap_vs_flex": 0.0,
-   "loop_vs_pods": 0.0,
+   "band_ends_vs_module": 0.0,
+   "band_run_vs_module": 0.0,
+   "tail_vs_module": 0.0,
+   "band_vs_pods_untilted": 5.006,
+   "tail_vs_pods_untilted": 31.209,
+   "strap_vs_flex": 17.424,
+   "module_vs_flex_links": 2.517,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
    "pads_vs_wrist": 12.642
-  }
+  },
+  "strap_to_module_min_mm": 0.65
  },
  "180": {
   "wrist_mm": 180.0,
@@ -213,8 +197,8 @@
    "3-2": -0.1
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 2.54,
-   "4-5": 4.53
+   "3-2": 4.93,
+   "4-5": 2.59
   },
   "module_seat_gap_mm": {
    "centre": 1.26,
@@ -222,59 +206,61 @@
    "max": 1.39,
    "edge": 1.38
   },
-  "loop_clear_of_skin_mm": 5.32,
+  "bar_clear_of_skin_mm": 2.12,
   "strap_load_rel": {
-   "1": 1.42,
-   "2": 0.91,
-   "5": 0.87,
-   "6": 1.07,
-   "7": 0.84,
-   "8": 0.89
+   "1": 1.57,
+   "2": 0.14,
+   "5": 1.21,
+   "6": 1.18,
+   "7": 0.92,
+   "8": 0.98
   },
-  "strap_load_max_min": 1.7,
-  "strap_tension_for_3kPa_N": 0.37,
-  "strap_path_mm": 159.4,
-  "loop_set_length_mm": 159.4,
-  "webbing_tip_to_tip_mm": 187.5,
-  "lock_path_mm": [
-   14.1,
-   14.1
-  ],
+  "strap_load_max_min": 10.86,
+  "strap_tension_for_3kPa_N": 0.41,
+  "strap_bar_to_bar_mm": 150.3,
+  "strap_cap_to_fold_mm": 226.4,
+  "strap_needed_mm": 275.4,
+  "strap_lock_A_mm": 50.6,
+  "strap_tail_modelled_mm": 55.2,
   "strap_min_clear_to_skin_mm": -0.42,
-  "lock_clearance_mm": {
-   "a": 1.81,
-   "b": 1.87
-  },
-  "lock_to_module_mm": 1.23,
-  "lock_to_pods_mm": 1.95,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
-   "pods_vs_module": 0.0,
-   "strap_vs_module": 0.0,
-   "lock_vs_slides": 0.0,
-   "lock_vs_pods": 0.0,
-   "lock_layers": 1.961,
-   "strap_vs_pods_untilted": 0.0,
-   "loop_vs_module": 0.0,
-   "strap_vs_flex": 0.0,
-   "loop_vs_pods": 0.0,
+   "pods_vs_module": 0.176,
+   "band_ends_vs_module": 0.0,
+   "band_run_vs_module": 0.0,
+   "tail_vs_module": 0.0,
+   "band_vs_pods_untilted": 2.276,
+   "tail_vs_pods_untilted": 20.056,
+   "strap_vs_flex": 17.962,
+   "module_vs_flex_links": 2.804,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
    "pads_vs_wrist": 12.95
-  }
+  },
+  "strap_to_module_min_mm": 0.79
  },
- "strap_cut_mm": {
-  "webbing": 218.0,
-  "tip_to_tip_145": 155.3,
-  "tip_to_tip_160": 169.1,
-  "tip_to_tip_180": 187.5,
-  "between_slides_145": 127.2,
-  "between_slides_160": 141.0,
-  "between_slides_180": 159.4,
-  "lock_path_each": [
-   14.1,
-   14.1
-  ],
-  "note": "closed loop slipped over the hand; set once at the slides, then trim each tail so its tucked tip reaches the slot"
+ "strap_length_mm": {
+  "strap": 302.0,
+  "ring_cut_min": 10.0,
+  "fold_from_lock_tip": {
+   "145": 196.5,
+   "160": 209.1,
+   "180": 226.4
+  },
+  "cut_from_ring_end_mm": {
+   "145": [
+    18.0,
+    33.5
+   ],
+   "160": [
+    5.4,
+    20.9
+   ],
+   "180": [
+    -11.9,
+    3.6
+   ]
+  },
+  "note": "open strap: ring end cut off and locked round bar A (pinch lock), band through the pods, up through slot B, folded back so the hook tab lands on the loop panel; cut c inside the range (at least the ring loop); where the range ends below the ring cut, part of the hook still lands on the panel"
  }
 }

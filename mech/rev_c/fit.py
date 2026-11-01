@@ -1,18 +1,20 @@
-"""fit.py - rev C fit check: the one-size band on wrist models of 145, 160 and 180 mm.
+"""fit.py - rev C fit check: the one-size band on wrist models of 145, 160 and 180 mm (r2: open
+hook-and-loop strap on the module's two integral bars).
 
 Layout per wrist (cross-section at the band line, ellipse model from mech/fitgeom.py):
 - the module sits centred on the dorsal apex, resting on the pads of pods 3/4 (foam at its
   nominal worn compression, STACK_LOADED);
 - the free pods follow the flex: pod centres 18 mm apart along the shell-face curve (skin offset
   by STACK_LOADED), tangent to it, pads on the skin;
-- the strap is taut: its path is the convex hull of the lug bars, the pod channel floors and the
-  skin (in the gap): one continuous webbing from the hidden ulnar bar to the slim loop on the radial
-  side (a closed loop: both ends anchored by the slides).
+- the strap is taut: the band is the convex hull of the bars' lower ends, the pod channel floors
+  and the skin (in the gap); at end A it rises through slot A to the end cap on the ears, at end
+  B it wraps round bar B's lower end, rises through slot B, goes over the bar and folds back over
+  the band (the tail, lifted over the pod lips it crosses).
 Numbers: gap over the ulna (size and where), electrode coverage, pod collisions, module seat
-gaps, spine bend radii, strap load per pod, strap lengths. Collisions are measured in CAD.
-Writes mech/rev_c/fit_results.json and fit_145.step / fit_180.step (fit_160 and the closed band
-come from assembly.py).
-Run: QT_QPA_PLATFORM=offscreen timeout 600 /usr/bin/freecad mech/rev_c/fit.py
+gaps, spine bend radii, strap load per pod, strap lengths, bar clearance to the skin. Collisions
+are measured in CAD. Writes mech/rev_c/fit_results.json and fit_145.step / fit_180.step
+(fit_160 and the closed band come from assembly.py).
+Run: QT_QPA_PLATFORM=offscreen timeout 900 /usr/bin/freecad mech/rev_c/fit.py
 """
 import os, sys, math, json
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -133,36 +135,21 @@ def layout(c):
         gaps.append(z0 + M.z_u(x) - b * math.sqrt(1 - (x / a) ** 2))
     seat = dict(centre=round(gaps[30], 2), min=round(min(gaps), 2), max=round(max(gaps), 2),
                 edge=round((gaps[0] + gaps[-1]) / 2, 2))
-    # ears / strap loops vs the skin (lowest point of the ear, module coords -> wrist)
-    # ---- module-edge spine links (3-2, 4-5): leave the module underside and drape onto the skin
-    # under the strap's wrap round the hidden bar ----
+    # ---- the two bars (2D, wrist frame: module coords + z0): rounding centres of their four corners ----
+    t = R.STRAP_T
+    bars = {}
+    for si in (-1, 1):
+        g = M.bar_geom(si)
+        sh = lambda q: (q[0], z0 + q[1])
+        bars[si] = dict(li=sh(g['cen']['li']), lo=sh(g['cen']['lo']), uo=sh(g['cen']['uo']), ui=sh(g['cen']['ui']), r=g['r'],
+                        n=dict(bottom=g['n_bottom'], outer=g['n_outer'], top=g['n_top'], slot=g['n_slot']),
+                        xe=M.end_x(si), gap=M.slot_gap(si), corner=(M.end_x(si) - si * 0.6, z0 + M.z_u(M.OUT_W / 2 - 0.6) + 0.6))
+    rb = 1.0 + t / 2 + 0.05                           # band centre line round a bar corner (rounding R1)
+    # ---- module-edge spine links (3-2, 4-5): leave the module underside and drape onto the skin under
+    # the band's wrap round the bar's lower end ----
     lift = R.STACK_LOADED - R.FLEX_T
     lskin = G.Curve(a, b, R.FLEX_T / 2 + 0.12)
-    far_pre, loop_dir, lock, lock_e = {}, {}, {}, {}
-    for si, pj in ((-1, 2), (1, 5)):                 # slim loops on both hidden bars, reaching toward pods 2 / 5
-        _c = loc(pods[pj], -si * (P.SHELL_W / 2 - 0.6), R.BASE_T + R.STRAP_T / 2)
-        _bb = (M.bar_x(si), z0 + M.BAR_Z)
-        _dl = math.dist(_bb, _c)
-        e_ = ((_c[0] - _bb[0]) / _dl, (_c[1] - _bb[1]) / _dl)           # hinge -> pod sleeve: the loaded strand
-        nn = (-e_[1], e_[0])
-        if nn[0] * _bb[0] + nn[1] * _bb[1] < 0:
-            nn = (e_[1], -e_[0])
-        # the slide pivots on its clip until the loaded strand (tangent to the outer layer under the
-        # friction bar) points at the hinge: its axis is LOCK_SWING outward of the hinge -> sleeve line
-        sw_ = S.lock_swing()
-        d_ = (e_[0] * math.cos(sw_) + nn[0] * math.sin(sw_), e_[1] * math.cos(sw_) + nn[1] * math.sin(sw_))
-        n_ = (nn[0] * math.cos(sw_) - e_[0] * math.sin(sw_), nn[1] * math.cos(sw_) - e_[1] * math.sin(sw_))
-        loop_dir[si] = d_
-        far_pre[si] = (_bb[0] + S.LOOP_REACH * d_[0], _bb[1] + S.LOOP_REACH * d_[1])
-        lock_e[si] = e_
-        lock[si] = (_bb, d_, n_)
-    lg = S.lock_geom()
-    def slide_pt(si, u, v):
-        (bx, bz), (dx_, dz_), (nx_, nz_) = lock[si]
-        return (bx + u * dx_ + v * nx_, bz + u * dz_ + v * nz_)
-    edge_links = {}
-    bars_m = {-1: (M.bar_x(-1), z0 + M.BAR_Z), 1: (M.bar_x(1), z0 + M.BAR_Z)}
-    wrap_r = {-1: S.CLIP_RO, 1: S.CLIP_RO}                  # loop clips on the hidden bars
+
     def hermite(p0, t0, p1, t1, n=30):
         m = math.dist(p0, p1)
         out = []
@@ -171,9 +158,8 @@ def layout(c):
             h00, h10, h01, h11 = 2*u**3 - 3*u**2 + 1, u**3 - 2*u**2 + u, -2*u**3 + 3*u**2, u**3 - u**2
             out.append((h00*p0[0] + h10*m*t0[0] + h01*p1[0] + h11*m*t1[0], h00*p0[1] + h10*m*t0[1] + h01*p1[1] + h11*m*t1[1]))
         return out
-    rf_out = S.FAR_W / 2 + S.LOCK_CLR + R.STRAP_T          # the tail under the friction bar
+
     def spline(pts, t0, t1, n=16):
-        """Tangent-continuous Catmull-Rom/Hermite through pts with end tangents t0, t1."""
         tans = [t0]
         for k in range(1, len(pts) - 1):
             dx, dz = pts[k + 1][0] - pts[k - 1][0], pts[k + 1][1] - pts[k - 1][1]
@@ -185,101 +171,61 @@ def layout(c):
             seg = hermite(pts[k], tans[k], pts[k + 1], tans[k + 1], n)
             out += seg[:-1] if k < len(pts) - 2 else seg
         return out
-    for i, j, si in ((3, 2, -1), (4, 5, 1)):
-        # free link: leaves the paddle edge along the R42 seat, arrives along pod j's face (smooth,
-        # tangent), passing under the strap wrap / loop clip / far-bar wrap (skin side)
-        e0 = loc(pods[i], si * R.POD_W / 2, -R.FLEX_T / 2)
-        e1 = loc(pods[j], -si * R.POD_W / 2, -lift - R.FLEX_T / 2)
-        t0 = (si * math.cos(pods[i]['ang']), si * math.sin(pods[i]['ang']))
-        t1 = (si * math.cos(pods[j]['ang']), si * math.sin(pods[j]['ang']))
-        obst = [(bars_m[si], wrap_r[si]), (far_pre[si], rf_out),
-                (slide_pt(si, lg['uc1'], -lg['vc']), lg['r1'] + R.STRAP_T / 2)]   # the tail round the bar end
-        (hx_, hz_), (ex_, ez_) = lock[si][0], lock_e[si]
-        for k_ in range(2, 10):                        # the loaded strand, on the hinge -> sleeve line
-            obst.append(((hx_ + k_ * ex_, hz_ + k_ * ez_), R.STRAP_T / 2))
-        vias = []
-        q = hermite(e0, t0, e1, t1)
-        for _ in range(4):
-            bad = None
-            for (cx, cz), r in obst:
-                need = r + R.FLEX_T / 2 + 0.1
-                dmin = min(math.dist(pt, (cx, cz)) for pt in q)
-                if dmin < need - 0.02 and (bad is None or need - dmin > bad[2]):
-                    bad = ((cx, cz), need, need - dmin)
-            if bad is None:
-                break
-            (cx, cz), need, _ = bad
-            rc0 = math.hypot(cx, cz)
-            v = (cx - cx / rc0 * need, cz - cz / rc0 * need)
-            sk = lskin.at(nearest_s(lskin, *v))
-            if math.hypot(*v) < math.hypot(sk[0], sk[1]) + 0.05:   # do not go into the skin
-                v = (sk[0] * 1.0, sk[1] * 1.0)
-            vias = sorted([x for x in vias if math.dist(x, v) > 0.5] + [v], key=lambda p_: abs(p_[0]))
-            q = spline([e0] + vias + [e1], t0, t1)
-        edge_links[f'{i}-{j}'] = q
-    def min_radius(q):
-        q = S.resample(q, 0.25)
-        best = 1e9
-        for k in range(1, len(q) - 1):
-            (x1, y1), (x2, y2), (x3, y3) = q[k - 1], q[k], q[k + 1]
-            a_, b_, c_ = math.dist(q[k - 1], q[k]), math.dist(q[k], q[k + 1]), math.dist(q[k - 1], q[k + 1])
-            area = abs((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) / 2
-            if area > 1e-9:
-                best = min(best, a_ * b_ * c_ / (4 * area))
-        return best
-    edge_link_r = {k: round(min_radius(v), 2) for k, v in edge_links.items()}
-    # ---- strap: one continuous webbing, taut convex hull ----
-    zc = R.BASE_T + R.STRAP_T / 2
+    # ---- strap: the taut band is the convex hull of the bars' lower ends, the pod channel floors and the skin ----
+    zc = R.BASE_T + t / 2
     pts = []
-    rb = 0.05                                          # the band ends at the loaded strand's tangent point
-    bar_a = (M.bar_x(-1), z0 + M.BAR_Z)
-    bar_b = (M.bar_x(1), z0 + M.BAR_Z)
-    far_a, far_b = far_pre[-1], far_pre[1]
-    d = loop_dir[1]
-    rf = rb
     circ = {}
-    def tangent_pt(si):                                # foot of the outer-layer arc centre on the loaded strand's line
-        cb = slide_pt(si, lg['uc0'], -(lg['v1'] + R.STRAP_T / 2))   # tail tip's lower corner
-        (bx, bz), (ex, ez) = lock[si][0], lock_e[si]
-        k_ = (cb[0] - bx) * ex + (cb[1] - bz) * ez
-        return (bx + k_ * ex, bz + k_ * ez)
-    for key, (cx, cz), r in (('A', tangent_pt(-1), rb), ('B', tangent_pt(1), rf)):
-        circ[key] = []
-        for k in range(24):
-            t = 2 * math.pi * k / 24
-            q = (cx + r * math.cos(t), cz + r * math.sin(t))
-            circ[key].append(q)
-            pts.append(q)
+    rA = 1.0 + 1.5 * t + 0.1                          # (kept for the edge-link obstacles)
+
+    def contour(si, d):
+        """Band centre line round bar si: the bar section (module.bar_profile) offset by d, clockwise (x, z)."""
+        poly = [(M.x_of(si, u), z0 + z) for u, z in M.bar_profile(si)]
+        f = Part.Face(Part.makePolygon([V(x, 0, z) for x, z in poly] + [V(poly[0][0], 0, poly[0][1])]))
+        w = f.makeOffset2D(d).OuterWire
+        q = [(v.x, v.z) for v in w.discretize(Distance=0.25)]
+        if q[0] == q[-1]:
+            q = q[:-1]
+        area = sum(q[k][0] * q[(k + 1) % len(q)][1] - q[(k + 1) % len(q)][0] * q[k][1] for k in range(len(q)))
+        return q[::-1] if area > 0 else q             # clockwise
+
+    def seg(q, p_from, p_to):
+        i = min(range(len(q)), key=lambda k: math.dist(q[k], p_from))
+        j = min(range(len(q)), key=lambda k: math.dist(q[k], p_to))
+        out = [q[i]]
+        k = i
+        while k != j:
+            k = (k + 1) % len(q)
+            out.append(q[k])
+        return out
+    zb_bar = z0 + M.BAR_ZB
+    cB = contour(1, t / 2 + 0.1)
+    cA1 = contour(-1, t / 2 + 0.1)                    # end A: the tail's layer on bar A
+    cA2 = contour(-1, 1.5 * t + 0.2)                  # end A: the loaded band over it
+    for key, cq in (('A', cA2), ('B', cB)):
+        # the band runs UNDER the bar to reach its slot: only the bar's underside supports it
+        circ[key] = [q for q in cq if q[1] < zb_bar + 0.05]
+        pts += circ[key]
     pod_pts = {}
     for i, p in pods.items():
         if p['on_module']:
             continue
         pod_pts[i] = [loc(p, lx, zc) for lx in (-P.SHELL_W / 2 + 0.6, 0.0, P.SHELL_W / 2 - 0.6)]
         pts += pod_pts[i]
-        hs = P.SHELL_W / 2 + R.STRAP_T / 2 + 0.05     # the strap wraps the pod sides where it drops to the skin
-        pts += [loc(p, sx * hs, zz) for sx in (-1, 1) for zz in (R.BASE_T, 0.6, -R.STACK_LOADED + R.STRAP_T / 2 + 0.3)]
-        rr = R.STRAP_T / 2 + 0.05
-        pts += [loc(p, sx * (P.SHELL_W / 2 + rr * math.cos(t)), R.BASE_T + rr * math.sin(t))
-                for sx in (-1, 1) for t in (0.0, 0.4, 0.8, 1.2, 1.5708)]
-    # keep the webbing outside the draped module-edge links
-    for q in edge_links.values():
-        for k in range(1, len(q) - 1):
-            x, z = q[k]
-            if min(math.dist(q[k], bars_m[-1]), math.dist(q[k], bars_m[1])) < 3.5:
-                continue                              # under the wrap / loop: not a strap support
-            rr_ = math.hypot(x, z)
-            off_ = R.FLEX_T / 2 + R.STRAP_T / 2 + 0.05
-            pts.append((x + x / rr_ * off_, z + z / rr_ * off_))
-    skin_s = G.Curve(a, b, R.STRAP_T / 2 + 0.15)      # +0.15: avoid tangent faces in the CAD Booleans
+        hs = P.SHELL_W / 2 + t / 2 + 0.05
+        pts += [loc(p, sx * hs, zz) for sx in (-1, 1) for zz in (R.BASE_T, 0.6, -R.STACK_LOADED + t / 2 + 0.3)]
+        rr = t / 2 + 0.05
+        pts += [loc(p, sx * (P.SHELL_W / 2 + rr * math.cos(th_)), R.BASE_T + rr * math.sin(th_))
+                for sx in (-1, 1) for th_ in (0.0, 0.4, 0.8, 1.2, 1.5708)]
+    skin_s = G.Curve(a, b, t / 2 + 0.15)
     for k in range(400):
         x, z, _ = skin_s.at(skin_s.P * k / 400)
-        if z < z0 - 1.0 or abs(x) > M.OUT_W / 2 + 4:
+        if z < z0 - 1.0 or abs(x) > M.OUT_W / 2 + 10:
             pts.append((x, z))
     H = hull(pts)[::-1]                               # clockwise (dorsal -> radial -> volar -> ulnar)
+
     def is_on(q, key):
-        return any(math.dist(q, c) < 1e-3 for c in circ[key])
+        return any(math.dist(q, c_) < 1e-3 for c_ in circ[key])
     n = len(H)
-    # the top (A -> B over the module) is not strap: start at the B block that follows the A block
     ka = next(k for k in range(n) if is_on(H[k], 'A') and not is_on(H[(k + 1) % n], 'A'))
     H = H[ka + 1:] + H[:ka + 1]
     jb0 = next(k for k in range(n) if is_on(H[k], 'B'))
@@ -287,7 +233,77 @@ def layout(c):
     while is_on(H[jb + 1], 'B'):
         jb += 1
     ja = next(k for k in range(jb, n) if is_on(H[k], 'A'))
-    path = H[jb:ja + 1]                               # main band: far bar (radial) -> pods 5..8, 1, 2 -> bar A
+    hull_path = H[jb:ja + 1]                          # B's lower end -> pods 5..8, gap, 1, 2 -> A's lower end
+
+    def ang(c_, q):
+        return math.degrees(math.atan2(q[1] - c_[1], q[0] - c_[0]))
+
+    def arc_to(c_, r_, q0, a1, cw):
+        """arc round c_ from point q0's angle to a1 (deg), clockwise if cw."""
+        a0 = ang(c_, q0)
+        if cw:
+            while a1 > a0:
+                a1 -= 360
+        else:
+            while a1 < a0:
+                a1 += 360
+        return S.arc_pts(c_, r_, a0, a1, 0.3)
+    # end A (pinch lock), in band order from the tail tip: the tip lies in slot A against bar A's inner face,
+    # the band goes down, round bar A's lower corners, up its outer face, over its top, down slot A on the
+    # end-wall side and round the tail's wrap at the lower-inner corner (the pinch) to pod 2
+    def ray(p0, ang_deg, d):
+        return (p0[0] + d * math.cos(math.radians(ang_deg)), p0[1] + d * math.sin(math.radians(ang_deg)))
+    bA, bB = bars[-1], bars[1]
+    nA, nB = bA['n'], bB['n']
+
+    def cw_arc(c_, r_, a0, a1):
+        while a1 > a0:
+            a1 -= 360.0
+        return S.arc_pts(c_, r_, a0, a1, 0.3)
+    # end A (pinch lock), in band order from the tail tip: up slot A against bar A's inner face, round the whole
+    # bar (tail layer, cA1), then the loaded band down slot A on the end-wall side and under the bar over the tail
+    # (cA2) to the hull
+    inner = [q for q in cA1 if zb_bar + 4.0 < q[1] < zb_bar + 6.5]
+    p_tip = max(inner, key=lambda q: q[0])
+    p_end = min([q for q in cA1 if q[1] > zb_bar + 6.0 and q[0] > p_tip[0] - 3.0], key=lambda q: -q[0] + 0.1 * q[1])
+    lockA = seg(cA1, p_tip, p_end)
+    uw = lambda z: M.end_x(-1) - (M.u_in(-1, z - z0) + t / 2 + 0.25)
+    lockA += [(uw(z0 + M.BAR_ZT), z0 + M.BAR_ZT), (uw(zb_bar), zb_bar)]
+    lockA += seg(cA2, lockA[-1], hull_path[-1])[1:]
+    # end B: from the hull start (under the bar) round the inner corner, up slot B, over the top, down the outer face
+    p_out = max([q for q in cB if zb_bar + 0.5 < q[1] < zb_bar + 2.5], key=lambda q: q[0])
+    pre = seg(cB, hull_path[0], p_out)
+    over = []
+    path_full = lockA[:-1] + list(reversed(hull_path)) + pre[1:] + over
+    cap_ax, cap_az = p_tip
+    # the tail: from the outer side of bar B back down over the band (outside it, one thickness out), lifted over
+    # the pod lips it crosses, TAB_L of hook zone
+    tail0 = path_full[-1]
+    back = list(reversed(hull_path))                  # A -> B along the band (outer side is the hull's outside)
+    band_out = []
+    for k in range(len(back) - 1, 0, -1):             # walk from B toward A
+        (x1, z1), (x2, z2) = back[k], back[k - 1]
+        nx_, nz_ = x1, z1
+        rr_ = math.hypot(nx_, nz_) or 1.0
+        band_out.append((x1 + nx_ / rr_ * t, z1 + nz_ / rr_ * t))
+    tail = [tail0]
+    for q in band_out:
+        qq = q
+        for i in (5, 6, 7, 8):                        # over a pod: ride on its lips
+            p = pods[i]
+            c_, s_ = math.cos(p['ang']), math.sin(p['ang'])
+            dx, dz = qq[0] - p['x'], qq[1] - p['z']
+            lx, lz = dx * c_ + dz * s_, -dx * s_ + dz * c_
+            if abs(lx) <= P.SHELL_W / 2 + 0.3:
+                lz = max(lz, P.H + t / 2 + 0.05)
+                qq = (p['x'] + lx * c_ - lz * s_, p['z'] + lx * s_ + lz * c_)
+        if math.dist(tail[-1], qq) > 0.3:
+            tail.append(qq)
+        if S.plen(tail) > R.TAB_L + 12.0:
+            break
+    tail = S.resample(S.smooth(tail, 2), 0.6)
+    # loads per pod (turning of the hull at each pod)
+
     def ext(k):
         p0, p1, p2 = H[k - 1], H[k], H[(k + 1) % len(H)]
         a0 = math.atan2(p1[1] - p0[1], p1[0] - p0[0])
@@ -302,19 +318,58 @@ def layout(c):
         for k in range(len(H)):
             dx, dz = H[k][0] - p['x'], H[k][1] - p['z']
             lx, lz = dx * c_ + dz * s_, -dx * s_ + dz * c_
-            if abs(lx) <= P.SHELL_W / 2 + R.STRAP_T and -R.STACK_LOADED - 0.1 <= lz <= R.BASE_T + R.STRAP_T + 0.2:
+            if abs(lx) <= P.SHELL_W / 2 + t and -R.STACK_LOADED - 0.1 <= lz <= R.BASE_T + t + 0.2:
                 ks.append(k)
         loads[i] = sum(ext(k) for k in ks)
-    def path_len(seq):
-        return sum(math.dist(seq[k], seq[k + 1]) for k in range(len(seq) - 1))
-    loop_ang = math.atan2(d[1], d[0])
-    loop_ang_a = math.atan2(loop_dir[-1][1], loop_dir[-1][0])
-    loop_skin = min(math.hypot(far_b[0] - x, far_b[1] - z) for x, z in skin.pts[::4]) - S.FAR_W / 2
+    # edge links: from the module pod edge to pod 2 / 5, under the band's wrap round the bar's lower end
+    edge_links = {}
+    for i, j, si in ((3, 2, -1), (4, 5, 1)):
+        e0 = loc(pods[i], si * R.POD_W / 2, -R.FLEX_T / 2)
+        e1 = loc(pods[j], -si * R.POD_W / 2, -lift - R.FLEX_T / 2)
+        t0 = (si * math.cos(pods[i]['ang']), si * math.sin(pods[i]['ang']))
+        t1 = (si * math.cos(pods[j]['ang']), si * math.sin(pods[j]['ang']))
+        obst = [(bars[si]['li'], (rA if si < 0 else rb) + t / 2), (bars[si]['lo'], 1.0 + 0.3), (bars[si]['corner'], 1.2)]
+        near = [q for q in hull_path if math.dist(q, bars[si]['li']) < 16.0]     # the band's run from the bar to pod 2 / 5
+        obst += [(q, t / 2 + 0.15) for q in S.densify(near, 0.8)]
+        vias = []
+        q = hermite(e0, t0, e1, t1)
+        for _ in range(5):
+            bad = None
+            for (cx, cz), r in obst:
+                need = r + R.FLEX_T / 2 + 0.1
+                dmin = min(math.dist(pt, (cx, cz)) for pt in q)
+                if dmin < need - 0.02 and (bad is None or need - dmin > bad[2]):
+                    bad = ((cx, cz), need, need - dmin)
+            if bad is None:
+                break
+            (cx, cz), need, _ = bad
+            rc0 = math.hypot(cx, cz)
+            v = (cx - cx / rc0 * need, cz - cz / rc0 * need)
+            sk = lskin.at(nearest_s(lskin, *v))
+            if math.hypot(*v) < math.hypot(sk[0], sk[1]) + 0.05:
+                v = (sk[0] * 1.0, sk[1] * 1.0)
+            vias = sorted([x for x in vias if math.dist(x, v) > 0.5] + [v], key=lambda p_: abs(p_[0]))
+            q = spline([e0] + vias + [e1], t0, t1)
+        edge_links[f'{i}-{j}'] = q
+
+    def min_radius(q):
+        q = S.resample(q, 0.25)
+        best = 1e9
+        for k in range(1, len(q) - 1):
+            (x1, y1), (x2, y2), (x3, y3) = q[k - 1], q[k], q[k + 1]
+            a_, b_, c_ = math.dist(q[k - 1], q[k]), math.dist(q[k], q[k + 1]), math.dist(q[k - 1], q[k + 1])
+            area = abs((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) / 2
+            if area > 1e-9:
+                best = min(best, a_ * b_ * c_ / (4 * area))
+        return best
+    edge_link_r = {k: round(min_radius(v), 2) for k, v in edge_links.items()}
+    bar_skin = min(min(math.hypot(bars[si][k_][0] - x, bars[si][k_][1] - z) for x, z in skin.pts[::2]) - bars[si]['r']
+                   for si in (-1, 1) for k_ in ('li', 'lo'))
     return dict(c=c, a=a, b=b, z0=z0, mod_tilt=mod_tilt, pods=pods, face_P=face.P, skin_P=skin.P, chain=chain, gap=gap,
                 gap_deg=gap_deg, cover=cover, radii=radii, edge_slack=edge_slack, seat=seat,
-                ear_skin=loop_skin, loads=loads, path=path, path_len=path_len(path), bar_a=bar_a, bar_b=bar_b,
-                far_b=far_b, far_a=far_a, rb=rb, rf=rf, loop_ang=loop_ang, loop_ang_a=loop_ang_a,
-                edge_links=edge_links, edge_link_r=edge_link_r, lock=lock)
+                bar_skin=bar_skin, loads=loads, path=hull_path, band=path_full, tail=tail,
+                band_len=S.plen(path_full), tail_len=S.plen(tail), hull_len=S.plen(hull_path), lock_len=S.plen(lockA),
+                edge_links=edge_links, edge_link_r=edge_link_r, bars=bars, cap=(cap_ax, cap_az))
 
 
 def numbers(L):
@@ -332,11 +387,13 @@ def numbers(L):
         electrode_arc_on_skin_mm=round(L['cover'] * L['skin_P'], 1),
         spine_bend_radius_mm=L['radii'], min_free_bend_radius_mm=round(rmin_free, 2),
         module_edge_link_slack_mm=L['edge_slack'], module_edge_link_min_bend_r_mm=L['edge_link_r'],
-        module_seat_gap_mm=L['seat'], loop_clear_of_skin_mm=round(L['ear_skin'], 2),
+        module_seat_gap_mm=L['seat'], bar_clear_of_skin_mm=round(L['bar_skin'], 2),
         strap_load_rel={k: round(v / mean, 2) for k, v in sorted(L['loads'].items())},
-        strap_load_max_min=round(max(free.values()) / min(free.values()), 2),
+        strap_load_max_min=round(max(free.values()) / max(min(free.values()), 1e-6), 2),
         strap_tension_for_3kPa_N=round(T_3kpa, 2),
-        strap_path_mm=round(L['path_len'], 1),
+        strap_bar_to_bar_mm=round(L['hull_len'], 1),
+        strap_cap_to_fold_mm=round(L['band_len'], 1),
+        strap_needed_mm=round(L['band_len'] + R.TAB_L + 5.0, 1), strap_lock_A_mm=round(L['lock_len'], 1),
     )
 
 
@@ -353,7 +410,7 @@ def strap_clearance(L):
                 n = max(1, int(math.dist(path[k], path[k + 1]) / 0.5))
                 for j in range(n + 1):
                     x, z = x0 + (x1 - x0) * j / n, z0 + (z1 - z0) * j / n
-                    if z > L['z0'] - 3 and abs(x) < 20:      # under the module: lug loops, not on skin
+                    if z > L['z0'] - 8 and abs(x) < 27:      # at the module and its bars: not on skin
                         continue
                     d = min(math.hypot(px - x, pz - z) for px, pz in skin.pts[::3])
                     inside = (x / a) ** 2 + (z / b) ** 2 < 1
@@ -415,29 +472,27 @@ def build_band(c, log, with_wrist=True, cad=True):
             bm = S.sweep_band(q, ys, w=sw, t=R.FLEX_T)
         if bm is not None:
             links.append(bm)
-    # strap: one closed webbing loop + a wrap round each slide's friction bar + the two tucked tails
-    path = L['path']
-    band = S.sweep_band(path[::-1], y)                 # slide A -> pods 2, 1, gap, 8..5 -> slide B
-    lk = {}
-    for key, si, p_end in (('a', -1, path[-1]), ('b', 1, path[0])):
-        bar_, d_, n_ = L['lock'][si]
-        inc, tl = S.lock_paths(bar_, d_, n_, p_end)
-        lk[key] = (S.sweep_band(inc, y, step=0.35), S.sweep_band(tl, y, step=0.35), S.plen(inc) + S.plen(tl))
-    lock_a, tail_a, lock_b, tail_b = lk['a'][0], lk['a'][1], lk['b'][0], lk['b'][1]
-    loop = S.placed_loop(L['bar_b'][0], L['bar_b'][1], L['loop_ang'], y).fuse(
-        S.placed_loop(L['bar_a'][0], L['bar_a'][1], L['loop_ang_a'], y, flip=True))
-    def tilt(sh):                                      # follow the module's taper tilt at its lugs
+    # strap: the band (end cap -> slot A -> pods -> round bar B) and the folded-back tail; the parts at the
+    # module follow its taper tilt, the run through the pods does not (the pods tilt by their own)
+    def tilt(sh):
         if sh is None:
             return None
         sh = sh.copy()
         sh.rotate(V(0, y, L['z0']), V(1, 0, 0), math.degrees(L['mod_tilt']))
         return sh
-    loop = tilt(loop)
-    lock_a, tail_a, lock_b, tail_b = tilt(lock_a), tilt(tail_a), tilt(lock_b), tilt(tail_b)
-    strap_parts = [x for x in (band, lock_a, tail_a, lock_b, tail_b) if x is not None]
-    res['loop_set_length_mm'] = round(L['path_len'], 1)           # webbing between the two slides
-    res['webbing_tip_to_tip_mm'] = round(L['path_len'] + lk['a'][2] + lk['b'][2], 1)
-    res['lock_path_mm'] = [round(lk['a'][2], 1), round(lk['b'][2], 1)]
+    band_run = S.sweep_band(L['path'][::-1], y)
+    nA = len(L['band']) - len(L['path'])
+    full = L['band']
+    k0 = full.index(L['path'][-1]) if L['path'][-1] in full else None
+    ends_a = full[:k0 + 1] if k0 else full[:12]
+    k1 = full.index(L['path'][0]) if L['path'][0] in full else None
+    ends_b = full[k1:] if k1 else full[-20:]
+    band_a = tilt(S.sweep_band(ends_a, y, step=0.4))
+    band_b = tilt(S.sweep_band(ends_b, y, step=0.4))
+    strap_tail = tilt(S.sweep_band(L['tail'], y, step=0.6))
+    strap_parts = [x for x in (band_run, band_a, band_b, strap_tail) if x is not None]
+    res['strap_cap_to_fold_mm'] = round(L['band_len'], 1)
+    res['strap_tail_modelled_mm'] = round(L['tail_len'], 1)
     items = []
     wrist = None
     if with_wrist:
@@ -450,8 +505,7 @@ def build_band(c, log, with_wrist=True, cad=True):
               ('flex', Part.makeCompound(PS['flex'] + mf + links + [tail]), R.C_FLEX),
               ('pads', Part.makeCompound(PS['gold'] + mg), R.C_GOLD),
               ('foam', Part.makeCompound(PS['foam'] + mfo), R.C_FOAM),
-              ('strap', Part.makeCompound(strap_parts), R.C_STRAP),
-              ('strap_slide', loop, R.C_POD)]
+              ('strap', Part.makeCompound(strap_parts), R.C_STRAP)]
     res['strap_min_clear_to_skin_mm'] = strap_clearance(L)
     if cad and CHECK_CAD:
         def vol(x, ys_):
@@ -460,28 +514,20 @@ def build_band(c, log, with_wrist=True, cad=True):
         inter = {}
         inter['pod_vs_pod'] = round(sum(sh[k].common(sh[k + 1]).Volume for k in range(len(sh) - 1)), 3)
         inter['pods_vs_module'] = vol(Part.makeCompound(sh), [base, lid])
-        inter['strap_vs_module'] = vol(Part.makeCompound(strap_parts), [base, lid])
-        inter['lock_vs_slides'] = vol(Part.makeCompound([lock_a, tail_a, lock_b, tail_b]), [loop])
-        inter['lock_vs_pods'] = vol(Part.makeCompound([lock_a, tail_a, lock_b, tail_b]), sh)
-        inter['lock_layers'] = round(lock_a.common(tail_a).Volume + lock_b.common(tail_b).Volume, 3)
-        res['lock_clearance_mm'] = {k: round(min(x.distToShape(o)[0] for x in (lk_, tl_)), 2)
-                                    for k, (lk_, tl_) in (('a', (lock_a, tail_a)), ('b', (lock_b, tail_b)))
-                                    for o in [Part.makeCompound(links)]}
-        res['lock_to_module_mm'] = round(min(x.distToShape(Part.makeCompound([base, lid]))[0]
-                                             for x in (lock_a, tail_a, lock_b, tail_b)), 2)
-        res['lock_to_pods_mm'] = round(min(x.distToShape(Part.makeCompound(sh))[0]
-                                           for x in (lock_a, tail_a, lock_b, tail_b)), 2)
+        inter['band_ends_vs_module'] = vol(Part.makeCompound([x for x in (band_a, band_b) if x]), [base, lid])
+        inter['band_run_vs_module'] = vol(band_run, [base, lid]) if band_run else None
+        inter['tail_vs_module'] = vol(strap_tail, [base, lid]) if strap_tail else None
         sh0 = place_pod_shapes(L, shell0, flex0, [], [], use_tilt=False)['shells']
-        inter['strap_vs_pods_untilted'] = vol(band, sh0)      # webbing twists <= 3 deg with the pods' taper tilt
-        inter['loop_vs_module'] = vol(loop, [base, lid])
-        inter['strap_vs_flex'] = vol(Part.makeCompound(strap_parts + [loop]), links)
-        inter['loop_vs_pods'] = vol(loop, sh)
+        inter['band_vs_pods_untilted'] = vol(band_run, sh0) if band_run else None   # the band twists <= 3 deg with the pods
+        inter['tail_vs_pods_untilted'] = vol(strap_tail, sh0) if strap_tail else None
+        inter['strap_vs_flex'] = vol(Part.makeCompound(strap_parts), links)
+        inter['module_vs_flex_links'] = vol(Part.makeCompound(links), [base])
         if wrist is not None:
             inter['pods_vs_wrist'] = vol(wrist, sh)
             inter['module_vs_wrist'] = vol(wrist, [base, lid])
             inter['pads_vs_wrist'] = vol(wrist, PS['gold'] + mg)       # pads pressed in (foam takes it)
-            # (strap vs the lofted wrist hangs OCC at 180 mm -> analytic clearance below instead)
         res['interference_mm3'] = inter
+        res['strap_to_module_min_mm'] = round(min(x.distToShape(Part.makeCompound([base, lid]))[0] for x in (band_run, strap_tail) if x), 2)
     return res, items, L
 
 
@@ -498,17 +544,23 @@ if not getattr(sys, 'neurband_fit_lib', False):
         if not os.path.exists(wf):          # 145 mm wrist model (extra/wrists has 140..200 only)
             U.save(f'wrist_{int(c)}', [(f'wrist_{int(c)}', items[0][1], R.C_SKIN)], log,
                    folder=os.path.join(R.ROOT, 'extra', 'wrists'))
-    # one strap for all sizes: cut length from the largest wrist
-    lo, hi = results['145'], results['180']
-    results['strap_cut_mm'] = dict(
-        webbing=round(hi['webbing_tip_to_tip_mm'] + 30, 0),      # 180 mm wrist tip to tip + 30 mm to hold while tucking
-        tip_to_tip_145=lo['webbing_tip_to_tip_mm'], tip_to_tip_160=results['160']['webbing_tip_to_tip_mm'],
-        tip_to_tip_180=hi['webbing_tip_to_tip_mm'],
-        between_slides_145=lo['loop_set_length_mm'], between_slides_160=results['160']['loop_set_length_mm'],
-        between_slides_180=hi['loop_set_length_mm'], lock_path_each=hi['lock_path_mm'],
-        note='closed loop slipped over the hand; set once at the slides, then trim each tail so its tucked '
-             'tip reaches the slot')
+    # one strap for all sizes: the single-pass hook-and-loop strap, size L (rc.STRAP_*): 302 mm, loop panel
+    # 127-202 mm and hook tab 258-302 mm from the ring end. Cut c mm off the ring end (at least the ring's
+    # sewn loop, RING_CUT) so that the hook tab, folded back at bar B, lands on the loop panel.
+    def cut_range(F):
+        L0, (p0, p1), (h0, h1) = R.STRAP_L, R.STRAP_PANEL, R.STRAP_HOOK
+        # positions from the cut end (the lock tip); the fold at F folds the tail back onto the band
+        lo = (p0 - (2 * F - L0)) / 2 + 0.0           # hook start on the panel start
+        hi = (p1 - (2 * F - h0)) / 2                   # hook end on the panel end
+        return round(lo, 1), round(hi, 1)
+    results['strap_length_mm'] = dict(
+        strap=R.STRAP_L, ring_cut_min=R.RING_CUT,
+        fold_from_lock_tip={k: results[k]['strap_cap_to_fold_mm'] for k in ('145', '160', '180')},
+        cut_from_ring_end_mm={k: cut_range(results[k]['strap_cap_to_fold_mm']) for k in ('145', '160', '180')},
+        note='open strap: ring end cut off and locked round bar A (pinch lock), band through the pods, up through '
+             'slot B, folded back so the hook tab lands on the loop panel; cut c inside the range (at least the '
+             'ring loop); where the range ends below the ring cut, part of the hook still lands on the panel')
     with open(os.path.join(HERE, 'fit_results.json'), 'w') as f:
         json.dump(results, f, indent=1)
-    log("strap cut: " + json.dumps(results['strap_cut_mm']))
+    log("strap length: " + json.dumps(results['strap_length_mm']))
     R.finish(log)

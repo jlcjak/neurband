@@ -1,5 +1,6 @@
-"""bond_jig.py - rev C bonding jig: lay the flex on it, put foam dots in the pods and the base, press
-each part into its nest. No hole punch, no needles, no tape.
+"""bond_jig.py - rev C bonding jig, stage 1: lay the flex on it, put foam dots in the six free pods,
+press each pod into its nest. No hole punch, no needles, no tape. (r2: the module base is pressed on in
+stage 2, on the pedestal of base_jig.py: its integral strap bars would come down on pods 2 / 5 here.)
 
 Jig frame = world frame of the flex (docs/layout/flex_c_layout.md): X along the flex (pod k at
 X = -45 + 18 (k - 1) developed), Y distal, Z up; the flex lies SKIN SIDE DOWN (pads down), z = 0 is
@@ -64,18 +65,7 @@ def build():
     saddle = Part.makeCylinder(RS, 100, axis, V(1, 0, 0)) if False else Part.makeCylinder(RS, 40, V(0, -20, ZAX), V(0, 1, 0))
     saddle = saddle.common(R.box(-X_E, X_E, -R.POD_L / 2 - 0.5, R.POD_L / 2 + 0.5, -0.8, 5))
     s = plate.fuse(saddle)
-    # base stop pads on the R42 surface (outside the flex paddles, outside the spine band)
-    stop = Part.makeCylinder(M.R_U, 40, V(0, -20, ZAX), V(0, 1, 0))
-    for sx in (-1, 1):
-        for ya, yb in ((-15.0, SPINE_GAP[0]), (SPINE_GAP[1], 15.0)):
-            pad = R.box(min(sx * 12.9, sx * 14.6), max(sx * 12.9, sx * 14.6), ya, yb, -0.8, 5).common(stop)
-            s = s.fuse(pad)
-    # base fence (world: X = -X_mech, Y = -Y_mech) with gaps for the links and the tail
-    bx, by = -M.CX_OFF, -M.YC
-    fo = R.rrect(M.OUT_W + 2 * (FENCE_CLR + FENCE_T), M.OUT_L + 2 * (FENCE_CLR + FENCE_T), M.PLAN_R + FENCE_CLR + FENCE_T, FENCE_H + 0.8, -0.8, bx, by)
-    fi = R.rrect(M.OUT_W + 2 * FENCE_CLR, M.OUT_L + 2 * FENCE_CLR, M.PLAN_R + FENCE_CLR, FENCE_H + 2, -1.0, bx, by)
-    fence = fo.cut(fi).cut(R.box(-60, 60, SPINE_GAP[0], SPINE_GAP[1], -2, 10)).cut(R.box(-6.0, 6.0, 10, 30, -2, 10))
-    s = s.fuse(fence)
+    # (r2: the module base is bonded on base_jig.py, stage 2: its strap bars would land on pods 2 / 5 here)
     # free pods: fence + two ledges each, pins
     for k, xd in enumerate(POD_X_DEV):
         if k in (2, 3):
@@ -105,18 +95,13 @@ if not getattr(sys, 'neurband_jig_lib', False):
     bb = jig.BoundBox
     # check: the base (underside down, turned 180 deg) dropped on its stops must not hit the jig, and its
     # underside must stand MOD_PRESS above the flex over the pod 3/4 pads
-    base = Part.read(os.path.join(R.HERE, 'module_base.step'))
-    b2 = base.copy()
-    b2.rotate(V(0, 0, 0), V(0, 0, 1), 180)
-    b2.translate(V(0, 0, ZAX + M.R_U))          # module underside apex onto the stop radius
     pod = Part.read(os.path.join(R.HERE, 'pod.step'))
     p2 = pod.copy()
     p2.translate(V(x_of(27.0), 0, FLEX_REAL + POD_PRESS))
-    chk = dict(base_vs_jig=round(b2.common(jig).Volume, 3), pod5_vs_jig=round(p2.common(jig).Volume, 3),
-               saddle_crest_mm=round(ZAX + RS, 2), saddle_half_width_mm=round(X_E, 2),
+    chk = dict(pod5_vs_jig=round(p2.common(jig).Volume, 3), saddle_crest_mm=round(ZAX + RS, 2), saddle_half_width_mm=round(X_E, 2),
                pod_x_on_jig=[round(x_of(x), 2) for x in POD_X_DEV])
     log("  bond jig: %.1f x %.1f x %.1f mm; checks %s" % (bb.XLength, bb.YLength, bb.ZLength, json.dumps(chk)))
     R.save('bond_jig', [('bond_jig', jig, (0.85, 0.85, 0.80))], log)
-    R.save('bond_jig_fit', [('bond_jig', jig, (0.85, 0.85, 0.80)), ('module_base', b2, R.C_HOUSING), ('pod', p2, R.C_POD)], log)
-    R.fab('bond_jig', 'neurband rev C bonding jig (flex + pods + module base; print once)', jig, 1, 'fdm', 'pla', 'white', log)
+    R.save('bond_jig_fit', [('bond_jig', jig, (0.85, 0.85, 0.80)), ('pod', p2, R.C_POD)], log)
+    R.fab('bond_jig', 'neurband rev C bonding jig stage 1 (flex + six free pods; print once)', jig, 1, 'fdm', 'pla', 'white', log)
     R.finish(log)

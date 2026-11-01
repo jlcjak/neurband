@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "neurband rev C bonding jig stage 2: pedestal for the module base (print once)",
+  "source": "base_jig.step",
+  "qty": 1,
+  "options": {
+    "process": "fdm",
+    "material": "pla",
+    "color": "white"
+  },
+  "features": {
+    "volume_cm3": 25.609,
+    "area_cm2": 100.76,
+    "size_x_mm": 60.0,
+    "size_y_mm": 34.0,
+    "size_z_mm": 28.5
+  },
+  "min_wall_mm": 1.0
+}

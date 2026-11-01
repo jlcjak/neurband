@@ -44,16 +44,40 @@ FOAM_PROUD = FOAM_T - FOAM_POCKET_H         # 1.0 mm free, ~0.6-0.7 mm at 2-5 kP
 STACK = FOAM_PROUD + FLEX_T                  # shell face above the skin at a pad (free foam)
 STACK_LOADED = 0.65 + FLEX_T                 # nominal worn (foam ~35 % compressed)
 
-# ---------------- strap (bought: plain woven elastic webbing) ----------------
-STRAP_W = 20.0          # webbing width (sourcing: 20.0 +/-0.5 mm polyester elastic); sleeves, slides, slots follow
-STRAP_W_TOL = 0.6       # clearance over the nominal width in the pod sleeves and the slide (20.6)
-STRAP_T = 1.5           # webbing thickness, sourced nominal: the fit model uses this
-STRAP_T_MAX = 1.8       # design maximum (sourcing allows 1.2-1.8): every slot and sleeve clears this
-STRAP_T_MIN = 1.2
+# ---------------- strap (bought: 20 mm one-piece "single pass" hook-and-loop watch strap; sourcing.md) ------
+# First pick Amazon.de B0CWH1XS7B (black, size L), fallback B06XRYRDRR (Eichmueller, 325 mm). Ring end cut
+# off and heat-sealed (end A: pinch lock round bar A); plain hook end through slot B, folded back onto the
+# loop panel. Thickness is not stated by these sellers; the same strap type is stated 1.5 mm by another maker
+# (StrapHabit, US) and comparable 20 mm nylon hook-and-loop straps 1.5-2.0 mm: the design takes 1.3-2.4.
+STRAP_L = 302.0         # size L, seller drawing (ring end to tip)
+STRAP_PANEL = (127.0, 202.0)    # loop panel, from the ring end (seller drawing)
+STRAP_HOOK = (258.0, 302.0)     # hook tab, from the ring end
+RING_CUT = 10.0         # cut at least this much off the ring end (the ring's sewn loop)
+STRAP_W = 20.0          # strap width; slots and channels follow
+STRAP_W_TOL = 0.8       # clearance over the nominal width in the pod channels (20.8)
+STRAP_T = 2.0           # band thickness used by the fit model
+STRAP_T_MAX = 2.4       # pod channels and slots clear this
+STRAP_T_MIN = 1.3
+TAB_T = 3.0             # hook end (band + hook tab): must pass slot B when threading
+TAB_L = 44.0            # hook tab length (seller drawing)
+SLOT_GAP_A = 2 * STRAP_T + 0.4  # slot A (4.4): two layers of band (the pinch lock)
+SLOT_GAP_B = TAB_T + 0.5        # slot B (3.5): one layer, and the hook tab passes when threading
+SLOT_GAP = SLOT_GAP_A
 CHANNEL_W = STRAP_W + STRAP_W_TOL
-CHANNEL_H = STRAP_T_MAX + 0.1   # clear sleeve height (1.9)
-BASE_T = FOAM_POCKET_H + 1.0  # pod shell face -> sleeve floor (foam pocket + 1.0 floor)
-LIP_T = 1.0             # sleeve rims (>= 1.0 for FDM TPU)
+CHANNEL_H = STRAP_T_MAX + 0.1   # pod channel clear height (2.5): the band is pressed in past two TPU lips
+BASE_T = FOAM_POCKET_H + 1.0  # pod shell face -> channel floor (foam pocket + 1.0 floor)
+LIP_T = 1.0             # channel lips (>= 1.0 for FDM TPU)
+
+# ---------------- magnetic charge connector (bought, device side; sourcing.md) ----------------
+# 2-pin magnetic pogo pair, 2.5 mm pitch (Samzo PR5L4015-2P type; Amazon.de B0FXL1C7N1, Electrokit 41035992):
+# female = flat face with 2 gold pads between 2 magnets; boss 12.5 x 4.0 x 2.0, flange 14.5 x 4.0 x 2.0,
+# 2 pins 0.7 x 1.5 behind it.
+MAG_BOSS = (12.5, 2.0, 4.0)     # X width, Y depth, Z height (sits in the 2.0 mm wall, face flush)
+MAG_FLANGE = (14.5, 2.0, 4.0)   # behind the wall
+MAG_PIN_L = 1.5
+MAG_PITCH = 2.5                 # contact pitch
+MAG_MAG_C = 8.0                 # magnet centre distance
+MAG_PAD_D = 1.2                 # contact face diameter (visual)
 
 # ---------------- pogo pins (bought; charger clip and SWD jig) ----------------
 POGO_D = 0.68           # P50 barrel diameter (sourcing); plunger 0.48
