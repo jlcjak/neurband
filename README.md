@@ -89,9 +89,10 @@ typing, fluent handwriting.
 
 ## Build one
 
-**Build guide: [docs/build/assembly.md](docs/build/assembly.md)**: the shopping list, the prints, eight
-illustrated steps, troubleshooting and the tests to run on a first band. There is also a 24 s
-[assembly animation](docs/media/assembly.mp4).
+**Build guide: [docs/build/assembly.md](docs/build/assembly.md)**: the shopping list, the prints, ten
+illustrated steps, troubleshooting and the tests to run on a first band (also as a
+[PDF](docs/build/neurband_build_manual.pdf)). There is also a 36 s
+[assembly animation](docs/media/assembly_r2.mp4).
 
 A first prototype costs around $300 (≈ $290–350 for five main boards with two assembled, five electrode flexes,
 the prints and the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)). Most of it is the ADS1298 and the
@@ -104,7 +105,7 @@ fab's assembly fees.
      hook-and-loop watch strap, 6 mm foam dots, a 401223 LiPo, a 2-pin magnetic charging connector and
      cable, a Pico 2 as the SWD probe and an nRF52840 dongle.
 2. **Build** it ([docs/build/assembly.md](docs/build/assembly.md), PDF alongside):
-   - flash the bare board once through five soldered wires on the SWD pads;
+   - flash the bare board once through four soldered wires on the SWD pads (3V3, SWDIO, SWDCLK, GND);
    - solder the cell and the charging connector;
    - bond the six free pods in the flat jig and the base in the pedestal jig;
    - fold the tail into J1 and close the module;

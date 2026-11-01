@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
-"""neurband rev C assembly animation (Blender 5.2 Cycles / OptiX).
+"""neurband rev C assembly animation (Blender 5.2 Cycles / OptiX), r2 mechanics.
 
-  python3 render/assembly_anim.py                  # export inputs, render 720 frames on GPUs 0,1, encode
+  python3 render/assembly_anim.py                  # export inputs, render 1080 frames on GPUs 0,1, encode
   python3 render/assembly_anim.py --no-export      # reuse render/build/*.glb
   python3 render/assembly_anim.py --quick          # half size, 16 spp preview (render/build/assembly_quick/)
   python3 render/assembly_anim.py --encode-only    # captions + MP4 + GIF from existing frames
 
-Outputs: docs/media/assembly.mp4 (1920 x 1080, H.264) and docs/media/assembly.gif (720 px wide, 8 fps).
-The build-guide figures (docs/build/img/) are made by render/guide_figures.py, which reuses the
-two scenes defined here and there.
+Outputs: docs/media/assembly_r2.mp4 (1920 x 1080, H.264) and docs/media/assembly_r2.gif (720 px wide,
+6 fps). The build-guide figures (docs/build/img/) are made by render/guide_figures.py, which reuses the
+scenes defined here and there.
 
-Two scenes, cross-faded at 6.6-7.0 s:
-- jig (0-7 s, render/guide_figures.py jig_scene): the flat flex on the bonding jig's pins, foam dots
-  into the pods and the base, each part turned over and pressed into its fence;
-- ring (6.6-24 s, ring_scene below): the band as fitted on the 160 mm wrist
-  (render/build/band_assembly.glb, ring parts mirrored to the real flex's pod order, see
-  nb_blender.mirror_ring), the real KiCad board (render/build/main_board.glb) placed with module.k2m,
-  the flex tail as a ribbon of constant free length while the board folds down on it (the book fold),
-  the cell's own leads round the board's distal +X corner, the two strap slides, the webbing loop and
-  the charge clip.
-Frames go to render/build/assembly/ (git-ignored) as j_NNNN.png / r_NNNN.png, one Blender process per
-GPU (even / odd frames). Captions are drawn afterwards (PIL, Noto Sans), so the 3D frames stay clean.
-Blender side: blender -b --python render/assembly_anim.py -- --scene ring --frames 198:720:2 [--quick]
+Four scenes (SCENES), cross-faded where they overlap:
+- board (0-6.4 s, board_scene): the bare main board bottom side up; wires on the SWD pads (flash once,
+  then off), the cell's leads onto J2 under Kapton, the J3 charging wires to the magnetic connector;
+- jig (6-12.4 s, render/guide_figures.py jig_scene): stage 1 on the bonding jig: the flex pads-down on
+  its pins, foam dots into the pods, each pod turned over and pressed into its fence;
+- pedestal (12-16.4 s, pedestal_scene): stage 2 on the base jig: the pod 3/4 part on the saddle, the
+  base with its foam dots pressed on;
+- ring (16-36 s, ring_scene below): the band as fitted on the 160 mm wrist (render/build/band_assembly.glb,
+  real flex pod order), the real KiCad board (render/build/main_board.glb) placed with module.k2m, the
+  flex tail as a ribbon of constant free length while the board folds down on it (the book fold), the
+  cell's leads and the J3 wires, the magnetic connector into its bay, cell, button cap, lid, the strap
+  (revealed round the pods, locked round bar A, through bar B and folded back) and the charging cable.
+Frames go to render/build/assembly/ (git-ignored) as b_/j_/p_/r_NNNN.png, one Blender process per GPU
+(even / odd frames). Captions are drawn afterwards (PIL, Noto Sans), so the 3D frames stay clean.
+Blender side: blender -b --python render/assembly_anim.py -- --scene ring --frames 480:1080:2 [--quick]
 """
 import os, sys, math, time, json, argparse, subprocess, glob, threading
 
@@ -35,32 +38,44 @@ MEDIA = os.path.join(ROOT, 'docs', 'media')
 FONT_DIR = '/usr/share/fonts/noto'
 
 FPS = 30
-DUR = 24.0
+DUR = 36.0
 NF = int(round(DUR * FPS))
 RES = (1920, 1080)
-XFADE = (6.6, 7.0)                                   # jig -> ring cross-fade (s)
-SCENE_FRAMES = {'jig': (0, int(XFADE[1] * FPS) + 1), 'ring': (int(XFADE[0] * FPS), NF)}
+# r2 (Nov 2026): four scenes, cross-faded where they overlap (s)
+SCENES = [('board', 0.0, 6.4), ('jig', 6.0, 12.4), ('pedestal', 12.0, 16.4), ('ring', 16.0, DUR)]
+PREFIX = {'board': 'b', 'jig': 'j', 'pedestal': 'p', 'ring': 'r'}
+SCENE_FRAMES = {n: (int(round(t0 * FPS)), min(NF, int(round(t1 * FPS)) + 1)) for n, t0, t1 in SCENES}
+JIG_OFF = 6.2                                        # jig scene: local time = t - JIG_OFF (guide_figures.jig_scene)
+OUT_NAME = 'assembly_r2'                             # docs/media/assembly_r2.mp4 / .gif
 
-# ---------------------------------------------------------------- ring timeline (seconds)
-TL = dict(board_in=(7.2, 8.2), board_swing=(8.6, 10.2), cell=(10.5, 11.4), cap=(11.5, 12.1), lid=(12.2, 13.4),
-          slides=(13.7, 14.5), strap=(14.7, 17.6), tails=(17.5, 18.5), pull=(18.6, 19.3),
-          clip=(19.7, 20.9), clip_off=(22.0, 22.5))
+# ---------------------------------------------------------------- board timeline (seconds)
+TB = dict(wires=(0.5, 1.3), wires_off=(2.9, 3.4), cell=(3.4, 4.1), kapton=(4.1, 4.4), conn=(4.6, 5.3))
+# ---------------------------------------------------------------- pedestal timeline
+TP = dict(flex=(12.1, 12.9), base=(13.1, 14.8))
+# ---------------------------------------------------------------- ring timeline
+TL = dict(board_in=(16.6, 17.6), board_swing=(18.0, 19.6), conn=(19.9, 20.7), cell=(21.0, 21.7), cap=(21.8, 22.3),
+          lid=(22.4, 23.5), slides=(99.0, 99.5), strap=(23.9, 26.6), tails=(26.5, 27.5), pull=(27.6, 28.2),
+          clip=(29.0, 30.2), clip_off=(32.0, 32.5))
 CAPTIONS = [
-    (0.3, 2.6, '1', 'Flex pads-down on the jig pins, foam dots into the pod pockets'),
-    (2.7, 6.5, '2', 'Turn each pod over and press it into its fence; the base goes on last'),
-    (7.1, 10.4, '3', 'Tail into J1, close the latch, fold the board down'),
-    (10.5, 13.5, '4', 'Cell into its cage, button cap, lid snaps on'),
-    (13.6, 19.4, '5', 'Slides onto the hidden bars, webbing through the six pods, tails tucked under the bars'),
-    (19.6, 21.9, '6', 'Charge with the clip: it fits one way only'),
-    (22.2, 24.0, '', 'Ready to wear'),
+    (0.3, 3.3, '1', 'Flash the bare board once through wires on its SWD pads, then unsolder them'),
+    (3.5, 6.2, '2', 'Cell leads onto J2 under Kapton; charging wires from J3 to the magnetic connector'),
+    (6.5, 9.0, '3', 'Bonding jig: flex pads-down on the pins, foam dots into the pods'),
+    (9.1, 12.0, '', 'Turn each pod over and press it into its fence'),
+    (12.4, 16.0, '4', 'Pedestal jig: foam dots in the base, tail through its slot, press it onto the saddle'),
+    (16.6, 19.7, '5', 'Tail into J1, close the latch, fold the board down'),
+    (19.8, 20.9, '', 'Magnetic connector into its bay, glued by its flange'),
+    (21.0, 23.6, '6', 'Cell onto the board, button cap, lid snaps on'),
+    (23.8, 28.4, '7', 'Strap into the pods, its cut end locked round bar A, the hook end through bar B and folded back'),
+    (28.9, 31.9, '8', 'Charge: the magnetic cable clicks on one way round'),
+    (32.6, 36.0, '', 'Ready to wear'),
 ]
-TITLE = 'neurband rev C  ·  assembly'
+TITLE = 'neurband rev C  ·  assembly (r2)'
 # ring camera keys: (t, target, azimuth from -Y toward +X, elevation, distance m); R ring, M module,
-# H hinge, C charge clip
-CAM = [(6.6, 'R', 28, 30, 0.31), (7.6, 'H', 52, 18, 0.205), (9.0, 'H', 58, 20, 0.20),
-       (10.4, 'M', 42, 36, 0.19), (12.2, 'M', 34, 38, 0.19), (13.5, 'M', 28, 30, 0.215),
-       (14.6, 'R', 18, 24, 0.31), (17.6, 'R', 52, 22, 0.32), (19.2, 'C', 140, 24, 0.24),
-       (20.9, 'C', 150, 26, 0.215), (22.4, 'R', 64, 22, 0.32), (24.0, 'R', 44, 20, 0.31)]
+# H hinge, C connector bay (proximal end)
+CAM = [(16.0, 'R', 28, 30, 0.31), (16.8, 'H', 52, 18, 0.205), (18.6, 'H', 58, 20, 0.20), (19.8, 'C', 140, 30, 0.21),
+       (20.8, 'C', 128, 36, 0.21), (21.6, 'M', 42, 36, 0.19), (23.0, 'M', 34, 38, 0.19), (23.9, 'R', 18, 24, 0.31),
+       (26.2, 'R', 40, 22, 0.32), (27.0, 'L', 6, 18, 0.27), (28.2, 'L', -4, 18, 0.27), (29.0, 'C', 140, 24, 0.24),
+       (30.6, 'C', 150, 26, 0.215), (32.6, 'R', 64, 22, 0.32), (36.0, 'R', 44, 20, 0.31)]
 
 
 def clamp01(x):
@@ -225,19 +240,14 @@ def ring_scene(NB, clip=True):
         straps[k] = o
     # charge clip and its two pins (module frame) + USB lead
     S.clip = []
-    if clip:
-        cc = NB.import_glb(os.path.join(BUILD, 'charge_clip_fit.glb'), bake=True)
-        for o in list(cc.values()):
-            k = NB.kind(o.name)
-            if k in ('charge_clip', 'pogo_pins'):
-                o['kind'] = k
-                NB.setmat(o, mat_tool(NB) if k == 'charge_clip' else NB.mat_gold())
-                NB.smooth(o, math.radians(35))
-                o.matrix_world = T @ o.matrix_world
-                S.clip.append(o)
-            else:
-                bpy.data.objects.remove(o)
-        usb = [(0, 19.6, -13.0), (0, 24.0, -13.3), (0, 33.0, -15.5), (0, 50.0, -24.0), (0, 75.0, -37.0), (0, 110.0, -41.5)]
+    if clip:                                         # r2: the magnetic charging cable's head and lead
+        import guide_figures as GF
+        mc = (0.5, 19.6, 3.35)                       # connector face centre, module frame (mm)
+        head = GF.box_obj(NB, 'cable_head', (0, 0, 0), (0.0145, 0.0060, 0.0045),
+                          NB.principled('cable_head', (0.03, 0.03, 0.032), 0.4), bevel=0.0010)
+        head.matrix_world = T @ Matrix.Translation((mc[0] / 1000, (mc[1] + 3.05) / 1000, mc[2] / 1000))
+        S.clip.append(head)
+        usb = [(0.5, 25.0, 3.35), (0.5, 33.0, 2.0), (0.5, 50.0, -6.0), (0.5, 75.0, -22.0), (0.5, 110.0, -34.0)]
         cab = curve_obj(NB, 'usb_lead', [tuple(x / 1000 for x in p) for p in usb], 0.0016,
                         NB.principled('cable', (0.03, 0.03, 0.032), 0.45))
         cab.matrix_world = T.copy()
@@ -414,7 +424,7 @@ def ring_scene(NB, clip=True):
     cam = NB.camera(NB.orbit(ring_c, 30, 24, 0.33), ring_c, lens=85, fstop=16.0, focus=ring_c)
 
     mod_c = centre(S.lid)
-    S.targets = {'R': ring_c + Vector((0, 0, 0.004)), 'M': mod_c + Vector((0, 0, -0.002)),
+    S.targets = {'R': ring_c + Vector((0, 0, 0.004)), 'M': mod_c + Vector((0, 0, -0.002)), 'L': T @ Vector((0, -0.010, -0.002)),
                  'H': T @ Vector((0.002, -0.010, 0.013)), 'C': T @ Vector((0.0, 0.016, -0.002)),
                  'A': centre(S.slides[:1]) if S.slides else T @ Vector((-0.0217, 0, 0)),     # r2: no slides; the bars A, B
                  'B': centre(S.slides[1:]) if S.slides else T @ Vector((0.0218, 0, 0))}
@@ -467,6 +477,7 @@ def ring_scene(NB, clip=True):
         fly(S.cap, t, *TL['cap'], 0.016, direction=up)
         fly(S.lid, t, *TL['lid'], 0.030, direction=up)
         fly(S.slides, t, *TL['slides'], 0.014, stagger=0.25)
+        fly(S.mag, t, *TL['conn'], 0.012, direction=up)
         rs = ease_io(ph(t, *TL['strap']))
         reveal.default_value = rs * 1.002
         place(band_s, M0(band_s), 1.0 if rs > 0 else 0.0)
@@ -498,7 +509,7 @@ def blender_main(argv):
     import guide_figures as GF
 
     ap = argparse.ArgumentParser()
-    ap.add_argument('--scene', default='ring', choices=('ring', 'jig'))
+    ap.add_argument('--scene', default='ring', choices=('ring', 'jig', 'board', 'pedestal'))
     ap.add_argument('--frames', default='')
     ap.add_argument('--quick', action='store_true')
     ap.add_argument('--samples', type=int, default=0)
@@ -516,8 +527,9 @@ def blender_main(argv):
     sc.cycles.adaptive_threshold = 0.03
     sc.cycles.max_bounces = 8
     sc.cycles.transparent_max_bounces = 24
-    S = ring_scene(NB) if a.scene == 'ring' else GF.jig_scene(NB, anim=True)
-    pre = 'r' if a.scene == 'ring' else 'j'
+    S = {'ring': lambda: ring_scene(NB), 'jig': lambda: jig_scene_r2(NB, GF), 'board': lambda: board_scene(NB),
+         'pedestal': lambda: pedestal_scene(NB)}[a.scene]()
+    pre = PREFIX[a.scene]
 
     def render_to(path):
         sc.render.filepath = path
@@ -556,6 +568,178 @@ def run(cmd, log, timeout=3600, env=None):
         p = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, timeout=timeout, env=env)
     print('  %-40s exit %d  %.0f s' % (os.path.basename(log), p.returncode, time.time() - t), flush=True)
     return p.returncode
+
+
+# ---------------------------------------------------------------- r2: bare board scene (steps 1-2)
+def board_scene(NB):
+    """the bare main board bottom side up: wires on the SWD pads (flash once, then off), the cell's leads
+    onto J2 under Kapton, the J3 charging wires to the magnetic connector. Times: TB (global seconds)."""
+    import bpy
+    import numpy as np
+    from mathutils import Vector, Matrix
+    import guide_figures as GF
+    S = Scene()
+    mm = 0.001
+    bobj, body = NB.load_board()
+    objs = list(bobj.values())
+    bmn, bmx = NB.bbox([body])
+    c = Vector(((bmn + bmx) / 2).tolist())
+    Mf = Matrix.Translation(c) @ Matrix.Rotation(math.pi, 4, 'Y') @ Matrix.Translation(-c)
+    for o in objs:
+        o.matrix_world = Mf @ o.matrix_world
+    a_, b_ = NB.bbox(objs)
+    G = Matrix.Translation((-c.x, -c.y, 0.0025 - a_[2]))           # centre on the origin, 2.5 mm above the floor
+    for o in objs:
+        o.matrix_world = G @ o.matrix_world
+    Mk = G @ Mf
+
+    def kp(xk, yk, dz=0.0):
+        return Mk @ Vector((bmn[0] + xk * mm, bmx[1] - yk * mm, bmn[2] - dz * mm))
+
+    def wmat(name, col):
+        return NB.principled(name, col, 0.35, coat_weight=0.3, coat_roughness=0.2)
+    cols = {'red': (0.55, 0.045, 0.035), 'black': (0.02, 0.02, 0.022), 'yellow': (0.75, 0.55, 0.05), 'green': (0.05, 0.35, 0.10)}
+    tp = [(1.1, 5.1), (2.0, 4.2), (2.9, 3.3), (3.79, 2.41), (4.69, 1.51)]
+    swd = []
+    for i, key in ((0, 'red'), (1, 'yellow'), (2, 'green'), (4, 'black')):
+        x, y = tp[i]
+        pts = [kp(x, y, 0.25), kp(x - 0.4, y - 1.6, 0.9), kp(x - 3.0 - 0.8 * i, -4.0 - 1.0 * i, 1.6), kp(-14.0 - 1.6 * i, -16.0 - 1.4 * i, 2.0),
+               kp(-30.0 - 1.6 * i, -24.0 - 1.4 * i, 2.0)]
+        swd.append(curve_obj(NB, 'swd_%d' % i, [tuple(p) for p in pts], 0.00028, wmat('w_' + key, cols[key])))
+    cell = GF.box_obj(NB, 'cell', tuple(kp(28.7 + 4.0 + 12.5, 18.8, -1.4)), (0.025, 0.012, 0.004), NB.mat_lipo(), bevel=0.0006)
+    leads = [curve_obj(NB, 'lead_r', [tuple(p) for p in (kp(32.8, 19.6, -1.0), kp(31.0, 19.8, 0.25), kp(28.0, 19.3, 0.25), kp(26.8, 18.9, 0.2))],
+                       0.00026, wmat('l_red', cols['red'])),
+             curve_obj(NB, 'lead_b', [tuple(p) for p in (kp(32.8, 18.0, -1.0), kp(31.0, 17.2, 0.25), kp(26.0, 17.4, 0.25), kp(23.8, 18.6, 0.2))],
+                       0.00026, wmat('l_black', cols['black']))]
+    kap = GF.box_obj(NB, 'kapton', tuple(kp(25.3, 18.8, 0.5)), (0.0062, 0.0042, 0.00008),
+                     NB.principled('kapton', (0.85, 0.45, 0.05), 0.25, transmission_weight=0.4))
+    conn = GF.box_obj(NB, 'connector', tuple(kp(14.5, -6.0, -1.5)), (0.0145, 0.004, 0.004),
+                      NB.principled('conn', (0.03, 0.03, 0.032), 0.4), bevel=0.0004)
+    jw = [curve_obj(NB, 'j3_r', [tuple(p) for p in (kp(23.9, 25.4, 0.2), kp(25.6, 24.0, 0.45), kp(27.2, 20.0, 0.45), kp(27.2, 3.0, 0.45),
+                                                     kp(24.0, -1.0, 0.45), kp(15.75, -3.5, -0.6), kp(15.75, -4.0, -1.5))],
+                    0.00026, wmat('j_red', cols['red'])),
+          curve_obj(NB, 'j3_b', [tuple(p) for p in (kp(26.9, 25.4, 0.2), kp(27.8, 23.5, 0.45), kp(27.8, 20.0, 0.45), kp(27.8, 3.0, 0.45),
+                                                     kp(25.0, -1.5, 0.45), kp(13.25, -3.5, -0.6), kp(13.25, -4.0, -1.5))],
+                    0.00026, wmat('j_black', cols['black']))]
+    for m in list(bpy.data.materials):
+        if m.node_tree is not None:
+            add_fade(m)
+    tgt = kp(16.0, 10.0)
+    NB.sweep(color=(0.52, 0.51, 0.49), depth=0.8, height=1.0, radius=0.3, origin=(0, 0.06, 0),
+             yaw=math.radians(180), mat=NB.mat_paper((0.52, 0.51, 0.49)))
+    NB.studio(tgt, key=5, fill=1.4, rim=5, top=2.0)
+    cam = NB.camera(NB.orbit(tgt, -20, 52, 0.20), tgt, lens=85, fstop=16.0, focus=tgt)
+
+    def place(o, alpha):
+        o.color = (1, 1, 1, alpha)
+        o.hide_render = alpha <= 0.002
+
+    def apply(t):
+        aw = smooth(ph(t, *TB['wires'])) * (1 - smooth(ph(t, *TB['wires_off'])))
+        for o in swd:
+            place(o, aw)
+        for o in [cell] + leads:
+            place(o, smooth(ph(t, *TB['cell'])))
+        place(kap, smooth(ph(t, *TB['kapton'])))
+        for o in [conn] + jw:
+            place(o, smooth(ph(t, *TB['conn'])))
+
+    def cam_at(t):
+        u = smooth(ph(t, 0.0, 6.4))
+        return tgt, -2 + 14 * u, 48 - 4 * u, 0.20
+
+    def set_cam(tg, az, el, d, lens=85):
+        loc = NB.orbit(tg, az, el, d)
+        NB.look_at(cam, tg, loc)
+        cam.data.lens = lens
+        cam.data.dof.focus_distance = (Vector(tg) - loc).length
+    S.apply, S.cam_at, S.set_cam, S.cam = apply, cam_at, set_cam, cam
+    return S
+
+
+# ---------------------------------------------------------------- r2: pedestal jig scene (stage 2)
+def pedestal_scene(NB):
+    """the base jig: the strip's pod 3/4 part pads-down on the saddle, then the base (foam dots in its
+    pockets) pressed on. Times: TP (global seconds)."""
+    import bpy
+    from mathutils import Vector, Matrix
+    S = Scene()
+    jg = NB.import_glb(os.path.join(BUILD, 'base_jig_fit.glb'), bake=True)
+    jig, base = [], []
+    for o in jg.values():
+        k = NB.kind(o.name)
+        if k == 'module_base':
+            NB.setmat(o, NB.mat_housing())
+            base.append(o)
+        else:
+            NB.setmat(o, mat_tool(NB))
+            jig.append(o)
+        NB.smooth(o, math.radians(35))
+    ma = NB.import_glb(os.path.join(BUILD, 'module_assy.glb'), bake=True)
+    Mj = Matrix.Translation((0, 0, 0.02711)) @ Matrix.Rotation(math.pi, 4, 'Z')    # module frame -> jig (base_jig.py)
+    flex, dots = [], []
+    for o in list(ma.values()):
+        k = NB.kind(o.name)
+        if k in ('flex_pods_3_4', 'pads', 'tail', 'foam'):
+            o.matrix_world = Mj @ o.matrix_world
+            NB.setmat(o, {'pads': NB.mat_gold(), 'foam': NB.mat_foam()}.get(k, NB.mat_flex()))
+            (dots if k == 'foam' else flex).append(o)
+        else:
+            bpy.data.objects.remove(o)
+    for o in jig + base + flex + dots:
+        o['M0'] = [list(r) for r in o.matrix_world]
+    for m in list(bpy.data.materials):
+        if m.node_tree is not None:
+            add_fade(m)
+    a_, b_ = NB.bbox(jig)
+    tgt = Vector((0.0, 0.0, 0.022))
+    NB.sweep(color=(0.52, 0.51, 0.49), depth=0.8, height=1.0, radius=0.3, origin=(0, 0.05, 0),
+             yaw=math.radians(180 + 30), mat=NB.mat_paper((0.52, 0.51, 0.49)))
+    NB.studio(tgt, key=5, fill=1.4, rim=5, top=2.0)
+    cam = NB.camera(NB.orbit(tgt, -30, 26, 0.24), tgt, lens=85, fstop=16.0, focus=tgt)
+
+    def place(o, M, alpha):
+        o.matrix_world = M
+        o.color = (1, 1, 1, alpha)
+        o.hide_render = alpha <= 0.002
+
+    def apply(t):
+        pf = ph(t, *TP['flex'])
+        for o in flex:
+            place(o, Matrix.Translation((0, 0, 0.008 * (1 - ease_out(pf)))) @ Matrix(o['M0']), smooth(pf / 0.6))
+        pb = ease_io(ph(t, *TP['base']))
+        ab = smooth(ph(t, TP['base'][0] - 0.5, TP['base'][0]))
+        for o in base + dots:
+            place(o, Matrix.Translation((0, 0, 0.022 * (1 - pb))) @ Matrix(o['M0']), ab)
+        for o in jig:
+            place(o, Matrix(o['M0']), 1.0)
+
+    def cam_at(t):
+        u = smooth(ph(t, 12.0, 16.4))
+        return tgt, -34 + 22 * u, 28 - 4 * u, 0.25
+
+    def set_cam(tg, az, el, d, lens=85):
+        loc = NB.orbit(tg, az, el, d)
+        NB.look_at(cam, tg, loc)
+        cam.data.lens = lens
+        cam.data.dof.focus_distance = (Vector(tg) - loc).length
+    S.apply, S.cam_at, S.set_cam, S.cam = apply, cam_at, set_cam, cam
+    return S
+
+
+def jig_scene_r2(NB, GF):
+    """stage 1 on the bonding jig (guide_figures.jig_scene), shifted to global time; no base in r2."""
+    S = GF.jig_scene(NB, anim=True, tail_up=False)
+    loc_apply, loc_cam = S.apply, S.cam_at
+
+    def apply(t):
+        loc_apply(t - JIG_OFF)
+        for o in [S.base] + list(S.bdots):
+            o.hide_render = True
+
+    S.apply = apply
+    S.cam_at = lambda t: loc_cam(t - JIG_OFF)
+    return S
 
 
 def freecad_strap_pieces(step, dst):
@@ -603,7 +787,7 @@ def render_frames(gpus, quick, samples, out):
     os.makedirs(out, exist_ok=True)
 
     def worker(k, g):
-        for scene in ('jig', 'ring'):
+        for scene in [n for n, _, _ in SCENES]:
             f0, f1 = SCENE_FRAMES[scene]
             start = f0 + ((k - f0) % len(gpus))
             cmd = [BLENDER, '-b', '--python', os.path.abspath(__file__), '--', '--scene', scene,
@@ -622,7 +806,7 @@ def render_frames(gpus, quick, samples, out):
     for x in th:
         x.join()
     need = sum(f1 - f0 for f0, f1 in SCENE_FRAMES.values())
-    have = len(glob.glob(os.path.join(out, '[jr]_*.png')))
+    have = len(glob.glob(os.path.join(out, '[bjpr]_*.png')))
     print('  frames %d/%d  %.1f min' % (have, need, (time.time() - t) / 60), flush=True)
     if have != need:
         sys.exit('assembly render incomplete, see render/build/logs/assembly_*_gpu*.log')
@@ -636,14 +820,12 @@ def _caption_frame(args):
     i, src, out = args
     from PIL import Image, ImageDraw, ImageFont, ImageFilter
     t = i / FPS
-    pj, pr = os.path.join(src, 'j_%04d.png' % i), os.path.join(src, 'r_%04d.png' % i)
-    if t < XFADE[0] or not os.path.exists(pr):
-        im = Image.open(pj).convert('RGBA')
-    elif t > XFADE[1] or not os.path.exists(pj):
-        im = Image.open(pr).convert('RGBA')
-    else:
-        a = smooth((t - XFADE[0]) / (XFADE[1] - XFADE[0]))
-        im = Image.blend(Image.open(pj).convert('RGBA'), Image.open(pr).convert('RGBA'), a)
+    live = [(n, t0, t1) for n, t0, t1 in SCENES if t0 <= t <= t1 and os.path.exists(os.path.join(src, '%s_%04d.png' % (PREFIX[n], i)))]
+    im = Image.open(os.path.join(src, '%s_%04d.png' % (PREFIX[live[0][0]], i))).convert('RGBA')
+    if len(live) > 1:                                # cross-fade: the later scene comes in over the overlap
+        n2, t0b, _ = live[1]
+        a = smooth((t - t0b) / max(live[0][2] - t0b, 1e-3))
+        im = Image.blend(im, Image.open(os.path.join(src, '%s_%04d.png' % (PREFIX[n2], i))).convert('RGBA'), a)
     W, H = im.size
     k = W / 1920.0
     f_txt = ImageFont.truetype(os.path.join(FONT_DIR, 'NotoSans-Regular.ttf'), int(34 * k))
@@ -656,7 +838,7 @@ def _caption_frame(args):
         a = caption_alpha(t, t0, t1)
         if a > 0:
             layers.append((a, num, txt))
-    ttl = max(caption_alpha(t, -1, 3.0, 0.5), caption_alpha(t, 22.1, DUR + 1, 0.5))
+    ttl = max(caption_alpha(t, -1, 3.0, 0.5), caption_alpha(t, DUR - 3.4, DUR + 1, 0.5))
     if layers or ttl > 0:
         ov = Image.new('RGBA', im.size, (0, 0, 0, 0))
         bg = Image.new('RGBA', im.size, (0, 0, 0, 0))
@@ -692,12 +874,12 @@ def encode(src, quick=False):
     pat = os.path.join(out, 'f_%04d.png')
     dst = MEDIA if not quick else os.path.join(BUILD, 'assembly_quick_out')
     os.makedirs(dst, exist_ok=True)
-    mp4 = os.path.join(dst, 'assembly.mp4')
-    gif = os.path.join(dst, 'assembly.gif')
+    mp4 = os.path.join(dst, OUT_NAME + '.mp4')
+    gif = os.path.join(dst, OUT_NAME + '.gif')
     run(['ffmpeg', '-y', '-framerate', str(FPS), '-i', pat, '-c:v', 'libx264', '-preset', 'slow', '-crf', '20',
          '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4], os.path.join(LOGS, 'assembly_mp4.log'))
     run(['ffmpeg', '-y', '-framerate', str(FPS), '-i', pat, '-vf',
-         'fps=8,scale=720:-2:flags=lanczos,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];'
+         'fps=6,scale=720:-2:flags=lanczos,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];'
          '[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif],   # < 10 MB
         os.path.join(LOGS, 'assembly_gif.log'))
     for f in (mp4, gif):

@@ -10,7 +10,7 @@ charging connector. Each step says which part, where it goes, which way round, a
   closed elastic loop and its printed slides;
 - a **slimmer, tapered case** with a crowned lid;
 - a **magnetic charging connector** in place of the printed charge clip;
-- flashing **once, through five soldered wires**, in place of the SWD jig;
+- flashing **once, through four soldered wires**, in place of the SWD jig;
 - a second bonding jig, the pedestal, for the base.
 
 ![The r2 module and band](img/r2_hero.jpg)
@@ -127,7 +127,7 @@ Retired in r2 and not ordered (`"order": false`): `strap_slide`, `charge_clip`, 
 
 ## Step 1: Flash and test the bare board (once, with soldered wires)
 
-The board is flashed through five soldered wires on its SWD pads, before assembly. To re-flash later, open
+The board is flashed through four soldered wires on its SWD pads, before assembly. To re-flash later, open
 the module, fold the board out and re-attach the wires (or leave them as short pigtails). Bluetooth
 updates (MCUboot + SMP) are planned but not yet in the firmware.
 

@@ -121,7 +121,7 @@ No ready-made USB cable matches this pair. One half must be wired to USB. A smal
 proximal end.
 
 Pogo pins (P50) are **no longer needed**. The SWD jig and the printed charge clip are retired. The
-bare board is flashed through five soldered wires on its SWD pads before assembly; to re-flash later, open the
+bare board is flashed through four soldered wires on its SWD pads (3V3, SWDIO, SWDCLK, GND) before assembly; to re-flash later, open the
 module, fold the board out and re-attach the wires (or leave them as short pigtails). Bluetooth updates (MCUboot +
 SMP) are planned, not yet in the firmware.
 
