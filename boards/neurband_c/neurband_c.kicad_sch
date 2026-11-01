@@ -6425,7 +6425,7 @@
 		(uuid "17573161-179a-575f-9cf8-9eb192c9a18c")
 	)
 	(junction
-		(at 191.77 53.34)
+		(at 180.34 52.07)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3c7d302d-9ae7-57a8-9355-dbc7bbe4c887")
@@ -6479,6 +6479,12 @@
 		(uuid "4f9d5ea4-666b-577a-b5d2-7e0673f01c61")
 	)
 	(junction
+		(at 187.96 46.99)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "523e41f5-12a2-4953-aa55-fd6f95ed1e48")
+	)
+	(junction
 		(at 269.24 99.06)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6503,7 +6509,7 @@
 		(uuid "6ac40f92-dd26-420a-bac0-6e91d2624536")
 	)
 	(junction
-		(at 191.77 48.26)
+		(at 180.34 46.99)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "711f60f2-78b0-595e-bffb-b20b0f264f02")
@@ -6533,13 +6539,13 @@
 		(uuid "7e2e06f3-fa96-5ded-8ac9-9d4b9b0169c3")
 	)
 	(junction
-		(at 184.15 48.26)
+		(at 172.72 46.99)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "830867f2-d1d0-423e-a476-059e9dc46070")
 	)
 	(junction
-		(at 184.15 53.34)
+		(at 172.72 52.07)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a2031736-3a90-4c16-9618-6282df5a98c3")
@@ -6585,6 +6591,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d872add3-dd34-584b-9771-9a75788b3b0b")
+	)
+	(junction
+		(at 187.96 52.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "de34c029-4140-45a7-9a09-2eb3e366e2b1")
 	)
 	(junction
 		(at 101.6 259.08)
@@ -7220,6 +7232,16 @@
 	)
 	(wire
 		(pts
+			(xy 187.96 46.99) (xy 194.31 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "445a8f7f-8132-4003-a60f-878ebf01b568")
+	)
+	(wire
+		(pts
 			(xy 335.28 40.64) (xy 337.82 40.64)
 		)
 		(stroke
@@ -7680,7 +7702,7 @@
 	)
 	(wire
 		(pts
-			(xy 184.15 53.34) (xy 199.39 53.34)
+			(xy 172.72 52.07) (xy 187.96 52.07)
 		)
 		(stroke
 			(width 0)
@@ -7720,7 +7742,7 @@
 	)
 	(wire
 		(pts
-			(xy 181.61 53.34) (xy 184.15 53.34)
+			(xy 170.18 52.07) (xy 172.72 52.07)
 		)
 		(stroke
 			(width 0)
@@ -8020,6 +8042,16 @@
 	)
 	(wire
 		(pts
+			(xy 187.96 52.07) (xy 194.31 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a88b618d-f93c-4f73-8dbe-b971fa27d050")
+	)
+	(wire
+		(pts
 			(xy 304.8 60.96) (xy 304.8 48.26)
 		)
 		(stroke
@@ -8220,7 +8252,7 @@
 	)
 	(wire
 		(pts
-			(xy 184.15 48.26) (xy 199.39 48.26)
+			(xy 172.72 46.99) (xy 187.96 46.99)
 		)
 		(stroke
 			(width 0)
@@ -8420,7 +8452,7 @@
 	)
 	(wire
 		(pts
-			(xy 181.61 48.26) (xy 184.15 48.26)
+			(xy 170.18 46.99) (xy 172.72 46.99)
 		)
 		(stroke
 			(width 0)
@@ -10241,7 +10273,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 191.77 50.8 0)
+		(at 180.34 49.53 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -10251,7 +10283,7 @@
 		(dnp no)
 		(uuid "025e4404-0f97-5cd5-8a14-8724311a0d0c")
 		(property "Reference" "C8"
-			(at 193.67 50.2 0)
+			(at 182.24 48.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10262,7 +10294,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 193.67 52.7 0)
+			(at 182.24 51.43 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10273,7 +10305,7 @@
 			)
 		)
 		(property "Footprint" "neurband:Avizo_C_0402_Small"
-			(at 191.77 54.8 0)
+			(at 180.34 53.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10284,7 +10316,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 191.77 56.8 0)
+			(at 180.34 55.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10295,7 +10327,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 191.77 50.8 0)
+			(at 180.34 49.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10305,7 +10337,7 @@
 			)
 		)
 		(property "MPN" "CL05B104KO5NNNC"
-			(at 191.77 58.8 0)
+			(at 180.34 57.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10316,7 +10348,7 @@
 			)
 		)
 		(property "LCSC" "C1525"
-			(at 191.77 60.8 0)
+			(at 180.34 59.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14317,7 +14349,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 181.61 48.26 0)
+		(at 170.18 46.99 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -14327,7 +14359,7 @@
 		(dnp no)
 		(uuid "45013e12-f82f-50e6-a2e7-ab0c39b07142")
 		(property "Reference" "#PWR013"
-			(at 181.61 48.26 0)
+			(at 170.18 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14338,7 +14370,7 @@
 			)
 		)
 		(property "Value" "+3V3A"
-			(at 181.61 44.45 0)
+			(at 170.18 43.18 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14348,7 +14380,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 181.61 52.26 0)
+			(at 170.18 50.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14359,7 +14391,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 181.61 54.26 0)
+			(at 170.18 52.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14370,7 +14402,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 181.61 48.26 0)
+			(at 170.18 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15518,7 +15550,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 199.39 50.8 0)
+		(at 187.96 49.53 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15528,7 +15560,7 @@
 		(dnp no)
 		(uuid "5b67ec46-885b-495f-9572-abec2d4fe296")
 		(property "Reference" "C9"
-			(at 201.29 50.2 0)
+			(at 189.86 48.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15539,7 +15571,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 201.29 52.7 0)
+			(at 189.86 51.43 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15550,7 +15582,7 @@
 			)
 		)
 		(property "Footprint" "neurband:Avizo_C_0402_Small"
-			(at 199.39 54.8 0)
+			(at 187.96 53.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15561,7 +15593,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 199.39 56.8 0)
+			(at 187.96 55.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15572,7 +15604,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 199.39 50.8 0)
+			(at 187.96 49.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15582,7 +15614,7 @@
 			)
 		)
 		(property "MPN" "CL05A105KA5NQNC"
-			(at 199.39 58.8 0)
+			(at 187.96 57.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15593,7 +15625,7 @@
 			)
 		)
 		(property "LCSC" "C52923"
-			(at 199.39 60.8 0)
+			(at 187.96 59.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16587,6 +16619,108 @@
 			(project "neurband_c"
 				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
 					(reference "#PWR079")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
+		(at 194.31 49.53 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "732e47d1-44b0-4f4e-9fb0-de98f9c3179a")
+		(property "Reference" "C35"
+			(at 196.21 48.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 196.21 51.43 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "neurband:Avizo_C_0402_Small"
+			(at 194.31 53.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 194.31 55.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 194.31 49.53 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL05A105KA5NQNC"
+			(at 194.31 57.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C52923"
+			(at 194.31 59.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1dc00813-aa85-4736-ba53-55e799732404")
+		)
+		(pin "2"
+			(uuid "a4d55552-c5ec-4f9e-9cf2-8047696431e9")
+		)
+		(instances
+			(project "neurband_c"
+				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
+					(reference "C35")
 					(unit 1)
 				)
 			)
@@ -17716,7 +17850,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 181.61 53.34 0)
+		(at 170.18 52.07 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -17726,7 +17860,7 @@
 		(dnp no)
 		(uuid "80adeb9f-6f32-5fc4-aeb0-145de815b3e2")
 		(property "Reference" "#PWR014"
-			(at 181.61 53.34 0)
+			(at 170.18 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17737,7 +17871,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 181.61 57.15 0)
+			(at 170.18 55.88 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17747,7 +17881,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 181.61 57.34 0)
+			(at 170.18 56.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17758,7 +17892,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 181.61 59.34 0)
+			(at 170.18 58.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17769,7 +17903,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 181.61 53.34 0)
+			(at 170.18 52.07 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21572,7 +21706,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 184.15 50.8 0)
+		(at 172.72 49.53 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -21582,7 +21716,7 @@
 		(dnp no)
 		(uuid "c82e997a-e391-52c8-8e9f-79b18723a318")
 		(property "Reference" "C7"
-			(at 186.05 50.2 0)
+			(at 174.62 48.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21593,7 +21727,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 186.05 52.7 0)
+			(at 174.62 51.43 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21604,7 +21738,7 @@
 			)
 		)
 		(property "Footprint" "neurband:Avizo_C_0402_Small"
-			(at 184.15 54.8 0)
+			(at 172.72 53.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21615,7 +21749,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 184.15 56.8 0)
+			(at 172.72 55.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21626,7 +21760,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 184.15 50.8 0)
+			(at 172.72 49.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21636,7 +21770,7 @@
 			)
 		)
 		(property "MPN" "CL05A105KA5NQNC"
-			(at 184.15 58.8 0)
+			(at 172.72 57.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21647,7 +21781,7 @@
 			)
 		)
 		(property "LCSC" "C52923"
-			(at 184.15 60.8 0)
+			(at 172.72 59.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

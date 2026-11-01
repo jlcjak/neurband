@@ -43,6 +43,17 @@ Coordinates: board frame, mm from the outline's top-left.
 | 5 | Sol, power, analog | **ADS1298 bypass not local**: AVDD1 (pin 54, the charge pump) has no cap of its own (C33 is 4.7-6 mm of copper away, next to pin 56); right-side AVDD pins 17-22 reach C7/C8 through 6-9 mm and 2-3 vias; VREFP's 100 nF (C1) is 6.5 mm away | Outside TI's layout guidance; in-band effect likely negligible but unmeasured | Move C33 to pins 54/53 and C1 to pins 24/25; add or move a 100 nF to the right-side AVDD pins and tie pins 17/18 to 19 on F.Cu |
 | 6 | Power | **J3 charge input has no protection**: no TVS, C24 sits after U4's pin, J3 is exposed on the bottom, and the new case charges through a magnetic pogo connector (a bouncing hot-plug) | TP4054 VCC abs max is 10 V; its datasheet warns hot-plugging into an MLCC can ring above that: a dead charger | Schematic: add a 5 V TVS (SOD-523/0402 class) at VCHG and 1-1.5 ohm in series; route J3 -> C24 -> U4 pin 4 |
 
+### Status (2026-11-01, evening)
+
+| # | Status |
+|---|---|
+| 1 | Done: the owner's 13 vias kept; 16 paste windows, 52.7 % of the EP, identical in all four quadrants, >= 0.127 mm from every via land and 0.1 mm inside the EP edge (board and library footprint) |
+| 2 | Done: C21 back at -90 deg (ANT pad on the ANT line at y 5.5, GND pad at (4.8, 6.4)), F.Cu to VSS pin 31, via at (5.33, 4.50) removed. The rotation came from a hand edit on 2026-10-31 02:20 (KiCad local history) |
+| 3 | Owner adds the stitching vias |
+| 4 | Mask at 1:1 (no expansion) with a 0.13 mm minimum web (the fab's black-mask limit): every different-net pad pair keeps a dam (thinnest 0.141 mm, C9/C33). Same-net vias in or touching pad openings stay as the owner chose |
+| 5 | Accepted by the owner: right-side AVDD now on a +3V3A pour with C8 0.5 mm and C35 0.3-0.6 mm from pins 17-22; C1 0.10 mm from VREFP; AVDD1 pin 54 left as is |
+| 6 | Dropped by the owner |
+
 ## Worth doing (notes)
 
 - **Copper near the edge** (manufacturability): In1/In2 come to 0.30 mm from every edge (old: 0.50); /ADC_PWDN runs 0.30 mm from the top edge, VBAT 0.325 mm; ceramics within 0.4-0.7 mm of the right edge (C26, C1, C2, C25, C5, C6). When the fab breaks off its rails, caps that close can crack. Set a 0.5 mm zone-to-edge rule, pull the two edge tracks in, and ask for rails on the y = 0 and y = 27 edges only.
