@@ -4,7 +4,7 @@
 Exports each copper layer and the outline with kicad-cli (SVG, board area only), rasterises them with
 rsvg-convert and composes a 2 x 2 image, all layers seen from the top:
 
-  python3 tools/copper_layers.py [out.png]       # default docs/media/board_layers.png
+  python3 tools/copper_layers.py [out.png]       # default docs/media/board_layers_r2.png
 """
 import os, subprocess, sys, tempfile
 import numpy as np
@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCB = os.path.join(ROOT, 'boards/neurband_c/neurband_c.kicad_pcb')
 KCLI = os.environ.get('KICAD_CLI', os.path.expanduser('~/.backplane-bend/kicad/10.99.0-bp.4/bin/kicad-cli'))
-OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'docs/media/board_layers.png')
+OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'docs/media/board_layers_r2.png')
 
 LAYERS = [('F.Cu', 'L1  F.Cu', 'parts and most signal routing'),
           ('In1.Cu', 'L2  In1.Cu', 'solid GND reference plane'),

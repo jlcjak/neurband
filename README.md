@@ -35,11 +35,11 @@ The boards as laid out (KiCad renders, main board top and bottom; 28.7 × 27 mm)
 
 | | |
 |---|---|
-| ![](docs/media/board_top.png) | ![](docs/media/board_bottom.png) |
+| ![](docs/media/board_top_r2.png) | ![](docs/media/board_bottom_r2.png) |
 
 All four copper layers (`python3 tools/copper_layers.py`):
 
-![four copper layers of the main board](docs/media/board_layers.png)
+![four copper layers of the main board](docs/media/board_layers_r2.png)
 
 A 1080 × 1350 turntable video is in [docs/media/turntable.mp4](docs/media/turntable.mp4).
 All images are rendered from the real CAD and KiCad files with `python3 render/make_renders.py` (Blender Cycles);
