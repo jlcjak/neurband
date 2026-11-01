@@ -51,3 +51,7 @@ extra/wrists/*.step
 mfg/
 render/out/
 render/scenes/
+# local backups and editor history
+.archive/backups/
+**/.history/
+**/_restore_backup_*/

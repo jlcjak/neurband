@@ -1,0 +1,7 @@
+Closed low-fidelity visual model; no open-actuator clearance specified.
+DarkHousing: valid; solids=1; X -7.2000..7.2000 Y -5.4075..-0.2875 Z 0.1000..2.0000
+ClosedCreamFlipbar: valid; solids=1; X -6.8500..6.8500 Y -5.3575..-3.1375 Z 1.1400..2.0000
+TwentyBottomContacts: valid; solids=20; X -4.9000..4.9000 Y -5.1500..0.4800 Z 0.0200..0.4800
+SolderAnchors: valid; solids=2; X -7.0200..7.0200 Y -3.5750..-1.5750 Z 0.0200..0.6900
+Exported FCStd and color-preserving STEP via ImportGui.export.
+Model origin: signal-row centre at PCB surface; +X pin1->20; -Y mouth; +Z up. KiCad model offset=(0,0,0), rotation=(0,0,0), scale=(1,1,1).

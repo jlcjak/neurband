@@ -1,18 +1,19 @@
 {
-  "kind": "pcb",
+  "kind": "flex",
   "name": "Electrode flex rev C",
   "source": "neurband_c_flex.kicad_pcb",
   "qty": 5,
   "options": {
     "layers": 2,
-    "thickness_mm": 0.4,
-    "finish": "enig"
+    "thickness_mm": 0.11,
+    "coverlay": "yellow",
+    "stiffener": "polyimide_0.225",
+    "emi_shield": "none",
+    "gold_uin": 2
   },
   "features": {
     "width_mm": 133.1,
     "height_mm": 38.5,
     "min_drill_mm": 0.3
-  },
-  "order": false,
-  "note": "Not orderable through the rigid-board flow: this is a 2-layer polyimide flex (coverlay both sides, ENIG, PI stiffener to 0.30 mm at the fingers). Order it from a flex-PCB service with the notes in boards/neurband_c_flex/ORDERING.md; the options above are only a rigid-board placeholder."
+  }
 }

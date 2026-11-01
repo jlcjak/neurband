@@ -1,0 +1,26 @@
+"""Low-fidelity QFAA package envelope; copper remains footprint-defined."""
+import FreeCAD as App
+import Part, ImportGui, os, traceback
+from pathlib import Path
+# Millimetres. 0.9 mm visualization; reserve 1.0 mm for this package in mechanics.
+BODY_X=6.0; BODY_Y=6.0; HEIGHT=.9; LEAD_T=.1; PITCH=.4; EP=4.6
+folder=Path(os.environ.get('NEURBAND_ROOT', os.path.expanduser('~/neurband'))) / 'boards/neurband_c/layout/models'
+try:
+ d=App.newDocument('NRF52832_QFAA')
+ body=d.addObject('PartDesign::Feature','BlackMould');body.Shape=Part.makeBox(BODY_X,BODY_Y,HEIGHT-LEAD_T,App.Vector(-3,-3,LEAD_T))
+ pads=[]
+ for k in range(12):
+  c=-2.2+k*PITCH
+  pads.extend([Part.makeBox(.4,.2,LEAD_T,App.Vector(-3,c-.1,0)),Part.makeBox(.4,.2,LEAD_T,App.Vector(2.6,c-.1,0)),Part.makeBox(.2,.4,LEAD_T,App.Vector(c-.1,-3,0)),Part.makeBox(.2,.4,LEAD_T,App.Vector(c-.1,2.6,0))])
+ pads.append(Part.makeBox(EP,EP,LEAD_T,App.Vector(-EP/2,-EP/2,0)))
+ metal=d.addObject('PartDesign::Feature','LeadsAndEP');metal.Shape=Part.makeCompound(pads)
+ dot=d.addObject('PartDesign::Feature','PinOneDot');dot.Shape=Part.makeCylinder(.16,.005,App.Vector(-2.35,2.35,HEIGHT))
+ d.recompute()
+ for o,c in [(body,(.055,.055,.06)),(metal,(.65,.66,.68)),(dot,(.55,.55,.57))]:
+  if not o.Shape.isValid():raise RuntimeError('Invalid '+o.Name)
+  o.ViewObject.ShapeColor=c
+ d.recompute();d.saveAs(str(folder/'NRF52832_QFAA.FCStd'));ImportGui.export([body,metal,dot],str(folder/'NRF52832_QFAA.step'))
+ (folder/'NRF52832_QFAA.log').write_text('Valid 6x6x0.9 mm low-fidelity package model, EP4.6, pitch0.4. Reserve1.0mm mechanical height; not a detailed vendor model.\n')
+except Exception:
+ (folder/'NRF52832_QFAA.log').write_text(traceback.format_exc());os._exit(1)
+os._exit(0)

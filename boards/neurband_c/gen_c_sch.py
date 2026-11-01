@@ -13,10 +13,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 s = Schematic("neurband rev C: 8-ch sEMG, nRF52832 BLE, ADS1298", paper="User 420 310", project="neurband_c")
 
 FP = {
-    "R0402": "Resistor_SMD:R_0402_1005Metric",
-    "C0402": "Capacitor_SMD:C_0402_1005Metric",
-    "C0603": "Capacitor_SMD:C_0603_1608Metric",
-    "L0402": "Inductor_SMD:L_0402_1005Metric",
+    "R0402": "neurband:Avizo_R_0402_Small",
+    "C0402": "neurband:Avizo_C_0402_Small",
+    "C0603": "neurband:Avizo_C_0603_Small",
+    "L0402": "neurband:Avizo_L_0402_Small",
     "LED": "LED_SMD:LED_0603_1608Metric",
     "RN": "neurband:R_Array_Convex_4x0603_FabZero",
 }
@@ -306,12 +306,12 @@ for p, net in (("SWDIO", "SWDIO"), ("SWDCLK", "SWDCLK"), ("P0.21/~{RESET}", "NRS
     s.pin_label(u1, p, net)
 GPIO = {"P0.06": "ADC_CS", "P0.07": "SPI_SCK", "P0.08": "SPI_MOSI", "P0.11": "SPI_MISO", "P0.12": "ADC_DRDY",
         "P0.13": "ADC_START", "P0.14": "ADC_PWDN", "P0.15": "LED", "P0.16": "BUTTON", "P0.17": "CHG_N",
-        "P0.02/AIN0": "VBAT_SENSE", "P0.03/AIN1": "I2C_SDA", "P0.04/AIN2": "I2C_SCL", "P0.24": "IMU_INT"}
+        "P0.28/AIN4": "VBAT_SENSE", "P0.03/AIN1": "I2C_SDA", "P0.04/AIN2": "I2C_SCL", "P0.31/AIN7": "IMU_INT"}
 for p, net in GPIO.items():
     s.pin_label(u1, p, net)
-for p in ("P0.00/XL1", "P0.01/XL2", "P0.05/AIN3", "NFC1/P0.09", "NFC2/P0.10",
-          "P0.18/SWO", "P0.19", "P0.20", "P0.22", "P0.23", "P0.25", "P0.26", "P0.27", "P0.28/AIN4",
-          "P0.29/AIN5", "P0.30/AIN6", "P0.31/AIN7", "44"):
+for p in ("P0.00/XL1", "P0.01/XL2", "P0.02/AIN0", "P0.05/AIN3", "NFC1/P0.09", "NFC2/P0.10",
+          "P0.18/SWO", "P0.19", "P0.20", "P0.22", "P0.23", "P0.24", "P0.25", "P0.26", "P0.27",
+          "P0.29/AIN5", "P0.30/AIN6", "44"):
     s.pin_nc(u1, p)
 s.rect(229.87, 25.4, 401.32, 160.02, fill=COL["mcu"], title="MCU + BLE: nRF52832 (chip-down, printed antenna)")
 s.text("RF: ANT -> L/C match (Nordic ref.) -> pi tuning pads (0R + 2 DNP) -> TI SWRA117D antenna.", 238.76, 157.48)

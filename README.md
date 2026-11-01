@@ -96,10 +96,9 @@ A first prototype costs around $300 (≈ $290–350 for five main boards with tw
 the prints and the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)). Most of it is the ADS1298 and the
 fab's assembly fees.
 
-1. **Order** three things:
-   - the assembled main board and the prints, with **Buy it** in Backplane
-     (`boards/neurband_c/ORDERING.md`, `mech/rev_c/*.fab.json`);
-   - the electrode flex, from a flex-PCB service (`boards/neurband_c_flex/ORDERING.md`);
+1. **Order** two things:
+   - the assembled main board, the electrode flex and the prints, with **Buy it** in Backplane
+     (`boards/neurband_c/ORDERING.md`, `boards/neurband_c_flex/ORDERING.md`, `mech/rev_c/*.fab.json`);
    - about EUR 60 of off-the-shelf parts ([docs/build/sourcing.md](docs/build/sourcing.md)): 20 mm
      elastic, 6 mm foam dots, a 401223 LiPo, pogo pins, a Pico 2 as the SWD probe and an nRF52840
      dongle.

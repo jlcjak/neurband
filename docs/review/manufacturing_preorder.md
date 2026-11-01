@@ -4,6 +4,8 @@ Date: 2026-10-28, re-checked 2026-10-29 on the reworked boards (next section). O
 
 **Read-only.** No `.kicad_*` file, generator, layout script, BOM or fab.json was edited. Everything that writes (zone refill, `--save-board`, Gerber, drill, position and IPC-D-356 exports) ran on copies in a temporary directory. The only file written in the repo is this report.
 
+**Update 2026-10-30.** The flex is now ordered through Buy it as `"kind": "flex"`: 2 layers, 0.11 mm, yellow coverlay, a `polyimide_0.225` stiffener and 2 µ" ENIG. Its stiffener layer `User.2` is named `Stiffener`, so a plain Gerber export includes it. Its copper is unchanged and its DRC is 0/0/0. This replaces the `order: false` notes below (§ R3, the flex fab-file items). The main board is unrouted for the owner to route, and its fab file is `order: false` until it passes a new review.
+
 Electrical design (bypassing, analogue noise, antenna) is out of scope, except where it sets a manufacturing parameter (the stackup). For that topic see `docs/review/sol_preorder_review.md`.
 
 ## Final delta check (2026-10-29)

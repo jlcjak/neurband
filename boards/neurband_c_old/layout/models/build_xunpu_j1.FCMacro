@@ -1,0 +1,87 @@
+"""Closed XUNPU FPC-05F-20PH20 visual model, dimensions in mm.
+Run with QT_QPA_PLATFORM=offscreen FreeCAD build_xunpu_j1.FCMacro.
+Source: ../XUNPU_FPC-05F-20PH20.png and ../j1_review.md.
+Drawing-backed: 14.40 width, 5.12 depth, 2.00 closed height,
+10.60 mouth width, twenty 0.50-pitch contacts. Registration to pads is
+secondary-artwork inferred: body PCB Y=0.2875..5.4075.
+Undimensioned internal details, metal thicknesses, latch split and colors
+are illustrative only, not manufacturing geometry. No open-state claim.
+STEP coordinates: +X pin 1 toward pin 20, -Y toward cable mouth, +Z up.
+This maps to KiCad footprint +Y mouth with zero model offset/rotation.
+"""
+import os
+import traceback
+import FreeCAD as App
+import FreeCADGui as Gui
+import Part
+import ImportGui
+
+ROOT = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals() else os.path.join(os.environ.get('NEURBAND_ROOT', os.path.expanduser('~/neurband')), 'boards/neurband_c/layout/models')
+LOG = os.path.join(ROOT, 'XUNPU_FPC-05F-20PH20.log')
+
+def box(x, y, z, dx, dy, dz):
+    # Input Y follows PCB-top-view coordinates; model uses right-handed Z-up.
+    return Part.makeBox(dx, dy, dz, App.Vector(x, -y-dy, z))
+
+def feature(doc, name, shape, color):
+    obj = doc.addObject('PartDesign::Feature', name)
+    obj.Shape = shape
+    obj.ViewObject.ShapeColor = color
+    obj.ViewObject.LineColor = color
+    return obj
+
+try:
+    doc = App.newDocument('XUNPU_FPC_05F_20PH20')
+    # Dark moulded housing, front socket and shallow actuator recess.
+    housing = box(-7.2, 0.2875, 0.10, 14.4, 5.12, 1.90)
+    housing = housing.cut(box(-5.3, 2.4075, 0.30, 10.6, 3.10, 0.40))
+    housing = housing.cut(box(-6.65, 3.0875, 1.10, 13.30, 2.42, 1.00))
+    body = feature(doc, 'DarkHousing', housing, (0.095, 0.10, 0.11))
+    # Closed cream latch spans the mouth; side pivots remain within envelope.
+    latch = box(-6.6, 3.1375, 1.14, 13.2, 2.22, 0.86)
+    latch = latch.fuse(box(-6.85, 3.1375, 1.14, 0.25, 0.85, 0.65))
+    latch = latch.fuse(box(6.6, 3.1375, 1.14, 0.25, 0.85, 0.65))
+    # A small grip relief is visible on the front edge, not a cable envelope.
+    latch = latch.cut(box(-1.1, 5.1575, 1.14, 2.2, 0.30, 0.25))
+    bar = feature(doc, 'ClosedCreamFlipbar', latch, (0.84, 0.81, 0.65))
+    contacts = []
+    for n in range(20):
+        x = -4.75 + 0.5*n
+        # Exposed solder tails and low bottom-contact strips inside the socket.
+        tail = box(x-0.15, -0.48, 0.02, 0.30, 0.96, 0.15)
+        neck = box(x-0.10, 0.35, 0.08, 0.20, 0.48, 0.40)
+        strip = box(x-0.10, 0.65, 0.26, 0.20, 4.50, 0.10)
+        contacts.append(tail.fuse(neck).fuse(strip))
+    pins = feature(doc, 'TwentyBottomContacts', Part.makeCompound(contacts), (0.76, 0.65, 0.35))
+    anchors = []
+    for x in (-6.44, 6.44):
+        foot = box(x-0.58, 1.575, 0.02, 1.16, 2.00, 0.14)
+        upright = box(x-0.58, 1.575, 0.14, 0.14, 2.00, 0.55)
+        anchors.append(foot.fuse(upright))
+    metal = feature(doc, 'SolderAnchors', Part.makeCompound(anchors), (0.68, 0.70, 0.73))
+    doc.recompute()
+    objects = [body, bar, pins, metal]
+    lines = ['Closed low-fidelity visual model; no open-actuator clearance specified.']
+    for obj in objects:
+        if obj.Shape.isNull() or not obj.Shape.isValid():
+            raise RuntimeError('Invalid shape: ' + obj.Name)
+        b = obj.Shape.BoundBox
+        lines.append('%s: valid; solids=%d; X %.4f..%.4f Y %.4f..%.4f Z %.4f..%.4f' % (obj.Name, len(obj.Shape.Solids), b.XMin,b.XMax,b.YMin,b.YMax,b.ZMin,b.ZMax))
+    b = body.Shape.BoundBox
+    assert abs(b.XLength-14.4)<1e-6 and abs(b.YLength-5.12)<1e-6
+    assert abs(b.ZMax-2.0)<1e-6 and abs(bar.Shape.BoundBox.ZMax-2.0)<1e-6
+    Gui.activeDocument().activeView().viewAxonometric()
+    Gui.activeDocument().activeView().fitAll()
+    doc.recompute()
+    doc.saveAs(os.path.join(ROOT, 'XUNPU_FPC-05F-20PH20.FCStd'))
+    ImportGui.export(objects, os.path.join(ROOT, 'XUNPU_FPC-05F-20PH20.step'))
+    lines.append('Exported FCStd and color-preserving STEP via ImportGui.export.')
+    lines.append('Model origin: signal-row centre at PCB surface; +X pin1->20; -Y mouth; +Z up. KiCad model offset=(0,0,0), rotation=(0,0,0), scale=(1,1,1).')
+    with open(LOG, 'w') as stream:
+        stream.write('\n'.join(lines)+'\n')
+except Exception:
+    with open(LOG, 'w') as stream:
+        stream.write(traceback.format_exc())
+finally:
+    App.closeDocument(App.ActiveDocument.Name) if App.ActiveDocument else None
+    Gui.getMainWindow().close()

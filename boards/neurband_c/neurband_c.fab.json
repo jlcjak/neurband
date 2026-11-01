@@ -13,5 +13,7 @@
     "width_mm": 28.7,
     "height_mm": 27.0,
     "min_drill_mm": 0.3
-  }
+  },
+  "order": false,
+  "note": "Unrouted: the owner is routing this board. Set order back to true after routing, DRC and a new manufacturing review."
 }

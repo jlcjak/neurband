@@ -31,7 +31,7 @@ fab's quote before payment.
 | Parts for 2 boards (ADS1298 $20, nRF52832 $4, LSM6DSL $2.6, rest ~$0.9 each) | ~$55 | all in the fab's stock |
 | Shipping, main board + prints (one parcel) | $20–30 | import duties/tariffs depend on your country and are not included |
 | **Main-board order** | **~$165–185** | |
-| Electrode flex, 2-layer polyimide, ENIG, PI stiffener, 5 pcs | $25–50 + shipping $15–25 | ordered separately from a flex service ([ORDERING.md](../../boards/neurband_c_flex/ORDERING.md)) |
+| Electrode flex, 2-layer polyimide, ENIG, PI stiffener, 5 pcs | $25–50 + shipping $15–25 | its own **Buy it** order ([ORDERING.md](../../boards/neurband_c_flex/ORDERING.md)); a flex ships separately from rigid boards |
 | 3D prints: module base, lid, button cap, 2 strap slides, charge clip (MJF PA12) | $15–25 | the six TPU pods and the two jigs can be printed at home (FDM) |
 | Protected LiPo 401223-class, ~130 mAh (≤ 4 × 12 × 25 mm incl. protection board), ×2 | ~€24 | a "401225" is ~27 mm with its board and does not fit ([sourcing.md](../build/sourcing.md)) |
 | 20 × 1.5 mm woven elastic webbing, 1–2 m | ~€5 | the strap: no hook-and-loop, no sewing |

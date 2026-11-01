@@ -148,9 +148,9 @@ The script also checks the FIR response and the float32 rounding error.
 | P0.15 | LED | active low (LED from +3V3 via 1 kΩ into the pin, ~1.4 mA) |
 | P0.16 | BUTTON | to GND, internal pull-up. Press = marker; hold 3 s = System OFF; wakes from System OFF |
 | P0.17 | CHG_N | TP4054 CHRG (open drain, low = charging), internal pull-up. Interlock; wakes from System OFF |
-| P0.02 / AIN0 | VBAT_SENSE | VBAT/2 (1 M/1 M + 100 nF), SAADC gain 1/6, 0.6 V ref, 12 bit, 4× oversampling |
+| P0.28 / AIN4 | VBAT_SENSE | VBAT/2 (1 M/1 M + 100 nF), SAADC gain 1/6, 0.6 V ref, 12 bit, 4× oversampling |
 | P0.03 / P0.04 | I2C_SDA / I2C_SCL | TWI0, 400 kHz, LSM6DSL at 0x6A (SA0 low, CS high); moved off P0.22/P0.23 (near-radio low-drive bank) during layout |
-| P0.24 | IMU_INT | LSM6DSL INT1, rising edge (data-ready pulse) |
+| P0.31 / AIN7 | IMU_INT | LSM6DSL INT1, rising edge (data-ready pulse) |
 | P0.21 | NRST | reset pad (`gpio-as-nreset` from the DK) |
 | SWDIO / SWDCLK | — | SWD pads |
 

@@ -259,7 +259,7 @@ class Board:
               (polygon (pts {pts})))''')
 
     def save(self,path):
-        layers=[(0,'F.Cu','signal'),(31,'B.Cu','signal'),(36,'B.SilkS','user'),(37,'F.SilkS','user'),(38,'B.Mask','user'),(39,'F.Mask','user'),(44,'Edge.Cuts','user'),(48,'B.Fab','user'),(49,'F.Fab','user'),(50,'User.1','user'),(51,'User.2','user')]
+        layers=[(0,'F.Cu','signal'),(31,'B.Cu','signal'),(36,'B.SilkS','user'),(37,'F.SilkS','user'),(38,'B.Mask','user'),(39,'F.Mask','user'),(44,'Edge.Cuts','user'),(48,'B.Fab','user'),(49,'F.Fab','user'),(50,'User.1','user'),(51,'User.2','user "Stiffener"')]  # named so the Gerber is "...-Stiffener.gbr"
         header=f'''(kicad_pcb (version 20241229) (generator "neurband_flex_c")
           (general (thickness 0.099)) (paper "A3")
           (layers {' '.join(f'({n} "{name}" {kind})' for n,name,kind in layers)})
@@ -678,14 +678,14 @@ def fabrication_metadata(path):
     features={'width_mm':round(max(p[0] for p in points)-min(p[0] for p in points),6),
               'height_mm':round(max(p[1] for p in points)-min(p[1] for p in points),6),
               'min_drill_mm':min(drills)}
-    metadata={'kind':'pcb','name':'Electrode flex rev C','source':path.name,'qty':5,
-              'options':{'layers':2,'thickness_mm':0.4,'finish':'enig'},'features':features}
+    metadata={'kind':'flex','name':'Electrode flex rev C','source':path.name,'qty':5,
+              'options':{'layers':2,'thickness_mm':0.11,'coverlay':'yellow','stiffener':'polyimide_0.225',
+                         'emi_shield':'none','gold_uin':2},'features':features}
     manifest=path.with_suffix('.fab.json')
     if manifest.exists():
         previous=json.loads(manifest.read_text())
         previous['features']=features
         metadata=previous
-    metadata['order']=False
     manifest.write_text(json.dumps(metadata,indent=2)+'\n')
     return features
 

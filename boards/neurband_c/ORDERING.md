@@ -14,6 +14,10 @@ below is what that order has to be; the evidence is in
 | Placement | The footprints of U1, U2, U3, U4 and RN1–RN4 carry the fab's 0° orientation, and J1's anchor is its pad centre, so the raw position file is already in the fab's convention. Pin-1 dots (and D1's cathode bar) are on the silkscreen; the raw position file and actual pad numbering are the assembly authority. Do **not** apply a rotation database on top |
 | DNP | C22, C23 (antenna tuning shunts) are not fitted; R3 is 0 Ω |
 
-The electrode flex is **not** part of this order: the rigid-board flow cannot express a polyimide flex
-(see [../neurband_c_flex/ORDERING.md](../neurband_c_flex/ORDERING.md)). Printed parts are ordered
-from their own `mech/rev_c/*.fab.json`.
+**Status (2026-11-01): on hold.** The owner re-routed the board (DRC: 0 unconnected, 0 parity; only
+library-mismatch warnings). Its fab file stays `"order": false` until the new routing passes a
+manufacturing review; then set it back to `true`.
+The routed and reviewed layout is kept in `boards/neurband_c_old/` (not ordered).
+
+The electrode flex is its own Buy it order ([../neurband_c_flex/ORDERING.md](../neurband_c_flex/ORDERING.md)).
+Printed parts are ordered from their own `mech/rev_c/*.fab.json`.

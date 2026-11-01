@@ -124,11 +124,9 @@ What you probably already have:
 
 **What to order through Backplane.** Press **Buy it** in Backplane for:
 - the assembled main board ([boards/neurband_c/ORDERING.md](../../boards/neurband_c/ORDERING.md));
+- the electrode flex ([boards/neurband_c_flex/ORDERING.md](../../boards/neurband_c_flex/ORDERING.md):
+  0.11 mm polyimide, ENIG, a PI stiffener only under the fingers, none in the tail bend);
 - the printed parts, which are the `mech/rev_c/*.fab.json` files listed under Printing below.
-
-**What to order from a flex service.** The electrode flex is a separate order from a flex-PCB service.
-Follow [boards/neurband_c_flex/ORDERING.md](../../boards/neurband_c_flex/ORDERING.md) (0.11 mm
-polyimide, ENIG, no stiffener in the tail bend).
 
 ## Printing
 
@@ -275,7 +273,7 @@ the band; they are not part of it.
 1. Put the strip down, base the right way up. Hold the board **upright above the base's J1 end**,
    with J1 at the bottom and its mouth down. Let the cell hang beside the module on its leads.
 2. **Flip J1's latch up** (a). Push the tail in square until it stops, with its **gold fingers
-   toward the board**, on the side of the **DOWN** mark. J1's contacts are on the board side (section).
+   toward the board**: J1's contacts are on the board side (section). J1's pin 1 end has a dot.
 3. **Press the latch down** (b).
 
 ### 4.2 Book-fold the board down

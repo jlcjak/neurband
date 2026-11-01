@@ -41,7 +41,7 @@
 		led-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;		/* D1 from +3V3 via 1k into the pin */
 		button-gpios = <&gpio0 16 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;	/* SW1 to GND */
 		chg-gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;	/* TP4054 CHRG, open drain */
-		io-channels = <&adc 0>;					/* VBAT/2 on AIN0 */
+		io-channels = <&adc 0>;					/* VBAT/2 on AIN4 (P0.28, U1 pin 40) */
 	};
 };
 
@@ -57,7 +57,7 @@
 };
 
 /* IMU: ST LSM6DSL on TWI0 (SA0 low -> 0x6A, CS high = I2C mode). IMU pins live only here:
- * I2C_SDA P0.03, I2C_SCL P0.04 (kept off the near-radio pins P0.22-P0.24 bank), IMU_INT (INT1) P0.24. The app drives its registers directly;
+ * I2C_SDA P0.03, I2C_SCL P0.04 (kept off the near-radio pins P0.22-P0.24 bank), IMU_INT (INT1) P0.31. The app drives its registers directly;
  * CONFIG_LSM6DSL=n (prj.conf) keeps Zephyr's own lsm6dsl driver out. CONFIG_SENSOR itself is on:
  * the LFRC calibration selects it for the die temperature sensor (TEMP_NRF5). */
 &i2c0 {
@@ -71,7 +71,7 @@
 	lsm6dsl: lsm6dsl@6a {
 		compatible = "st,lsm6dsl";
 		reg = <0x6a>;
-		irq-gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+		irq-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
 	};
 };
 
@@ -136,7 +136,7 @@
 	};
 };
 
-/* Battery: VBAT/2 (1M/1M + 100 nF) on P0.02/AIN0. Gain 1/6 with the 0.6 V reference = 3.6 V
+/* Battery: VBAT/2 (1M/1M + 100 nF) on P0.28/AIN4. Gain 1/6 with the 0.6 V reference = 3.6 V
  * full scale; the 100 nF holds the node during the 40 us acquisition. */
 &adc {
 	#address-cells = <1>;
@@ -148,7 +148,7 @@
 		zephyr,gain = "ADC_GAIN_1_6";
 		zephyr,reference = "ADC_REF_INTERNAL";
 		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
-		zephyr,input-positive = <NRF_SAADC_AIN0>;
+		zephyr,input-positive = <NRF_SAADC_AIN4>;
 		zephyr,resolution = <12>;
 		zephyr,oversampling = <4>;
 	};

@@ -21,7 +21,7 @@
 		(35 "F.Fab" user)
 		(33 "B.Fab" user)
 		(39 "User.1" user)
-		(41 "User.2" user)
+		(41 "User.2" user "Stiffener")
 	)
 	(setup
 		(stackup
