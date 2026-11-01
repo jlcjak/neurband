@@ -60,6 +60,20 @@ Coordinates: board frame, mm from the outline's top-left.
 - **Order data**: regenerate the position file with `--exclude-dnp` (C22/C23); the main board's fab.json still says "Unrouted"; the BOM CSV now matches the schematic (C9/C31 are 1 uF, by the owner's edit).
 - **Net names**: the main board's J1 nets (E1P..E8N) no longer correspond to pods; the channel map lives in `host/neurband_ble.py` (`POD_MAP`) and `docs/firmware_c.md`.
 
+
+## Bigger picture: what could still go wrong
+
+| Risk | Why | What to do |
+|---|---|---|
+| **Charging while worn** (new with r2) | The r1 charge clip only fitted with the band off the wrist: a mechanical interlock. The r2 magnetic connector sits in the module's end wall and can be attached while the pads touch skin, which connects a USB (often mains-referenced) ground to the body through the electrodes and the ADS1298's input protection. The firmware powers the AFE down while charging, but the copper path remains. | Short term: the guide and README say charge only with the band off; prefer a power bank. Next mech pass: move the connector where the wrist covers it when worn (the skin side), or add a magnetic reed/latch that only seats with the strap open. Together with fix 6 (TVS + series resistor on VCHG). |
+| Re-flashing needs the module opened | No Bluetooth bootloader yet (MCUboot + SMP planned); SWD is five soldered wires on the bottom pads. | Leave short wire pigtails after the first flash, or add MCUboot before the first build (the 225 KB slots fit the 156 KB app plus the update service). |
+| Pod 5 contact pressure | The fit model gives pod 5 (beside strap bar A) only 0.14-0.24 of the mean strap pressure: weaker skin contact, noisier channel. | Tighten the strap; add a second foam dot behind pod 5; check its contact impedance first on the bench. |
+| Strap thickness | Neither EU listing states it; the slots and pod channels take 1.3-2.4 mm. | Measure on arrival (guide step 7.1); the fallback strap is longer for >170 mm wrists. |
+| Owner fixes introduce new problems | Six local edits on a dense 4-layer board. | Re-run DRC, the coupling scripts in /tmp/review/afe (or sim/preorder) and a quick review on the fixed board before setting order: true. |
+| Dry-electrode signal quality at the wrist | Nothing measured yet: noise, motion artefacts and contact impedance are estimates. | First bring-up: shorted-input noise, then on-wrist impedance and rest noise per pod (docs/firmware_c.md bring-up). |
+| Flex tail insertion | The 10.5 mm tail U-turns up the distal wall into J1 in a tighter, tapered case. | Fit-checked at zero clash; insert with the board upright as the guide shows; don't crease the U. |
+| Parts | ADS1298 is the scarcest part (1,650 in the fab's stock); the LiPo can't ship to every country. | Order the board soon after the fixes; measure the cell before printing. |
+
 ## Checked and fine (all reviews)
 
 Schematic: every J1 pair reaches exactly one ADS channel; every nRF pin the firmware uses is wired right (the firmware builds with the current overlay); P0.28/AIN4 and P0.31 are sensible choices; ERC has only the 8 long-standing tied-pin warnings; all 69 footprints exist and match their parts. Power: supply paths, IR drop (< 1 mV), LDO stability, brown-out margin during BLE TX and AFE start, TP4054 heat, nRF decoupling distances (0.36-1.84 mm), VCAP/DVDD caps (0.5-3.7 mm), single solid In1/In2 planes with no islands. RF: match placement identical to the reviewed board, Nordic matching keepout clear on In1/In2/B.Cu, 100 % ground under the feed after L1, other top copper >= 0.528 mm from the feed, antenna keepout empty, crystal fully over ground with nothing switching nearby, decoupling values per Nordic. Manufacturing: 0.10/0.10 mm minimum track/gap, all vias 0.30/0.45, hole-to-copper >= 0.20, mask webs >= 0.15 mm, silkscreen >= 0.15 mm lines and clear of pads, all 11 pin-1 marks on the right pin, raw position-file rotations consistent with the fab's convention, bodies >= 0.15 mm apart, no bottom-side parts, all parts in stock (ADS1298 lowest at 1,650).
