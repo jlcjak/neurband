@@ -90,7 +90,7 @@ blender -b --python render/assembly_anim.py -- --scene ring --quick --times 9.4,
 ### Assembly-manual figures (`render/guide_figures.py`, `render/manual_figs.py`)
 
 ```
-python3 render/guide_figures.py                 # every figure (hero + 0.1 ... 9.1) and the PDF (~5 min)
+python3 render/guide_figures.py                 # every figure (0.1 ... 10.1, r2) and the PDF (~5 min)
 python3 render/guide_figures.py --only 3.5      # one figure (or a list: --only 3.5,4.1); stale files are kept
 python3 render/guide_figures.py --annotate-only # redo the 2D pass (labels, arrows, insets) from render/build/guide/
 python3 render/guide_figures.py --pdf           # only docs/build/neurband_build_manual.pdf from docs/build/assembly.md
@@ -98,9 +98,9 @@ python3 render/guide_figures.py --xsec          # also rebuild the pod cross-sec
 ```
 
 - **Output.**
-  - `docs/build/img/m<part>-<n>_<name>.png`, one per figure 0.1 ... 9.1. They are about 1400 px
-    wide and readable at 900 px.
-  - `docs/build/img/hero.jpg`, the Cycles beauty shot.
+  - `docs/build/img/m<part>-<n>_<name>.png`, one per step figure of the r2 guide (0.1 ... 10.1). They
+    are about 1400 px wide and readable at 900 px.
+  - `docs/build/img/r2_hero.jpg`, `r2_exploded.jpg`, `r2_on_wrist*.jpg`: the Cycles beauty shots.
   - `docs/build/neurband_build_manual.pdf`: A4, built from `assembly.md` with python-markdown and
     headless Chromium; images as JPEG; a page break before each part.
 

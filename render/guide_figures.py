@@ -30,7 +30,7 @@ FONT_DIR = '/usr/share/fonts/noto'
 RES = (1600, 1000)
 sys.path.insert(0, HERE)
 import manual_figs as MF                              # the assembly-manual figures (0.1 ... 9.1)
-FIGS = ['hero'] + MF.IDS
+FIGS = list(MF.IDS)                                  # r2: the manual figures only (the r1 Cycles 'hero' is retired)
 
 # bonding jig geometry (mech/rev_c/bond_jig.py), mm
 R_U, MOD_PRESS, FLEX_REAL, POD_W, POD_PRESS = 42.0, 1.0, 0.11, 7.1, 0.6
@@ -277,6 +277,13 @@ def jig_scene(NB, anim=False, tail_up=True):
             base = o
             NB.setmat(o, NB.mat_housing())
         NB.smooth(o, math.radians(35))
+    if base is None:                                   # r2: the base is bonded on the pedestal jig (stage 2), not here
+        for o in NB.import_glb(os.path.join(BUILD, 'module_base.glb'), bake=True).values():
+            base = o
+            o['kind'] = 'module_base'
+            NB.setmat(o, NB.mat_housing())
+            o.data.transform(Matrix.Translation((0, 0, 0.012)) @ Matrix.Rotation(math.pi, 4, 'Z') @ o.matrix_world)
+            o.matrix_world = Matrix.Identity(4)
     x5 = (NB.bbox([pod_t])[0][0] + NB.bbox([pod_t])[1][0]) / 2
     # flex: KiCad GLB (x, -y, F side up) -> jig/world frame (x - 65, y_kicad - 35, F side down), on the saddle
     fl, _ = NB.load_board(os.path.join(BUILD, 'flex_board.glb'), flex=True)
@@ -1505,7 +1512,7 @@ def main():
         else:
             print('  missing render for', n)
     if not a.quick and not a.only:
-        keep = set(['hero.jpg'] + [MF.fname(n) + '.png' for n in MF.IDS])
+        keep = set([MF.fname(n) + '.png' for n in MF.IDS] + [os.path.basename(f) for f in glob.glob(os.path.join(IMG, 'r2_*.jpg'))])
         for f in glob.glob(os.path.join(IMG, '*')):
             if os.path.basename(f) not in keep:
                 os.remove(f)

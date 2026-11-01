@@ -75,7 +75,7 @@
  "pod": {
   "min_wall_mm": 1.0,
   "p1_wall_mm": 1.0,
-  "samples": 1105,
+  "samples": 1190,
   "thin_spots": [],
   "min_at": [
    -3.9,
@@ -87,7 +87,7 @@
  "bond_jig": {
   "min_wall_mm": 1.0,
   "p1_wall_mm": 1.0,
-  "samples": 8296,
+  "samples": 8060,
   "thin_spots": [],
   "min_at": [
    80.3,

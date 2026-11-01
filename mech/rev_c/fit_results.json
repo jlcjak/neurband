@@ -19,7 +19,7 @@
   "R_dorsal_mm": 33.4,
   "R_side_mm": 15.6,
   "gap_mm": 17.3,
-  "gap_centre_deg_from_dorsal": 137.0,
+  "gap_centre_deg_from_dorsal": -137.0,
   "electrode_cover_pct": 88.5,
   "electrode_arc_on_skin_mm": 128.3,
   "spine_bend_radius_mm": {
@@ -37,8 +37,8 @@
    "3-2": -0.21
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 3.24,
-   "4-5": 2.93
+   "3-2": 2.93,
+   "4-5": 3.24
   },
   "module_seat_gap_mm": {
    "centre": 1.02,
@@ -49,8 +49,8 @@
   "bar_clear_of_skin_mm": 3.12,
   "strap_load_rel": {
    "1": 1.7,
-   "2": 0.24,
-   "5": 0.55,
+   "2": 0.55,
+   "5": 0.24,
    "6": 1.51,
    "7": 0.95,
    "8": 1.06
@@ -61,7 +61,7 @@
   "strap_cap_to_fold_mm": 196.5,
   "strap_needed_mm": 245.5,
   "strap_lock_A_mm": 50.6,
-  "strap_tail_modelled_mm": 57.8,
+  "strap_tail_modelled_mm": 55.5,
   "strap_min_clear_to_skin_mm": 1.56,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
@@ -69,13 +69,13 @@
    "band_ends_vs_module": 0.0,
    "band_run_vs_module": 0.0,
    "tail_vs_module": 0.0,
-   "band_vs_pods_untilted": 6.923,
-   "tail_vs_pods_untilted": 33.238,
+   "band_vs_pods_untilted": 6.749,
+   "tail_vs_pods_untilted": 17.942,
    "strap_vs_flex": 15.4,
    "module_vs_flex_links": 2.378,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
-   "pads_vs_wrist": 12.865
+   "pads_vs_wrist": 11.374
   },
   "strap_to_module_min_mm": 0.49
  },
@@ -99,7 +99,7 @@
   "R_dorsal_mm": 36.8,
   "R_side_mm": 17.2,
   "gap_mm": 32.4,
-  "gap_centre_deg_from_dorsal": 141.0,
+  "gap_centre_deg_from_dorsal": -141.0,
   "electrode_cover_pct": 80.4,
   "electrode_arc_on_skin_mm": 128.6,
   "spine_bend_radius_mm": {
@@ -117,8 +117,8 @@
    "3-2": -0.12
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 3.92,
-   "4-5": 2.72
+   "3-2": 2.72,
+   "4-5": 3.92
   },
   "module_seat_gap_mm": {
    "centre": 1.14,
@@ -129,8 +129,8 @@
   "bar_clear_of_skin_mm": 2.64,
   "strap_load_rel": {
    "1": 1.55,
-   "2": 0.14,
-   "5": 1.35,
+   "2": 1.35,
+   "5": 0.14,
    "6": 1.2,
    "7": 0.8,
    "8": 0.96
@@ -141,7 +141,7 @@
   "strap_cap_to_fold_mm": 209.1,
   "strap_needed_mm": 258.1,
   "strap_lock_A_mm": 50.6,
-  "strap_tail_modelled_mm": 56.2,
+  "strap_tail_modelled_mm": 70.1,
   "strap_min_clear_to_skin_mm": -0.28,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
@@ -149,13 +149,13 @@
    "band_ends_vs_module": 0.0,
    "band_run_vs_module": 0.0,
    "tail_vs_module": 0.0,
-   "band_vs_pods_untilted": 5.006,
-   "tail_vs_pods_untilted": 31.209,
+   "band_vs_pods_untilted": 4.911,
+   "tail_vs_pods_untilted": 17.276,
    "strap_vs_flex": 17.424,
    "module_vs_flex_links": 2.517,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
-   "pads_vs_wrist": 12.642
+   "pads_vs_wrist": 13.66
   },
   "strap_to_module_min_mm": 0.65
  },
@@ -179,7 +179,7 @@
   "R_dorsal_mm": 41.4,
   "R_side_mm": 19.3,
   "gap_mm": 52.4,
-  "gap_centre_deg_from_dorsal": 145.0,
+  "gap_centre_deg_from_dorsal": -145.0,
   "electrode_cover_pct": 71.7,
   "electrode_arc_on_skin_mm": 129.1,
   "spine_bend_radius_mm": {
@@ -197,8 +197,8 @@
    "3-2": -0.1
   },
   "module_edge_link_min_bend_r_mm": {
-   "3-2": 4.93,
-   "4-5": 2.59
+   "3-2": 2.59,
+   "4-5": 4.93
   },
   "module_seat_gap_mm": {
    "centre": 1.26,
@@ -209,8 +209,8 @@
   "bar_clear_of_skin_mm": 2.12,
   "strap_load_rel": {
    "1": 1.57,
-   "2": 0.14,
-   "5": 1.21,
+   "2": 1.21,
+   "5": 0.14,
    "6": 1.18,
    "7": 0.92,
    "8": 0.98
@@ -221,21 +221,21 @@
   "strap_cap_to_fold_mm": 226.4,
   "strap_needed_mm": 275.4,
   "strap_lock_A_mm": 50.6,
-  "strap_tail_modelled_mm": 55.2,
+  "strap_tail_modelled_mm": 54.7,
   "strap_min_clear_to_skin_mm": -0.42,
   "interference_mm3": {
    "pod_vs_pod": 0.0,
-   "pods_vs_module": 0.176,
+   "pods_vs_module": 0.096,
    "band_ends_vs_module": 0.0,
    "band_run_vs_module": 0.0,
    "tail_vs_module": 0.0,
-   "band_vs_pods_untilted": 2.276,
-   "tail_vs_pods_untilted": 20.056,
+   "band_vs_pods_untilted": 2.251,
+   "tail_vs_pods_untilted": 5.331,
    "strap_vs_flex": 17.962,
    "module_vs_flex_links": 2.804,
    "pods_vs_wrist": 0.0,
    "module_vs_wrist": 0.0,
-   "pads_vs_wrist": 12.95
+   "pads_vs_wrist": 12.954
   },
   "strap_to_module_min_mm": 0.79
  },

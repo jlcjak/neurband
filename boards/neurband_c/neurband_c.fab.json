@@ -15,5 +15,5 @@
     "min_drill_mm": 0.3
   },
   "order": false,
-  "note": "Unrouted: the owner is routing this board. Set order back to true after routing, DRC and a new manufacturing review."
+  "note": "Routed by the owner (2026-11-01). On hold until the fixes in docs/review/owner_layout_review_20261101.md are done and re-checked; then set order to true."
 }

@@ -9,11 +9,11 @@
     "color": "black"
   },
   "features": {
-    "volume_cm3": 0.646,
-    "area_cm2": 8.89,
+    "volume_cm3": 0.675,
+    "area_cm2": 8.9,
     "size_x_mm": 32.14,
     "size_y_mm": 9.14,
-    "size_z_mm": 5.54
+    "size_z_mm": 5.58
   },
   "notes": "TPU 95A, print on its side (channel vertical), no supports; 6 per band, 12 for two bands + 2 spares; snap-in channel for the 20 mm strap; 6 x 2.0 mm EVA foam dots bought separately (docs/build/sourcing.md)",
   "min_wall_mm": 1.0

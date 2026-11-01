@@ -123,4 +123,7 @@ for stem in PARTS:
         d['min_wall_mm'] = r['min_wall_mm']
         json.dump(d, open(fp, 'w'), indent=2)
         open(fp, 'a').write('\n')
-json.dump(res, open(os.path.join(HERE, 'wall_check.json'), 'w'), indent=1)
+_wp = os.path.join(HERE, 'wall_check.json')
+_all = json.load(open(_wp)) if (os.environ.get('WALL_PARTS') and os.path.exists(_wp)) else {}
+_all.update(res)                                   # a WALL_PARTS run only replaces the parts it checked
+json.dump(_all, open(_wp, 'w'), indent=1)

@@ -180,8 +180,14 @@ def ring_scene(NB, clip=True):
     mod = NB.load_module()
     bobj = NB.board_into(mod)                       # real KiCad board, module frame (m)
     T = NB.module_to_band(mod, band)
+    S.mag = []
     for o in list(mod.values()):
-        bpy.data.objects.remove(o)
+        if NB.kind(o.name) in ('mag_connector', 'mag_contacts'):   # r2: magnetic charging connector in its bay
+            o['kind'] = NB.kind(o.name)
+            o.matrix_world = T @ o.matrix_world
+            S.mag.append(o)
+        else:
+            bpy.data.objects.remove(o)
     J1_PARTS = ('ClosedCreamFlipbar', 'DarkHousing', 'SolderAnchors', 'TwentyBottomContacts')
     S.j1 = [o for o in bobj.values() if o.name.split('.')[0] in J1_PARTS]
     for o in bobj.values():
@@ -237,7 +243,8 @@ def ring_scene(NB, clip=True):
         cab.matrix_world = T.copy()
         S.clip.append(cab)
     # mirror the ring parts to the real flex's pod order
-    NB.mirror_ring(list(straps.values()))           # (load_band mirrors the band itself)
+    if NB.MIRROR_RING:
+        NB.mirror_ring(list(straps.values()))       # (load_band mirrors the band itself)
 
     # float the band 12 mm above the floor
     allobj = [o for o in bpy.data.objects if o.type == 'MESH']
@@ -273,16 +280,20 @@ def ring_scene(NB, clip=True):
         ob.matrix_world = T.copy()
         return ob
 
-    # the cell's own leads from the bottom J2 pads (module frame, mm): under the board in the J2 relief,
-    # round the distal edge through the lead gate (x >= 10.5), up past SW1's outer end, over U5 to the cell
-    gnd = [(12.9, -12.8, 1.45), (12.9, -14.3, 1.45), (12.95, -15.0, 1.6), (13.0, -15.45, 2.2), (13.05, -15.35, 2.95),
-           (13.85, -14.95, 3.0), (14.15, -13.6, 3.0), (14.15, -11.6, 3.0), (13.7, -10.5, 3.25), (12.3, -10.0, 3.75),
-           (10.2, -9.9, 3.8), (8.9, -9.8, 4.6), (8.25, -9.7, 5.7)]
-    vbat = [(9.7, -13.3, 1.45), (10.7, -13.4, 1.45), (11.3, -14.1, 1.45), (11.4, -14.95, 1.55), (11.45, -15.5, 2.2),
-            (11.5, -15.55, 3.0), (12.6, -15.75, 3.55), (13.9, -15.4, 3.55), (14.5, -14.4, 3.5), (14.55, -12.6, 3.5),
-            (14.45, -11.0, 3.55), (13.9, -10.2, 3.8), (12.2, -9.62, 4.3), (10.0, -9.55, 4.35), (8.9, -9.5, 5.2),
-            (8.2, -9.6, 6.4)]
+    # r2: the cell's own leads (module frame, mm): from the cell's lead end over the board to its +X (button
+    # side) edge level with J2, down past the edge in the 0.6 mm gap to the wall, back under the board to the
+    # J2 pads (VBAT at x 12.8, GND at x 9.8, y -6.6); the J3 charging wires under the board's +X edge to the
+    # magnetic connector in the proximal bay
+    vbat = [(6.0, -9.9, 5.0), (6.0, -10.6, 4.65), (9.0, -8.6, 4.65), (12.6, -7.0, 4.65), (14.0, -7.0, 3.05), (15.0, -7.0, 3.05),
+            (15.0, -7.0, 1.3), (14.2, -7.0, 1.3), (12.8, -6.7, 1.45)]
+    gnd = [(4.0, -9.9, 4.6), (4.0, -10.6, 4.05), (8.0, -8.0, 4.05), (12.6, -5.8, 4.05), (14.0, -5.8, 3.05), (15.0, -5.8, 3.05),
+           (15.0, -5.8, 1.3), (14.2, -5.8, 1.3), (11.5, -6.1, 1.3), (9.8, -6.5, 1.45)]
     leads = [lead('lead_gnd', gnd, (0.02, 0.02, 0.022)), lead('lead_vbat', vbat, (0.55, 0.045, 0.035))]
+    jr = [(9.9, -13.2, 1.6), (11.0, -12.6, 1.2), (12.9, -11.5, 1.2), (12.9, 11.0, 1.2), (11.0, 12.6, 1.4), (4.0, 13.2, 2.2),
+          (1.75, 14.0, 3.35), (1.75, 14.3, 3.35)]
+    jb = [(12.9, -13.2, 1.6), (13.2, -12.0, 1.2), (13.3, -11.0, 1.2), (13.3, 11.3, 1.2), (11.5, 13.0, 1.4), (2.0, 13.6, 2.2),
+          (-0.75, 14.0, 3.35), (-0.75, 14.3, 3.35)]
+    S.jwires = [lead('j3_red', jr, (0.55, 0.045, 0.035)), lead('j3_black', jb, (0.02, 0.02, 0.022))]
 
     # flex tail ribbon (module frame, mm): constant free length while the board folds on it
     TAIL_W, TAIL_T, L_TOT, L_S = 10.5, 0.22, 8.24, 3.8
@@ -373,7 +384,7 @@ def ring_scene(NB, clip=True):
     S.leads = leads
     S.tail = tail
     S.straps = straps
-    board_grp = S.board + leads
+    board_grp = S.board + leads + S.jwires
 
     # strap pieces: angle round the ring from slide A (+X) through pods 2, 1, 8 ... 5 to slide B
     def angles(o):
@@ -405,7 +416,8 @@ def ring_scene(NB, clip=True):
     mod_c = centre(S.lid)
     S.targets = {'R': ring_c + Vector((0, 0, 0.004)), 'M': mod_c + Vector((0, 0, -0.002)),
                  'H': T @ Vector((0.002, -0.010, 0.013)), 'C': T @ Vector((0.0, 0.016, -0.002)),
-                 'A': centre(S.slides[:1]), 'B': centre(S.slides[1:])}
+                 'A': centre(S.slides[:1]) if S.slides else T @ Vector((-0.0217, 0, 0)),     # r2: no slides; the bars A, B
+                 'B': centre(S.slides[1:]) if S.slides else T @ Vector((0.0218, 0, 0))}
 
     def set_cam(tgt, az, el, d, lens=85):
         loc = NB.orbit(tgt, az, el, d)
@@ -559,7 +571,7 @@ def freecad_strap_pieces(step, dst):
     import fit as F
     res, items, L = F.build_band(160.0, lambda *x: None, with_wrist=False, cad=False)
     shape = dict((n, sh) for n, sh, c in items)['strap']
-    names = ['strap_band', 'strap_lock_a', 'strap_tail_a', 'strap_lock_b', 'strap_tail_b']
+    names = ['strap_band', 'strap_lock_a', 'strap_lock_b', 'strap_tail_b']   # r2: run, lock round bar A, wrap round bar B, folded tail
     doc = FreeCAD.newDocument('strap')
     feats = []
     for n, x in zip(names, shape.Solids):
@@ -581,7 +593,7 @@ def export():
                + '=' + os.path.join(BUILD, 'strap_pieces.glb'))
     run([FREECAD, os.path.abspath(__file__)], os.path.join(LOGS, 'strap_pieces.log'), timeout=600, env=env)
     pairs = []
-    for n in ('bond_jig_fit', 'swd_jig_fit', 'charge_clip_fit', 'pod', 'module_base', 'cell_spacer', 'strap_slide'):
+    for n in ('bond_jig_fit', 'base_jig_fit', 'base_jig', 'pod', 'module_base', 'cell_spacer'):     # r2 tools and parts
         pairs.append(os.path.join(ROOT, 'mech/rev_c', n + '.step') + '=' + os.path.join(BUILD, n + '.glb'))
     env = dict(os.environ, QT_QPA_PLATFORM='offscreen', STEP2GLB=';'.join(pairs))
     run([FREECAD, os.path.join(HERE, 'step2glb.py')], os.path.join(LOGS, 'step2glb_tools.log'), timeout=900, env=env)

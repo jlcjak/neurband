@@ -447,8 +447,8 @@ def band_material(k, housing='graphite'):
     }[band_class(k)]()
 
 
-MIRROR_RING = os.environ.get('NB_MIRROR', '1') == '1'   # show the pod ring in the real flex's order (see mirror_ring);
-# r2 (open strap): NB_MIRROR=0 for product shots, so the strap's lock and fold stay at the module's matching slots
+MIRROR_RING = os.environ.get('NB_MIRROR', '0') == '1'   # r2: fit.py lays the ring out in the real flex's order, so no mirroring
+# (NB_MIRROR=1 only for r1-era band STEPs, whose pod order was mirrored)
 
 
 def load_band(path=None, housing='graphite', mirror=None):
@@ -466,7 +466,7 @@ def load_band(path=None, housing='graphite', mirror=None):
 
 
 RING_KINDS = ('pod_shells', 'flex', 'foam', 'pads')
-STRAP_END_KINDS = ('strap_lock_a', 'strap_tail_a', 'strap_lock_b', 'strap_tail_b')
+STRAP_END_KINDS = ('strap_lock_a', 'strap_lock_b', 'strap_tail_b')
 
 
 def mirror_ring(objs, cx=0.00035, ang_blend=(49.0, 53.0)):

@@ -19,35 +19,33 @@ ROOT = os.path.dirname(HERE)
 BUILD = os.path.join(HERE, 'build')
 FONT_DIR = '/usr/share/fonts/noto'
 
-MANUAL = [
+MANUAL = [                                            # r2 (Nov 2026): open hook-and-loop strap, magnetic charging
     ('0.1', 'kit', 'Kit of parts'),
     ('0.2', 'names', 'Names and directions'),
     ('0.3', 'exploded', 'Exploded overview'),
     ('0.4', 'section', 'One pod on the skin'),
-    ('1.1', 'swd_pins', 'Pogo pins into the SWD jig'),
-    ('1.2', 'swd_wiring', 'Wiring the jig to a Pico 2'),
-    ('1.3', 'swd_board', 'Board into the jig'),
+    ('1.1', 'swd_wires', 'Wires on the SWD pads'),
     ('2.1', 'cell_leads', 'Cell leads onto J2'),
-    ('3.1', 'jig', 'The bonding jig'),
+    ('2.2', 'j3_wires', 'Charging wires from J3'),
+    ('3.1', 'jig', 'The bonding jig (stage 1)'),
     ('3.2', 'flex_on', 'Flex onto the jig'),
     ('3.3', 'dots_pod', 'Foam dots into a pod'),
-    ('3.4', 'dots_base', 'Foam dots into the base'),
-    ('3.5', 'pods_in', 'Pods into their fences'),
-    ('3.6', 'base_on', 'Base onto the saddle'),
-    ('3.7', 'strip', 'The bonded strip'),
-    ('4.1', 'j1', 'Tail into J1'),
-    ('4.2', 'fold', 'Book-fold the board down'),
-    ('4.3', 'leads', 'Lead route round the board'),
-    ('5.1', 'cell', 'Cell into place'),
-    ('5.2', 'lid', 'Button cap and lid'),
-    ('6.1', 'slides', 'Slides onto the hidden bars'),
-    ('6.2', 'lock', 'Locking a webbing end'),
-    ('6.3', 'thread', 'Through the pods'),
-    ('6.4', 'length', 'Setting the length'),
-    ('7.1', 'wear', 'On the wrist'),
-    ('8.1', 'clip_build', 'Building the charge clip'),
-    ('8.2', 'clip_on', 'Clip onto the module'),
-    ('9.1', 'open', 'Opening and re-flashing'),
+    ('3.4', 'pods_in', 'Pods into their fences'),
+    ('3.5', 'strip', 'The strip after stage 1'),
+    ('4.1', 'dots_base', 'Foam dots into the base'),
+    ('4.2', 'base_jig', 'Base onto the pedestal (stage 2)'),
+    ('5.1', 'j1', 'Tail into J1'),
+    ('5.2', 'fold', 'Book-fold the board down'),
+    ('5.3', 'bay', 'Connector, leads and wires'),
+    ('6.1', 'lid', 'Button cap and lid'),
+    ('7.2', 'cut', 'Cutting the strap'),
+    ('7.3', 'lock_a', 'Locking the cut end round bar A'),
+    ('7.4', 'press', 'Pressing the strap into the pods'),
+    ('7.5', 'fold_b', 'Through bar B and fold back'),
+    ('8.1', 'wear', 'On the wrist'),
+    ('9.1', 'cable', 'The charging cable'),
+    ('9.2', 'charge', 'Charging'),
+    ('10.1', 'open', 'Opening and re-flashing'),
 ]
 IDS = [m[0] for m in MANUAL]
 TITLE = {m[0]: m[2] for m in MANUAL}
@@ -65,31 +63,34 @@ COL = dict(base=(0.56, 0.57, 0.58), lid=(0.84, 0.85, 0.86), cap=(0.20, 0.46, 0.8
            jig=(0.90, 0.84, 0.70), clip=(0.50, 0.66, 0.66), pin=(0.82, 0.64, 0.26), red=(0.82, 0.10, 0.08),
            black=(0.10, 0.10, 0.10), kapton=(0.95, 0.60, 0.12), skin=(0.94, 0.80, 0.70), spacer=(0.66, 0.58, 0.78),
            usb=(0.28, 0.28, 0.30), silk=(0.95, 0.95, 0.93), tin=(0.80, 0.80, 0.80), j1=(0.94, 0.92, 0.84),
-           wire_y=(0.92, 0.75, 0.10), wire_g=(0.15, 0.55, 0.20))
+           wire_y=(0.92, 0.75, 0.10), wire_g=(0.15, 0.55, 0.20), mag=(0.08, 0.60, 0.60), hook=(0.55, 0.30, 0.65),
+           ring=(0.70, 0.71, 0.74))
 LEGEND = [('base', 'Module base'), ('lid', 'Lid'), ('cap', 'Button cap'), ('board', 'Main board'), ('cell', 'Cell'),
-          ('flex', 'Electrode flex'), ('pad', 'Gold pads'), ('dot', 'Foam dots'), ('pod', 'Pods'), ('web', 'Webbing'),
-          ('slide', 'Strap slides'), ('spacer', 'Cell spacer'), ('clip', 'Charge clip'), ('jig', 'Jigs (tools)'),
-          ('pin', 'Pogo pins'), ('kapton', 'Kapton tape')]
+          ('flex', 'Electrode flex'), ('pad', 'Gold pads'), ('dot', 'Foam dots'), ('pod', 'Pods'), ('web', 'Strap'),
+          ('hook', 'Strap hook tab'), ('mag', 'Connector'), ('spacer', 'Cell spacer'), ('jig', 'Jigs (tools)'),
+          ('kapton', 'Kapton tape'), ('wire_y', 'Wires')]
 GHOST = (0.80, 0.81, 0.82)
 BG = (0.965, 0.962, 0.955)
 W0, H0 = 1400, 900
 
-# module-frame numbers (mm) from mech/rev_c/module.py
-Y_MIN, Y_MAX = -17.5, 16.8
+# module-frame numbers (mm) from mech/rev_c/module.py (r2)
+Y_MIN, Y_MAX = -17.45, 19.6
 Y_B0 = -14.8
 BAT_Y0 = -9.53
 D1 = (-12.0, 11.2)
 SW1 = (10.8, -12.9)
-CHG_PADS_Y = (6.2, 3.2)          # VCHG, GND
-SNAP_SEGS = ((-10.5, -6.0, 1), (9.0, 12.0, 1), (-11.25, -7.5, -1), (7.5, 10.5, -1))
+SNAP_SEGS = ((-11.0, -8.2, 1), (9.2, 11.4, 1), (-11.0, -7.5, -1), (7.5, 11.0, -1))
 ROOT_DOT = (0.0, -10.4)
-TAIL_SLOT_Y = (-16.4, -14.6)
-LEAD_GATE = (13.4, -15.6)
-BAR = (15.7, -0.8)               # +X hidden bar (x, z); the -X one at x -15.0
-J2_K = ((23.9, 25.6), (26.9, 25.6))
-TP_K = [(16.00 + 1.27 * i, 25.7) for i in range(5)]
+BT_POD = 2.0                     # pod face -> channel floor (rc.BASE_T, r2)
+TAIL_SLOT_Y = (-16.45, -14.65)
+BAR_A = (-21.72, -0.1)           # bar centres (x, z), module frame; slot A 4.4 mm, slot B 3.5 mm
+BAR_B = (21.76, -0.1)
+MAG_C = (0.5, 19.6, 3.35)        # magnetic connector face centre
+NOTCH = (0.5, 19.6, 6.85)        # pry notch, lid edge above the connector bay
+J2_K = ((26.8, 18.8), (23.8, 18.8))       # VBAT (+), GND (-), board bottom
+TP_K = [(1.1, 5.1), (2.0, 4.2), (2.9, 3.3), (3.79, 2.41), (4.69, 1.51)]
 TP_NAMES = ['TP1 +3V3', 'TP2 SWDIO', 'TP3 SWDCLK', 'TP4 NRST', 'TP5 GND']
-J3_K = ((14.0, 6.0), (14.0, 9.0))
+J3_K = ((23.9, 25.4), (26.9, 25.4))       # VCHG 5 V (+), GND, board bottom
 
 
 # ============================================================== Blender side
@@ -309,6 +310,9 @@ def colour_ring(S, modes=None):
     paint_board(S.board, m.get('board', 'on'))
     paint([S.leads[0]], 'black', m.get('leads', 'on'))
     paint([S.leads[1]], 'red', m.get('leads', 'on'))
+    paint(getattr(S, 'mag', []), 'mag', m.get('mag', 'on'))
+    for o, k in zip(getattr(S, 'jwires', []), ('red', 'black')):
+        paint([o], k, m.get('jwires', m.get('leads', 'on')))
     if S.clip:
         for o in S.clip:
             paint([o], 'pin' if o.get('kind') == 'pogo_pins' else ('usb' if o.type == 'CURVE' else 'clip'), m.get('clip', 'on'))
@@ -707,7 +711,7 @@ def f_cell_leads(R, NB):
 
 
 # --- bonding jig
-def jig(NB, tail_up=True):
+def jig(NB, tail_up=False):          # r2 stage 1: no base on this jig, the tail lies flat
     import guide_figures as GF
     S = GF.jig_scene(NB, tail_up=tail_up)
     wb_scene()
@@ -900,7 +904,7 @@ def f_j1(R, NB):
     from mathutils import Vector, Matrix
     S = ring(NB)
     colour_ring(S, dict(pods='hide', foam='hide', web='hide', slides='hide', lid='hide', cap='hide', cell='hide',
-                        base='ghost', flex='on', leads='hide'))
+                        base='ghost', flex='on', leads='hide', mag='hide', jwires='hide'))
     paint(S.flex + S.pads, 'flex', 'hide')
     S.tail.hide_render = False
     latch = [o for o in S.j1 if o.name.startswith('ClosedCreamFlipbar')]
@@ -934,7 +938,7 @@ def f_fold(R, NB):
     from mathutils import Vector
     S = ring(NB)
     colour_ring(S, dict(pods='hide', foam='hide', web='hide', slides='hide', lid='hide', cap='hide', cell='hide',
-                        base='ghost', leads='hide'))
+                        base='ghost', leads='hide', mag='hide', jwires='hide'))
     paint(S.flex + S.pads, 'flex', 'hide')
     cam = new_cam()
     tgt = mod_pt(S, (0, -4, 8))
@@ -1336,11 +1340,790 @@ def f_open(R, NB):
     shot(R, 'b', cam2, 700, 640, a2, hi=[cell])
 
 
-FIG_FUNCS = {'0.1': f_kit, '0.2': f_names, '0.3': f_exploded, '0.4': f_section, '1.1': f_swd_pins, '1.2': f_swd_wiring,
-             '1.3': f_swd_board, '2.1': f_cell_leads, '3.1': f_jig, '3.2': f_flex_on, '3.3': f_dots_pod, '3.4': f_dots_base,
-             '3.5': f_pods_in, '3.6': f_base_on, '3.7': f_strip, '4.1': f_j1, '4.2': f_fold, '4.3': f_leads, '5.1': f_cell,
-             '5.2': f_lid, '6.1': f_slides, '6.2': f_lock, '6.3': f_thread, '6.4': None, '7.1': f_wear, '8.1': f_clip_build,
-             '8.2': f_clip_on, '9.1': f_open}
+# ================================================================== r2 figures (Nov 2026)
+def _board_bottom(NB):
+    """the bare board, bottom side up (turned over about its long axis). Returns (objs, body, kp, c):
+    kp(x, y) maps a KiCad point (mm) of the bottom face to the world."""
+    from mathutils import Vector, Matrix
+    wb_scene()
+    bobj, body = NB.load_board()
+    objs = list(bobj.values())
+    bmn, bmx = NB.bbox([body])
+    mm = 0.001
+    c = Vector(((bmn + bmx) / 2).tolist())
+    Mf = Matrix.Translation(c) @ Matrix.Rotation(math.pi, 4, 'Y') @ Matrix.Translation(-c)
+    for o in objs:
+        o.matrix_world = Mf @ o.matrix_world
+    paint_board(objs)
+    kp = lambda xk, yk, dz=0.0: Mf @ Vector((bmn[0] + xk * mm, bmx[1] - yk * mm, bmn[2] - dz * mm))
+    return objs, body, kp, c
+
+
+def _wire(NB, name, pts, key, r=0.00028):
+    import assembly_anim as AA
+    o = AA.curve_obj(NB, name, [tuple(p) for p in pts], r, NB.mat_foam())
+    paint([o], key)
+    return o
+
+
+def f_swd_wires(R, NB):
+    objs, body, kp, c = _board_bottom(NB)
+    keys = ['red', 'wire_y', 'wire_g', None, 'black']
+    wires = []
+    for i, (x, y) in enumerate(TP_K):
+        if keys[i] is None:
+            continue
+        pts = [kp(x, y, 0.3), kp(x - 0.4, y - 2.0, 0.6), kp(x - 1.5 - 0.6 * i, -4.0 - 1.2 * i, 0.6), kp(-6.0 - 1.4 * i, -9.0 - 1.4 * i, 0.4)]
+        wires.append(_wire(NB, 'w%d' % i, pts, keys[i]))
+    cam = new_cam()
+    ortho(cam, c, 0, 90)
+    import numpy as np
+    pts = np.vstack([pts_of([body]), np.array([list(kp(-14, -16)), list(kp(30, 29))])])
+    fit(cam, pts, 980, 860, margin=1.05)
+    a = {('tp%d' % i): kp(*TP_K[i]) for i in range(5)}
+    a['board'] = kp(18, 12)
+    a['j1'] = kp(14, 27)
+    a['wires'] = kp(-8.5, -11.5, 0.4)
+    shot(R, 'main', cam, 980, 860, a, hi=wires)
+
+
+def f_cell_leads(R, NB):
+    import guide_figures as GF
+    objs, body, kp, c = _board_bottom(NB)
+    pv, pg = kp(*J2_K[0]), kp(*J2_K[1])
+    ce = kp(28.7 + 4.0 + 12.5, 18.8, -1.4)            # cell beyond the button-side edge, lead end toward the board
+    cell = GF.box_obj(NB, 'cell', (ce.x, ce.y, ce.z), (0.025, 0.012, 0.004), NB.mat_lipo(), bevel=0.0006)
+    paint([cell], 'cell')
+    red = _wire(NB, 'lr', [kp(32.8, 19.6, -1.0), kp(31.0, 19.8, 0.2), kp(28.0, 19.3, 0.2), kp(26.8, 18.9, 0.15)], 'red')
+    blk = _wire(NB, 'lb', [kp(32.8, 18.0, -1.0), kp(31.0, 17.2, 0.2), kp(26.0, 17.4, 0.2), kp(23.8, 18.6, 0.15)], 'black')
+    k0 = kp(25.3, 18.8, 0.45)
+    kap = GF.box_obj(NB, 'kap', (k0.x, k0.y, k0.z), (0.0062, 0.0042, 0.00006), NB.mat_foam())
+    paint([kap], 'kapton')
+    kap.color = (*lin(COL['kapton']), 0.55)
+    kap['rgba'] = list(kap.color)
+    cam = new_cam()
+    ortho(cam, c, 0, 90)
+    fit(cam, pts_of([body, cell]), 980, 860, margin=1.08)
+    a = dict(j2p=pv, j2m=pg, cell=ce, kap=kp(25.3, 18.0, 0.5), tp=kp(*TP_K[2]), j3v=kp(*J3_K[0]), edge=kp(28.7, 9.0),
+             red=kp(30.0, 19.7, 0.2), blk=kp(30.0, 17.3, 0.2))
+    shot(R, 'main', cam, 980, 860, a, hi=[red, blk, kap])
+
+
+def f_j3_wires(R, NB):
+    import guide_figures as GF
+    objs, body, kp, c = _board_bottom(NB)
+    cc = kp(14.5, -6.0, -1.5)                          # connector where it will sit: beyond the proximal edge, centred
+    conn = GF.box_obj(NB, 'conn', (cc.x, cc.y, cc.z), (0.0145, 0.004, 0.004), NB.mat_foam(), bevel=0.0004)
+    paint([conn], 'mag')
+    red = _wire(NB, 'jr', [kp(23.9, 25.4, 0.2), kp(25.6, 24.0, 0.4), kp(27.2, 20.0, 0.4), kp(27.2, 3.0, 0.4), kp(24.0, -1.0, 0.4),
+                           kp(15.75, -3.5, -0.6), kp(15.75, -4.0, -1.5)], 'red')
+    blk = _wire(NB, 'jb', [kp(26.9, 25.4, 0.2), kp(27.8, 23.5, 0.4), kp(27.8, 20.0, 0.4), kp(27.8, 3.0, 0.4), kp(25.0, -1.5, 0.4),
+                           kp(13.25, -3.5, -0.6), kp(13.25, -4.0, -1.5)], 'black')
+    cam = new_cam()
+    ortho(cam, c, 0, 90)
+    import numpy as np
+    fit(cam, np.vstack([pts_of([body, conn])]), 980, 860, margin=1.08)
+    a = dict(j3v=kp(*J3_K[0]), j3g=kp(*J3_K[1]), conn=cc, wires=kp(27.5, 10.0, 0.4), j1=kp(14, 27), j2=kp(*J2_K[0]))
+    shot(R, 'main', cam, 980, 860, a, hi=[red, blk, conn])
+
+
+def f_strip(R, NB):
+    from mathutils import Vector
+    S = jig(NB)
+    paint([S.jig, S.base] + S.bdots, 'jig', 'hide')
+    cam = new_cam()
+    ortho(cam, Vector((0.018, 0, 0.003)), -14, 38)
+    objs = S.flex + list(S.pods.values())
+    fit(cam, pts_of(objs), W0, 760, margin=1.06)
+    a = {}
+    for k in S.pods:
+        a['p%d' % k] = ctr([S.pods[k]]) + Vector((0, -0.012, 0.002))
+    a['mid'] = Vector((0.0, -0.004, 0.0005))
+    a['tail'] = Vector((0.0, 0.016, 0.0010))
+    a['spine'] = Vector((jig_x(18), 0.003, 0.0003))
+    shot(R, 'main', cam, W0, 760, a)
+
+
+def f_base_jig(R, NB):
+    """stage 2: the pedestal; the pod 3/4 part of the flex on the saddle, the base lowered onto it."""
+    import bpy
+    from mathutils import Vector, Matrix
+    wb_scene()
+    jg = NB.import_glb(os.path.join(BUILD, 'base_jig_fit.glb'), bake=True)
+    jig_o, base = [], []
+    for o in jg.values():
+        (base if NB.kind(o.name) == 'module_base' else jig_o).append(o)
+    paint(jig_o, 'jig')
+    paint(base, 'base')
+    ma = NB.import_glb(os.path.join(BUILD, 'module_assy.glb'), bake=True)
+    fl = []
+    Mj = Matrix.Translation((0, 0, 0.02711)) @ Matrix.Rotation(math.pi, 4, 'Z')    # module frame -> jig (base_jig.py)
+    for o in list(ma.values()):
+        k = NB.kind(o.name)
+        if k in ('flex_pods_3_4', 'pads', 'foam', 'tail'):
+            o.matrix_world = Mj @ o.matrix_world
+            paint([o], {'flex_pods_3_4': 'flex', 'pads': 'pad', 'foam': 'dot', 'tail': 'flex'}[k])
+            fl.append(o)
+        else:
+            bpy.data.objects.remove(o)
+    lift = Vector((0, 0, 0.014))
+    dots = [o for o in fl if NB.kind(o.name) == 'foam']
+    for o in base + dots:
+        o.matrix_world = Matrix.Translation(lift) @ o.matrix_world
+    cam = new_cam()
+    c = ctr(jig_o)
+    ortho(cam, c + Vector((0, 0, 0.012)), -28, 22)
+    fit(cam, pts_of(jig_o + base + fl), 1100, 860, margin=1.08)
+    cb = ctr(base)
+    a = dict(base=cb + Vector((0.006, 0.0, 0.004)), saddle=Vector((0.0, -0.004, 0.0262)), pins=Vector((0.0089, 0.005, 0.0266)),
+             fence=Vector((0.0, -0.0205, 0.0262)), pedestal=c + Vector((0.0, -0.016, -0.004)), flex=Vector((-0.009, 0.004, 0.0265)),
+             bar=cb + Vector((0.021, 0.0, -0.003)))
+    paths = dict(t0=[cb + Vector((-0.010, -0.012, 0.0)), cb + Vector((-0.010, -0.012, 0.0)) - lift * 0.8],
+                 t1=[cb + Vector((0.010, -0.012, 0.0)), cb + Vector((0.010, -0.012, 0.0)) - lift * 0.8])
+    shot(R, 'main', cam, 1100, 860, a, paths, hi=base)
+
+
+def f_bay(R, NB):
+    """lid off, top view: the connector in its bay, the J3 wires along the button-side edge, the cell leads."""
+    import bpy
+    import mathutils
+    from mathutils import Vector
+    S = ring(NB)
+    colour_ring(S, dict(pods='hide', foam='hide', web='hide', slides='hide', lid='hide', cap='hide', cell='ghost',
+                        base='on', board='ghost', flex='hide'))
+    paint(S.flex + S.pads, 'flex', 'hide')
+    paint(S.mag, 'mag')
+    paint([S.jwires[0]], 'red')
+    paint([S.jwires[1]], 'black')
+    cam = new_cam()
+    cam.matrix_world = S.T @ mathutils.Matrix.Translation((0.0, 0.001, 0.3))
+    cam.data.type = 'ORTHO'
+    cam.data.clip_start, cam.data.clip_end = 0.001, 10.0
+    bpy.context.view_layer.update()
+    import numpy as np
+    fit(cam, np.array([list(mod_pt(S, (x, y, 3))) for x in (-24, 24) for y in (-18.5, 20.5)]), W0, 860, margin=1.02)
+    a = dict(conn=mod_pt(S, (MAG_C[0], MAG_C[1] - 1.5, 5.4)), j3=mod_pt(S, (11.4, -13.2, 1.7)), wires=mod_pt(S, (13.1, 2.0, 1.2)),
+             leads=mod_pt(S, (15.0, -6.4, 2.0)), j2=mod_pt(S, (11.3, -6.6, 1.5)), cellend=mod_pt(S, (5.0, -10.0, 5.0)),
+             barA=mod_pt(S, (BAR_A[0], 0, 3.0)), barB=mod_pt(S, (BAR_B[0], 0, 3.0)))
+    shot(R, 'main', cam, W0, 860, a, hi=S.mag + S.jwires + S.leads)
+
+
+def f_lock_a(R, NB):
+    import bpy
+    from mathutils import Vector
+    S = ring(NB)
+    colour_ring(S, dict(pods='on', foam='hide', web='on', slides='hide', lid='on', cap='on', base='on', flex='on', board='hide', cell='hide', leads='hide'))
+    lk = S.straps.get('strap_lock_a')
+    cam = new_cam()
+    tgt = mod_pt(S, (BAR_A[0], 0.0, BAR_A[1]))
+    ortho(cam, tgt, 0, 6)
+    fit(cam, pts_of([lk]) if lk else [list(tgt)], 450, 430, margin=2.2, off=(0.05, 0.0))
+    a = dict(bar=tgt, lock=ctr([lk]) if lk else tgt, wall=mod_pt(S, (-15.6, -10.0, 1.0)))
+    shot(R, '3d', cam, 450, 430, a, hi=[lk] if lk else None)
+
+
+def f_fold_b(R, NB):
+    import bpy
+    from mathutils import Vector
+    S = ring(NB)
+    colour_ring(S, dict(pods='on', foam='hide', web='on', slides='hide', lid='on', cap='on', base='on', flex='on', board='hide', cell='hide', leads='hide'))
+    pieces = [S.straps[k] for k in ('strap_lock_b', 'strap_tail_b') if k in S.straps]
+    if 'strap_tail_b' in S.straps:
+        paint([S.straps['strap_tail_b']], 'hook')
+    lk = S.straps.get('strap_lock_b')
+    cam = new_cam()
+    tgt = mod_pt(S, (BAR_B[0], 0.0, BAR_B[1]))
+    ortho(cam, tgt, 0, 6)
+    fit(cam, pts_of([lk]) if lk else [list(tgt)], 450, 430, margin=2.4, off=(-0.05, 0.08))
+    import numpy as np
+    tb = S.straps.get('strap_tail_b')
+    tpt = tgt
+    if tb is not None:
+        V = NB.verts_np(tb)
+        d = np.linalg.norm(V - np.array(list(tgt)), axis=1)
+        tpt = Vector(V[np.argmin(np.abs(d - 0.010))].tolist())
+    a = dict(bar=mod_pt(S, (BAR_B[0], 0.0, BAR_B[1])), tail=tpt)
+    shot(R, '3d', cam, 450, 430, a, hi=pieces)
+
+
+def f_press(R, NB):
+    from mathutils import Vector, Matrix
+    import guide_figures as GF
+    wb_scene()
+    pp = NB.import_glb(os.path.join(BUILD, 'pod.glb'), bake=True)
+    pod = list(pp.values())
+    paint(pod, 'pod')
+    pmn, pmx = NB.bbox(pod)
+    pc = Vector(((pmn + pmx) / 2).tolist())
+    mm = 0.001
+    zf = pmn[2] + mm * (BT_POD + 1.0)                      # strap mid-plane when seated
+    c0 = Vector((pc.x, pc.y, zf))
+    hinge = Vector((pc.x, pc.y - 0.0095, zf - 0.0004))     # -y edge already under its lip
+    web = GF.box_obj(NB, 'web', tuple(c0), (0.012, 0.020, 0.002), NB.mat_foam())
+    tilt = Matrix.Translation(hinge) @ Matrix.Rotation(math.radians(13), 4, 'X') @ Matrix.Translation(-hinge)
+    web.matrix_world = tilt @ web.matrix_world
+    paint([web], 'web')
+    cam = new_cam()
+    ortho(cam, pc, 90, 12)
+    fit(cam, pts_of(pod + [web]), 1100, 860, margin=1.10)
+    ey = tilt @ Vector((pc.x, pc.y + 0.0100, zf + 0.001))
+    a = dict(pod=Vector((pc.x, pc.y + 0.006, pmn[2] + 0.0012)), lip=Vector((pc.x, pc.y - 0.0115, pmx[2])),
+             lip2=Vector((pc.x, pc.y + 0.0115, pmx[2])), web=tilt @ Vector((pc.x, pc.y + 0.005, zf + 0.001)),
+             floor=Vector((pc.x, pc.y + 0.004, pmn[2] + mm * BT_POD)))
+    paths = dict(t0=[ey + Vector((0, 0, 0.003)), Vector((pc.x, pc.y + 0.0100, zf + 0.0012))])
+    shot(R, 'main', cam, 1100, 860, a, paths, hi=[web])
+
+
+def f_charge(R, NB):
+    import bpy
+    from mathutils import Vector, Matrix
+    import guide_figures as GF
+    S = ring(NB)
+    colour_ring(S, dict(pods='ghost', foam='hide', web='ghost', slides='hide', flex='ghost', board='hide', cell='hide', leads='hide'))
+    paint(S.mag, 'mag')
+    head = GF.box_obj(NB, 'head', (0, 0, 0), (0.0145, 0.006, 0.0045), NB.mat_foam(), bevel=0.0008)
+    head.matrix_world = S.T @ Matrix.Translation(((MAG_C[0]) / 1000, (MAG_C[1] + 9.0) / 1000, MAG_C[2] / 1000)) @ Matrix.Identity(4)
+    paint([head], 'usb')
+    import assembly_anim as AA
+    cab = AA.curve_obj(NB, 'cab', [tuple(S.T @ Vector((MAG_C[0] / 1000, (MAG_C[1] + 12 + 6 * k) / 1000, (MAG_C[2] - 2 * k * k) / 1000))) for k in range(6)],
+                       0.0016, NB.mat_foam())
+    paint([cab], 'usb')
+    cam = new_cam()
+    tgt = mod_pt(S, (0, 16, 2))
+    ortho(cam, tgt, 150, 24)
+    fit(cam, pts_of(S.lid + S.base + [head]), 1000, 860, margin=1.25)
+    a = dict(bay=mod_pt(S, MAG_C), head=ctr([head]), lid=ctr(S.lid) + S.up * 0.004, j1=mod_pt(S, (0, Y_MIN, 4)))
+    paths = dict(t0=[ctr([head]) + (S.T.to_3x3() @ Vector((0, 0.004, 0))), mod_pt(S, (MAG_C[0], MAG_C[1] + 1.5, MAG_C[2]))])
+    shot(R, 'main', cam, 1000, 860, a, paths, hi=[head])
+
+
+def f_open(R, NB):
+    import bpy
+    import numpy as np
+    from mathutils import Vector, Matrix
+    S = ring(NB)
+    colour_ring(S, dict(pods='ghost', foam='hide', web='ghost', slides='hide', flex='ghost'))
+    paint(S.mag, 'mag')
+    cam = new_cam()
+    tgt = mod_pt(S, (0, 16, 5))
+    ortho(cam, tgt, 160, 22)
+    fit(cam, pts_of(S.lid + S.base), 690, 640, margin=1.30)
+    a = dict(notch=mod_pt(S, NOTCH), lid=ctr(S.lid) + S.up * 0.004, conn=mod_pt(S, MAG_C))
+    lev = [mod_pt(S, (0.5, 24 - 4 * math.cos(t), NOTCH[2] + 6 * math.sin(t))) for t in np.linspace(0.2, 1.6, 12)]
+    shot(R, 'a', cam, 690, 640, a, dict(lever=lev), hi=S.lid)
+    # b: lid and cell off, board folded out (upright) for the SWD wires
+    colour_ring(S, dict(pods='ghost', foam='hide', web='ghost', slides='hide', flex='ghost', lid='hide', cap='hide', cell='hide'))
+    paint(S.jwires, 'red', 'hide')
+    Hb = place_board(S, 0.0, 6.0)
+    import assembly_anim as AA
+    wires, allq = [], []
+    for i, key in ((1, 'wire_y'), (2, 'wire_g'), (4, 'black')):
+        tx, ty = TP_K[i][0] - 14.0, 12.2 - TP_K[i][1]
+        q = [Hb @ mod_pt(S, (tx, ty, 1.6)), Hb @ mod_pt(S, (tx - 0.5, ty + 0.5, -0.5)), Hb @ mod_pt(S, (tx - 2.0 - i, ty - 2.0, -6.0)),
+             Hb @ mod_pt(S, (tx - 3.0 - 2 * i, ty - 9.0, -9.0))]
+        w = AA.curve_obj(NB, 'rw%d' % i, [tuple(v) for v in q], 0.00028, NB.mat_foam())
+        paint([w], key)
+        wires.append(w)
+        allq += [list(v) for v in q]
+    cam2 = new_cam()
+    ortho(cam2, mod_pt(S, (0, -6, 14)), 125, 18)
+    fit(cam2, np.vstack([pts_of(S.base + S.board), np.array(allq)]), 690, 640, margin=1.10)
+    a2 = dict(board=Hb @ mod_pt(S, (0, 0, 1.6)), tp=Hb @ mod_pt(S, (TP_K[2][0] - 14.0, 12.2 - TP_K[2][1], 1.6)),
+              base=mod_pt(S, (10, 8, 0)))
+    shot(R, 'b', cam2, 690, 640, a2, hi=wires)
+
+
+# ---------------------------------------------------------------- r2 versions of the figures shared with r1
+def f_kit(R, NB):
+    import bpy
+    from mathutils import Vector, Matrix
+    import guide_figures as GF
+    import assembly_anim as AA
+    wb_scene()
+    mm = 0.001
+    items = {}
+
+    def imp(fn, kinds=None):
+        objs = NB.import_glb(os.path.join(BUILD, fn), bake=True)
+        out = {}
+        for o in list(objs.values()):
+            k = NB.kind(o.name)
+            if kinds and k not in kinds:
+                bpy.data.objects.remove(o)
+                continue
+            out.setdefault(k, []).append(o)
+        return out
+
+    def put(objs, x, y, rot_z=0.0, flip=False):
+        bpy.context.view_layer.update()
+        for o in objs:
+            if o.data.users > 1:
+                o.data = o.data.copy()
+            o.data.transform(o.matrix_world)
+            o.matrix_world = Matrix.Identity(4)
+        for o in objs:
+            if flip:
+                o.data.transform(Matrix.Rotation(math.pi, 4, 'Y'))
+            if rot_z:
+                o.data.transform(Matrix.Rotation(rot_z, 4, 'Z'))
+        a, b = NB.bbox(objs)
+        c = (a + b) / 2
+        for o in objs:
+            o.data.transform(Matrix.Translation((x * mm - c[0], y * mm - c[1], -a[2])))
+            o.data.update()
+        return objs
+    ma = imp('module_assy.glb', ('module_base', 'module_lid', 'button_cap', 'lipo', 'mag_connector', 'mag_contacts'))
+    items['base'] = put(ma['module_base'], 226, 84)
+    items['lid'] = put(ma['module_lid'], 270, 84)
+    items['cap'] = put(ma['button_cap'], 150, 30)
+    items['cell'] = put(ma['lipo'], 306, 84)
+    for k in ('base', 'lid', 'cap', 'cell'):
+        paint(items[k], k)
+    fem = put(ma.get('mag_connector', []) + ma.get('mag_contacts', []), 228, 30, rot_z=0.0)
+    male = []
+    for o in fem:
+        c = o.copy()
+        c.data = o.data.copy()
+        NB.link(c)
+        male.append(c)
+    male = put(male, 252, 30)
+    paint(fem + male, 'mag')
+    items['conn'] = fem + male
+    jg = imp('bond_jig.glb')
+    items['bond_jig'] = put(sum(jg.values(), []), 75, 148)
+    bj = imp('base_jig.glb')
+    items['base_jig'] = put(sum(bj.values(), []), 180, 148, rot_z=math.pi / 2)
+    cs = imp('cell_spacer.glb')
+    items['spacer'] = put(sum(cs.values(), []), 236, 148)
+    paint(items['bond_jig'] + items['base_jig'], 'jig')
+    paint(items['spacer'], 'spacer')
+    pods = []
+    for i in range(6):
+        pp = imp('pod.glb')
+        pods.append(put(sum(pp.values(), []), 8 + 17 * i, 30))
+        paint(pods[-1], 'pod')
+    items['pods'] = sum(pods, [])
+    bobj, body = NB.load_board()
+    items['board'] = put(list(bobj.values()), 182, 84)
+    paint_board(items['board'])
+    fl, _ = NB.load_board(os.path.join(BUILD, 'flex_board.glb'), flex=True)
+    items['flex'] = put(list(fl.values()), 75, 84)
+    paint_board(items['flex'], flex=True)
+    dots = []
+    for i in range(25):
+        d = GF.dot_obj(NB, 'kdot%d' % i, NB.mat_foam())
+        d.data.transform(d.matrix_world)
+        d.matrix_world = Matrix.Identity(4)
+        d.data.transform(Matrix.Translation((mm * (172 + 8 * (i % 5)), mm * (46 - 8 * (i // 5)), 0.001)))
+        dots.append(d)
+    paint(dots, 'dot')
+    items['dots'] = dots
+    # the strap, laid flat: ring end left, loop panel, hook tab at the right
+    x0s, ys = 6.0, -16.0
+    st = GF.box_obj(NB, 'strap', (mm * (x0s + 151), mm * ys, mm * 1.0), (0.302, 0.020, 0.002), NB.mat_foam())
+    lp = GF.box_obj(NB, 'panel', (mm * (x0s + 164.5), mm * ys, mm * 2.05), (0.075, 0.0196, 0.0001), NB.mat_foam())
+    hk = GF.box_obj(NB, 'hooktab', (mm * (x0s + 280), mm * ys, mm * 2.1), (0.044, 0.0196, 0.0002), NB.mat_foam())
+    paint([st], 'web')
+    paint([lp], tuple(0.78 * c + 0.22 for c in COL['web']))
+    paint([hk], 'hook')
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.0115, minor_radius=0.0011, location=(mm * (x0s - 4), mm * ys, 0.0011))
+    ring_o = bpy.context.active_object
+    ring_o.scale = (0.45, 1.0, 1.0)
+    paint([ring_o], 'ring')
+    items['strap'] = [st]
+    # USB-A lead to the male half
+    usb = AA.curve_obj(NB, 'usb', [(mm * 262, mm * 30, 0.0016), (mm * 276, mm * 36, 0.0016), (mm * 290, mm * 28, 0.0016),
+                                   (mm * 304, mm * 34, 0.0016)], 0.0018, NB.mat_foam())
+    paint([usb], 'usb')
+    cam = new_cam()
+    ortho(cam, (0.155, 0.06, 0), 0, 90)
+    allp = pts_of([o for o in bpy.data.objects if o.type == 'MESH' and not o.hide_render])
+    fit(cam, allp, W0, 860, margin=1.03, off=(0, 0.0))
+
+    def bot(objs):
+        a, b = NB.bbox(objs)
+        return Vector(((a[0] + b[0]) / 2, a[1], b[2]))
+    anchors = {k: bot(v) for k, v in items.items()}
+    anchors['conn'] = bot(fem)
+    anchors['strap'] = Vector((mm * (x0s + 60), mm * (ys - 10), 0.002))
+    anchors['hook'] = Vector((mm * (x0s + 280), mm * (ys - 10), 0.002))
+    anchors['ringe'] = Vector((mm * (x0s - 4), mm * (ys - 11), 0.002))
+    anchors['usb'] = Vector((mm * 290, mm * 25, 0.002))
+    shot(R, 'main', cam, W0, 860, anchors)
+
+
+def _bar_pt(S, bar, dz=0.0):
+    return mod_pt(S, (bar[0], 0.0, bar[1] + dz))
+
+
+def f_names(R, NB):
+    from mathutils import Vector
+    S = ring(NB)
+    cam = new_cam()
+    ortho(cam, S.ring_c, 12, 18)
+    fit(cam, pts_of(S.pods + S.lid + [S.band_s] + S.ends), 980, 860, margin=1.25)
+    a = {}
+    for o in S.pods:
+        a['pod%d' % S.pod_num[o.name]] = ctr([o]) + Vector((0, -0.017, 0))
+    a['pod3'] = mod_pt(S, (9, -16, -1))
+    a['pod4'] = mod_pt(S, (-9, -16, -1))
+    a['lid'] = ctr(S.lid) + S.up * 0.004
+    a['j1end'] = mod_pt(S, (0, Y_MIN - 0.5, 4))
+    a['button'] = ctr(S.cap) + S.up * 0.001
+    a['antenna'] = mod_pt(S, (-12.5, -8, 6))
+    a['barA'] = mod_pt(S, (BAR_A[0], Y_MIN, BAR_A[1] + 2.0))
+    a['barB'] = mod_pt(S, (BAR_B[0], Y_MIN, BAR_B[1] + 2.0))
+    a['conn'] = mod_pt(S, MAG_C)
+    p1 = [o for o in S.pods if S.pod_num[o.name] == 1][0]
+    p8 = [o for o in S.pods if S.pod_num[o.name] == 8][0]
+    gp = (ctr([p1]) + ctr([p8])) / 2
+    a['gap'] = Vector((gp.x, gp.y - 0.012, gp.z))
+    shot(R, 'main', cam, 980, 860, a)
+
+
+def f_exploded(R, NB):
+    import bpy
+    import numpy as np
+    from mathutils import Vector, Matrix
+    import guide_figures as GF
+    S = ring(NB)
+    paint(S.mag, 'mag')
+    up, rad = S.up, S.radial
+    rd = GF.dot_obj(NB, 'root_dot', NB.mat_foam())
+    rd.matrix_world = S.T @ Matrix.Translation((0, -0.0104, -0.0004))
+    rd['M0'] = [list(r) for r in rd.matrix_world]
+    paint([rd], 'dot')
+    for o in S.leads + S.jwires:
+        o.hide_render = True
+        o['mode'] = 'hide'
+    for o in S.mag:
+        o['M0'] = [list(r) for r in o.matrix_world]
+    moves = [(o, rad(o) * 0.007) for o in S.foam + [rd]] + [(o, rad(o) * 0.016) for o in S.pods] + \
+            [(o, up * 0.012) for o in S.base] + [(o, up * 0.012 + S.prox * 0.012) for o in S.mag] + \
+            [(o, up * 0.023) for o in S.board] + [(o, up * 0.033) for o in S.cell] + \
+            [(o, up * 0.044) for o in S.lid] + [(o, up * 0.054) for o in S.cap]
+    a, paths = {}, {}
+    for o, v in moves:
+        M0 = Matrix(o['M0']) if 'M0' in o.keys() and o in S.mag else S.M0(o)
+        o.matrix_world = Matrix.Translation(v) @ M0
+    for o in S.webs:
+        V = NB.verts_np(o, world=False)
+        th = np.arctan2(V[:, 0], V[:, 2] - S.z_axis)
+        V[:, 0] += 0.025 * np.sin(th)
+        V[:, 2] += 0.025 * np.cos(th)
+        o.data.vertices.foreach_set('co', V.ravel())
+        o.data.update()
+    bpy.context.view_layer.update()
+    for key, grp, v in (('lid', S.lid, up * 0.044), ('cap', S.cap, up * 0.054), ('cell', S.cell, up * 0.033),
+                        ('board', [S.board[0]], up * 0.023), ('base', S.base, up * 0.012)):
+        c = ctr(grp)
+        a[key] = c
+        paths['t_' + key] = [c - v + up * 0.002, c]
+    cm = ctr(S.mag)
+    a['conn'] = cm
+    paths['t_conn'] = [cm - S.prox * 0.010, cm]
+    p1 = [o for o in S.pods if S.pod_num[o.name] == 2][0]
+    a['pod'] = ctr([p1])
+    paths['t_pod'] = [ctr([p1]) - rad(p1) * 0.016, ctr([p1])]
+    fo = max(S.foam, key=lambda o: ctr([o]).x + 0.2 * ctr([o]).z)
+    a['foam'] = ctr([fo])
+    fl = max(S.flex, key=lambda o: ctr([o]).x - 0.3 * ctr([o]).z)
+    a['flex'] = ctr([fl])
+    a['tail'] = ctr([S.tail])
+    V = NB.verts_np(S.band_s)
+    a['web'] = Vector(V[np.argmax(V[:, 0] - V[:, 2])].tolist())
+    hb = S.straps.get('strap_tail_b')
+    if hb is not None:
+        paint([hb], 'hook')
+        Vh = NB.verts_np(hb)
+        a['hook'] = Vector(Vh[np.argmax(Vh[:, 0] - 0.3 * Vh[:, 2])].tolist())
+    a['barA'] = mod_pt(S, (BAR_A[0], Y_MIN, BAR_A[1])) + up * 0.012
+    cam = new_cam()
+    ortho(cam, S.ring_c + up * 0.02, 18, 14)
+    fit(cam, pts_of(S.pods + S.lid + S.cap + [S.band_s] + S.ends), 1000, 900, margin=1.08)
+    shot(R, 'main', cam, 1000, 900, a, paths)
+
+
+def f_lid(R, NB):
+    from mathutils import Matrix
+    S = ring(NB)
+    colour_ring(S, dict(pods='hide', foam='hide', web='hide', slides='hide', base='on', flex='hide'))
+    paint(S.flex + S.pads, 'flex', 'hide')
+    paint(S.mag, 'mag')
+    for o in S.cap:
+        o.matrix_world = Matrix.Translation(S.up * 0.008) @ S.M0(o)
+    for o in S.lid:
+        o.matrix_world = Matrix.Translation(S.up * 0.020) @ S.M0(o)
+    cam = new_cam()
+    ortho(cam, mod_pt(S, (0, 0, 10)), 32, 30)
+    fit(cam, pts_of(S.base + S.lid), 1000, 860, margin=1.06)
+    U = S.up * 0.020
+    a = dict(cap=ctr(S.cap) + S.up * 0.001, sw1=mod_pt(S, (SW1[0], SW1[1], 4.7)), led=mod_pt(S, (D1[0], D1[1], 9.6)) + U,
+             d1=mod_pt(S, (D1[0], D1[1], 2.9)), lid=ctr(S.lid) + S.up * 0.004, bay=mod_pt(S, MAG_C))
+    for i, (x0, x1, sy) in enumerate(SNAP_SEGS):
+        a['snap%d' % i] = mod_pt(S, ((x0 + x1) / 2, 18.6 if sy > 0 else -16.45, 3.6))
+    paths = dict(t0=[mod_pt(S, (-13, -15, 3)) + U, mod_pt(S, (-13, -15, 4))], t1=[mod_pt(S, (13, 17, 3)) + U, mod_pt(S, (13, 17, 4))],
+                 t2=[ctr(S.cap), ctr(S.cap) - S.up * 0.007])
+    shot(R, 'main', cam, 1000, 860, a, paths, hi=S.cap + S.lid)
+
+
+def f_wear(R, NB):
+    import bpy
+    import numpy as np
+    from mathutils import Vector
+    wb_scene()
+    band = NB.load_band()
+    arm, info = NB.build_arm(curl=30)
+    NB.fit_band_to_arm(band, arm)
+    objs = list(band.values()) + [arm]
+    rig = NB.rig_objects(objs)
+    NB.pose(rig, pitch=8, floor_objs=objs, floor=0.0003)
+    bpy.context.view_layer.update()
+    paint([arm], 'skin')
+    kmap = dict(module_base='base', module_lid='lid', button_cap='cap', pod_shells='pod', strap='web', flex='flex', pads='pad',
+                foam='dot', lipo='cell', mag_connector='mag', mag_contacts='mag')
+    for o in band.values():
+        k = o['kind']
+        if k in ('main_board', 'board_parts', 'cell_leads'):
+            paint([o], 'board', 'hide')
+        else:
+            paint([o], kmap.get(k, 'pod'))
+    c, mn, mx = NB.module_centre(band)
+    cam = new_cam()
+    tgt = c + rig.matrix_world.to_3x3() @ Vector((0, -0.04, -0.02))
+    ortho(cam, tgt, 62, 34)
+    fit(cam, pts_of([o for o in band.values() if o['kind'] == 'module_lid']).tolist() + [list(tgt + Vector((-0.09, -0.06, -0.03))), list(tgt + Vector((0.06, 0.08, 0.03)))], W0, 820, margin=1.0)
+    lid = [o for o in band.values() if o['kind'] == 'module_lid']
+    capo = [o for o in band.values() if o['kind'] == 'button_cap']
+    base = [o for o in band.values() if o['kind'] == 'module_base']
+    ax = rig.matrix_world.to_3x3() @ Vector((0, 1, 0))
+    st = [o for o in band.values() if o['kind'] == 'strap']
+    V = NB.verts_np(st[0])
+    Vb = NB.verts_np(base[0])
+    a = dict(module=ctr(lid) + Vector((0, 0, 0.004)), cap=ctr(capo), crease=c + ax * -0.026 + Vector((0, 0, -0.012)),
+             web=Vector(V[np.argmax(V[:, 0])].tolist()), bar=Vector(Vb[np.argmax(Vb[:, 0])].tolist()))
+    paths = dict(slip=[c + ax * -0.080 + Vector((0, 0, 0.026)), c + ax * -0.030 + Vector((0, 0, 0.026))])
+    shot(R, 'main', cam, W0, 820, a, paths)
+
+
+# --------------------------------------------------------------- r2 2D diagrams
+def dg_cut(C, box):
+    """the single-pass strap laid flat, ring end left: where to cut for each wrist, the loop panel and the hook tab."""
+    d = C.d
+    F = fonts()
+    frame_box(d, box, 'The strap laid flat, ring end left (size L, 302 mm)')
+    x, y, w, h = box
+    L = 302.0
+    x0, x1 = x + 200, x + w - 70
+    sx = (x1 - x0) / L
+    yb = y + 110
+    hb = 34
+    X = lambda mm: x0 + mm * sx
+    d.rectangle([X(0), yb, X(L), yb + hb], fill=col255('web'), outline=INK, width=2)
+    d.rectangle([X(127), yb, X(202), yb + hb], fill=tuple(int(0.75 * c + 0.25 * 255) for c in col255('web')), outline=INK, width=1)
+    d.rectangle([X(258), yb, X(L), yb + hb], fill=col255('hook'), outline=INK, width=2)
+    d.rounded_rectangle([X(-9), yb - 8, X(1), yb + hb + 8], radius=5, outline=col255('ring'), width=6)
+    T(d, (X(164.5), yb + hb / 2), 'loop panel', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    T(d, (X(280), yb + hb / 2), 'hook tab', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    T(d, (X(-12), yb + hb / 2), 'steel ring', font=F['small'], fill=SUB, anchor='rm')
+    for mm, lab in ((0, '0'), (127, '127'), (202, '202'), (258, '258'), (302, '302 mm')):
+        d.line([(X(mm), yb + hb), (X(mm), yb + hb + 12)], fill=INK, width=1)
+        T(d, (X(mm), yb + hb + 14), lab, font=F['small'], fill=SUB, anchor='ma')
+    rows = [('145 mm wrist', 18, 33, 'cut off 18-33 mm (about 25)'), ('160 mm wrist', 10, 21, 'cut off 10-21 mm (about 13)'),
+            ('180 mm wrist', 10, 10, 'cut off the ring only (10 mm); about 30 of the 44 mm hook tab lands on the panel')]
+    for i, (name, c0, c1, txt) in enumerate(rows):
+        yy = yb + hb + 70 + i * 50
+        d.text((x0 - 20, yy), name, font=F['lab'], fill=INK, anchor='rm')
+        d.rectangle([X(0), yy - 8, X(c1), yy + 8], fill=(250, 220, 200), outline=ACC, width=2)
+        if c0 != c1:
+            d.rectangle([X(c0), yy - 8, X(c1), yy + 8], fill=ACC)
+        d.line([(X(c1), yy - 15), (X(c1), yy + 15)], fill=ACC, width=3)
+        d.text((X(c1) + 16, yy), txt, font=F['sub'], fill=INK, anchor='lm')
+    T(d, (x + 30, y + h - 26), 'Measure from the ring end. The pale part always comes off; cut square across the strap inside the solid '
+      'range (a smaller wrist cuts more), then heat-seal the cut with a quick pass of a lighter flame.', font=F['small'], fill=SUB, anchor='lm')
+
+
+def _band(d, pts, col, w=9):
+    d.line(pts, fill=col, width=w, joint='curve')
+
+
+def _marker(d, xy, n, F):
+    cx, cy = xy
+    r = 14
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=ACC, outline=(255, 255, 255), width=2)
+    d.text((cx, cy + 1), str(n), font=F['num'], fill=(255, 255, 255), anchor='mm')
+
+
+def dg_lock(C, box):
+    """section through bar A (seen from the J1 end): the pinch lock, numbered."""
+    d = C.d
+    F = fonts()
+    frame_box(d, box, 'Section at bar A (antenna side), seen from the J1 end')
+    x, y, w, h = box
+    M = MM(box, 30, (w * 0.60, h * 0.55))
+    d.polygon([M(0.0, 4.0), M(1.6, -4.2), M(6.0, -4.2), M(6.0, 4.0)], fill=col255('base'), outline=INK)
+    d.polygon([M(-4.4, 3.0), M(-2.9, -4.2), M(-7.5, -4.2), M(-8.6, 1.2), M(-7.9, 3.0)], fill=col255('base'), outline=INK)
+    web, tail = col255('web'), tuple(int(0.6 * c + 0.4 * 255) for c in col255('web'))
+    _band(d, [M(-13, -9.5), M(-6, -6.3), M(-1.4, -5.4), M(0.6, -3.6), M(-0.4, 2.0), M(-1.2, 4.6), M(-4.6, 5.2), M(-8.6, 3.6),
+              M(-9.7, 1.0), M(-8.8, -4.6), M(-6.0, -5.0), M(-3.0, -4.9)], web)
+    _band(d, [M(-3.0, -4.9), M(-2.1, -3.6), M(-2.7, -0.6)], tail)
+    for n, (px, py) in enumerate(((0.1, -1.0), (-3.0, 5.4), (-9.9, -1.5), (-2.6, -1.4))):
+        _marker(d, M(px, py), n + 1, F)
+    T(d, M(-12.6, -10.4), 'band from pod 5', font=F['small'], fill=SUB, anchor='lt')
+    T(d, M(3.8, 1.5), 'end wall\n(base)', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    T(d, M(-5.6, -1.6), 'bar A', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    steps = ['From under the module, push the cut end up\nthrough slot A, on the end-wall side.', 'Over bar A.',
+             'Down its outer face and under it.', 'Tuck the end back up the slot, between\nthe bar and the band, about 6 mm.']
+    ty = y + 46
+    for n, t in enumerate(steps):
+        _marker(d, (x + 34, ty + 12), n + 1, F)
+        T(d, (x + 58, ty), t, font=F['sub'], fill=INK, anchor='la')
+        ty += 30 if '\n' not in t else 54
+
+
+def dg_fold(C, box):
+    """section through bar B: up the slot, over the bar, the hook tab folded back onto the loop panel."""
+    d = C.d
+    F = fonts()
+    frame_box(d, box, 'Section at bar B (button side), seen from the J1 end')
+    x, y, w, h = box
+    M = MM(box, 26, (w * 0.30, h * 0.54))
+    d.polygon([M(0.0, 4.0), M(-1.6, -4.2), M(-6.0, -4.2), M(-6.0, 4.0)], fill=col255('base'), outline=INK)
+    d.polygon([M(3.5, 3.0), M(2.3, -4.2), M(6.9, -4.2), M(8.0, 1.2), M(7.3, 3.0)], fill=col255('base'), outline=INK)
+    web, hook = col255('web'), col255('hook')
+    inc = [(17.0, -11.6), (9.5, -7.4), (6.0, -6.2), (1.6, -5.4), (0.2, -3.6), (1.0, 2.0), (1.6, 4.6), (4.6, 5.3), (8.4, 3.7),
+           (9.4, 0.5), (9.7, -3.0)]
+    _band(d, [M(*p) for p in inc], web)
+    nx, ny = 0.491, 0.871                                # normal (outward) of the incoming run
+    back = [(10.2, -5.6)] + [(px + 0.55 * nx, py + 0.55 * ny) for px, py in ((11.2, -8.3), (17.0, -11.6))]
+    _band(d, [M(9.7, -3.0)] + [M(*p) for p in back[:1]], web)
+    _band(d, [M(*p) for p in back], hook, w=8)
+    for n, (px, py) in enumerate(((0.2, -1.0), (4.6, 6.0), (13.6, -8.0))):
+        _marker(d, M(px, py), n + 1, F)
+    T(d, M(15.0, -12.6), 'band from pod 2', font=F['small'], fill=SUB, anchor='rt')
+    T(d, M(-3.0, 1.5), 'end wall', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    T(d, M(5.0, -1.5), 'bar B', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    steps = ['Push the hook end up through slot B\nfrom under the module.', 'Over bar B, and fold it back down\nover the band.',
+             'Pull it snug and press the hook tab\nonto the loop panel.']
+    ty = y + 46
+    for n, t in enumerate(steps):
+        _marker(d, (x + w - 420, ty + 12), n + 1, F)
+        T(d, (x + w - 396, ty), t, font=F['sub'], fill=INK, anchor='la')
+        ty += 58
+    T(d, (x + w - 396, ty + 8), 'To loosen: peel the tab and pull.', font=F['sub'], fill=ACC, anchor='la')
+
+
+def dg_channel(C, box):
+    """pod section along the arm (across the strap), to pod.py: floor, 20.8 x 2.5 channel, 0.8 mm lips."""
+    d = C.d
+    F = fonts()
+    frame_box(d, box, 'Pod, cut across the strap')
+    x, y, w, h = box
+    M = MM(box, 14.5, (w * 0.5, h * 0.80))
+    bt, ch, lt = BT_POD, 2.5, 1.0
+    top = bt + ch + lt
+    a_, y1_, y2_, eh = 8.0, 10.4, 16.0, 2.0                 # pod.py r2.1 end dome (quarter ellipse, tangent at the crest)
+    r_ = math.sqrt(1 - ((y2_ - y1_) / a_) ** 2)
+    zc_ = (eh - r_ * top) / (1 - r_)
+    dome = [(y1_ + (y2_ - y1_) * k / 16, zc_ + (top - zc_) * math.sqrt(max(0.0, 1 - ((y2_ - y1_) * k / 16 / a_) ** 2))) for k in range(17)]
+    half = [(16.0, 0.0)] + dome[::-1] + [(9.6, top), (9.6, bt + ch), (10.4, bt + ch), (10.4, bt)]
+    pts = half + [(-u, v) for u, v in reversed(half)]
+    d.polygon([M(u, v) for u, v in pts], fill=col255('pod'), outline=INK)
+    M.rect(d, -10.0, bt + 0.05, 10.0, bt + 2.05, fill=col255('web'), outline=None, width=0)
+    T(d, M(0, bt + 1.05), 'strap (20 mm)', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    T(d, M(-9.0, top + 1.6), 'lip', font=F['small'], fill=INK, anchor='mm')
+    T(d, M(9.0, top + 1.6), 'lip', font=F['small'], fill=INK, anchor='mm')
+    arrow(d, M(-9.0, top + 1.0), M(-9.9, top - 0.3), col=INK, w=2, head=8)
+    arrow(d, M(9.0, top + 1.0), M(9.9, top - 0.3), col=INK, w=2, head=8)
+    dim(d, M(-10.4, -1.0), M(10.4, -1.0), '', side=1)
+    T(d, M(0, -1.6), 'channel 20.8 x 2.5 mm, lips 0.8 mm over each edge', font=F['small'], fill=SUB, anchor='mt')
+    T(d, M(0, bt * 0.45), 'foam dots and flex below', font=F['small'], fill=(225, 225, 225), anchor='mm')
+
+
+def dg_cable(C, box):
+    """the cable: male half of the magnetic pair (sprung pins) to a USB-A lead, red to +5 V."""
+    d = C.d
+    F = fonts()
+    frame_box(d, box)
+    x, y, w, h = box
+    cx, cy = x + 210, y + h / 2
+    d.rounded_rectangle([cx - 150, cy - 40, cx + 150, cy + 40], radius=14, fill=col255('mag'), outline=INK, width=2)
+    for sx_, lab in ((-110, 'N'), (110, 'S')):
+        d.ellipse([cx + sx_ - 22, cy - 22, cx + sx_ + 22, cy + 22], fill=(150, 150, 155), outline=INK, width=2)
+        d.text((cx + sx_, cy), lab, font=F['small'], fill=INK, anchor='mm')
+    for sx_ in (-32, 32):
+        d.ellipse([cx + sx_ - 11, cy - 11, cx + sx_ + 11, cy + 11], fill=col255('pad'), outline=INK, width=2)
+    d.text((cx - 150, cy - 64), 'Male half: 2 sprung pins between 2 magnets (2.5 mm pitch)', font=F['sub'], fill=INK, anchor='lm')
+    ux = x + w - 230
+    d.rounded_rectangle([ux, cy - 30, ux + 150, cy + 30], radius=6, fill=col255('usb'), outline=INK, width=2)
+    d.rectangle([ux + 150, cy - 20, ux + 200, cy + 20], fill=(200, 200, 205), outline=INK, width=2)
+    d.text((ux + 75, cy), 'USB-A lead', font=F['small'], fill=(255, 255, 255), anchor='mm')
+    for sx_, key, dy, lab in ((32, 'red', -16, 'red: +5 V'), (-32, 'black', 16, 'black: GND')):
+        d.line([(cx + sx_, cy + 11), (cx + sx_, cy + 60 + dy), (ux - 40, cy + 60 + dy), (ux - 40, cy + dy / 2), (ux, cy + dy / 2)],
+               fill=col255(key), width=5, joint='curve')
+        d.text((ux - 50, cy + 60 + dy + (14 if dy > 0 else -14)), lab, font=F['small'], fill=INK, anchor='rm')
+    T(d, (x + 30, y + h - 30), 'Mark the red pin on the housing. The magnets only let the cable on one way round.', font=F['sub'], fill=SUB, anchor='lm')
+
+
+def dg_wiring_r2(C, box):
+    d = C.d
+    F = fonts()
+    frame_box(d, box)
+    x, y, w, h = box
+    px = x + 230
+    rows = [(0, 'TP1  +3V3', 'red', '3V3(OUT)  pin 36', 'bare board only,\nnever with the cell'), (1, 'TP2  SWDIO', 'wire_y', 'GP3  pin 5', ''),
+            (2, 'TP3  SWDCLK', 'wire_g', 'GP2  pin 4', ''), (3, 'TP4  NRST', None, 'not connected', ''), (4, 'TP5  GND', 'black', 'GND  pin 3', '')]
+    pico_x = x + w - 300
+    d.rounded_rectangle([pico_x, y + 40, pico_x + 120, y + h - 40], radius=10, fill=(30, 110, 60), outline=INK, width=2)
+    d.text((pico_x + 60, y + 60), 'Pico 2', font=F['lab'], fill=(255, 255, 255), anchor='ma')
+    T(d, (pico_x + 60, y + 92), '(debugprobe\nfirmware)', font=F['small'], fill=(225, 240, 230), anchor='ma', align='center')
+    d.text((px, y + 24), 'wires soldered to the pads', font=F['sub'], fill=SUB, anchor='ma')
+    for i, name, colk, pin, note in rows:
+        yy = y + 120 + i * ((h - 170) / 4)
+        d.ellipse([px - 7, yy - 7, px + 7, yy + 7], fill=col255('pad'), outline=INK, width=1)
+        d.text((px - 16, yy), name, font=F['lab'], fill=INK, anchor='rm')
+        if colk:
+            c = col255(colk)
+            d.line([(px, yy), (pico_x, yy)], fill=c, width=5)
+            d.ellipse([pico_x - 6, yy - 6, pico_x + 6, yy + 6], fill=(220, 200, 120), outline=INK, width=1)
+            d.text((pico_x + 132, yy), pin, font=F['sub'], fill=INK, anchor='lm')
+            if note:
+                T(d, (px - 16, yy + 18), note, font=F['small'], fill=ACC, anchor='ra')
+        else:
+            d.text((px + 30, yy), 'not needed', font=F['small'], fill=SUB, anchor='lm')
+
+
+def dg_wrist_r2(C, box):
+    d = C.d
+    frame_box(d, box, 'Right forearm, back of the hand up')
+    x, y, w, h = box
+    cx = x + w / 2
+    sk = (238, 214, 196)
+    d.rounded_rectangle([cx - 60, y + 230, cx + 60, y + h - 20], radius=40, fill=sk, outline=INK, width=2)
+    d.ellipse([cx - 78, y + 50, cx + 78, y + 250], fill=sk, outline=INK, width=2)
+    d.rounded_rectangle([cx - 150, y + 120, cx - 70, y + 160], radius=18, fill=sk, outline=INK, width=2)
+    for i in range(4):
+        fx = cx - 54 + i * 36
+        d.rounded_rectangle([fx, y + 34, fx + 28, y + 110], radius=12, fill=sk, outline=INK, width=2)
+    by = y + 300
+    d.rectangle([cx - 66, by - 14, cx + 66, by + 14], fill=col255('web'))
+    d.rounded_rectangle([cx - 40, by - 26, cx + 40, by + 26], radius=8, fill=col255('lid'), outline=INK, width=2)
+    d.rectangle([cx - 52, by - 18, cx - 42, by + 18], fill=col255('base'), outline=INK)
+    d.rectangle([cx + 42, by - 18, cx + 52, by + 18], fill=col255('base'), outline=INK)
+    d.ellipse([cx - 34, by - 18, cx - 22, by - 6], fill=col255('cap'))
+    F = fonts()
+    d.text((cx - 70, by - 44), 'button, bar B', font=F['small'], fill=INK, anchor='rm')
+    d.line([(cx - 68, by - 42), (cx - 30, by - 14)], fill=INK, width=1)
+    T(d, (cx, by + 44), 'module on the back,\nJ1 end toward the hand', font=F['small'], fill=INK, anchor='ma', align='center')
+    d.text((cx - 112, y + 172), 'thumb', font=F['small'], fill=SUB, anchor='mm')
+    T(d, (cx + 70, by + 6), 'bar A on the\nlittle-finger side', font=F['small'], fill=SUB, anchor='lm')
+    d.text((cx, y + h - 34), '~25 mm above the wrist crease', font=F['small'], fill=SUB, anchor='mm')
+
+
+FIG_FUNCS = {'0.1': f_kit, '0.2': f_names, '0.3': f_exploded, '0.4': f_section, '1.1': f_swd_wires, '2.1': f_cell_leads,
+             '2.2': f_j3_wires, '3.1': f_jig, '3.2': f_flex_on, '3.3': f_dots_pod, '3.4': f_pods_in, '3.5': f_strip,
+             '4.1': f_dots_base, '4.2': f_base_jig, '5.1': f_j1, '5.2': f_fold, '5.3': f_bay, '6.1': f_lid, '7.2': None,
+             '7.3': f_lock_a, '7.4': f_press, '7.5': f_fold_b, '8.1': f_wear, '9.1': None, '9.2': f_charge, '10.1': f_open}
 
 
 def render(fid, out_root):
@@ -2207,73 +2990,76 @@ def dg_window(C, box):
 
 # ---------------------------------------------------------------- figure specs (layout, labels)
 L, Rr = 'L', 'R'
+B = (0, 14, 'mt')
+
+
+def _post_text(xy, text):
+    return lambda C: text_block(C.d, (xy[0], TITLE_H + xy[1]), text, font=fonts()['sub'])
+
+
 SPECS = {
-    '0.1': dict(canvas=(W0, 1000), panels=[('main', (0, 0, W0, 800))],
-                labels=[('main', 'bond_jig', 'Bonding jig  x1\nprinted, tool', (0, 14, 'mt')),
-                        ('main', 'swd_jig', 'SWD jig  x1\nprinted, tool', (0, 14, 'mt')),
-                        ('main', 'clip', 'Charge clip  x1\nprinted, tool', (0, 14, 'mt')),
-                        ('main', 'spacer', 'Cell spacer\n401120 cell only', (0, 14, 'mt')),
-                        ('main', 'flex', 'Electrode flex  x1\nbought, pads up here', (0, 14, 'mt')),
-                        ('main', 'board', 'Main board  x1\nbought, assembled', (0, 14, 'mt')),
-                        ('main', 'base', 'Module base\nprinted', (0, 14, 'mt')),
-                        ('main', 'lid', 'Lid\nprinted', (0, 14, 'mt')),
-                        ('main', 'cell', 'LiPo cell\n401223', (0, 14, 'mt')),
-                        ('main', 'pods', 'Pods  x6\nprinted, TPU', (0, 14, 'mt')),
-                        ('main', 'slides', 'Slides  x2\nprinted', (0, 14, 'mt')),
-                        ('main', 'cap', 'Button\ncap', (0, 14, 'mt')),
-                        ('main', 'dots', 'Foam dots  x25\n6 x 2 mm', (0, 14, 'mt')),
-                        ('main', 'pins', 'Pogo pins  x7', (0, 14, 'mt')),
-                        ('main', 'usb', 'USB cable end', (0, 14, 'mt')),
-                        ('main', 'webr', 'Webbing  x1\n20 mm elastic, cut 220 mm', (30, 0, 'lm'))],
-                diagrams=[(lambda C, b: dg_legend(C, b), (20, 800, W0 - 40, 190))]),
+    '0.1': dict(canvas=(W0, 1060), panels=[('main', (0, 0, W0, 860))],
+                labels=[('main', 'bond_jig', 'Bonding jig  x1\nFDM, tool (stage 1)', B),
+                        ('main', 'base_jig', 'Base jig  x1\nFDM, tool (stage 2)', B),
+                        ('main', 'spacer', 'Cell spacer\n401120 cell only', B),
+                        ('main', 'flex', 'Electrode flex  x1\nbought, pads up here', B),
+                        ('main', 'board', 'Main board  x1\nbought, assembled', B),
+                        ('main', 'base', 'Module base\nwith bars A, B', B),
+                        ('main', 'lid', 'Lid', B),
+                        ('main', 'cell', 'LiPo cell\n401223', B),
+                        ('main', 'pods', 'Pods  x6\nprinted, TPU', B),
+                        ('main', 'cap', 'Button\ncap', B),
+                        ('main', 'dots', 'Foam dots  x25\n6 x 2 mm', B),
+                        ('main', 'conn', 'Magnetic 2-pin\nconnector pair', B),
+                        ('main', 'usb', 'USB-A lead', B),
+                        ('main', 'strap', 'Hook-and-loop strap, 20 mm, size L (302 mm)', B),
+                        ('main', 'hook', 'Hook tab', B),
+                        ('main', 'ringe', 'Steel ring\n(cut off)', B)],
+                diagrams=[(lambda C, b: dg_legend(C, b), (20, 860, W0 - 40, 190))]),
     '0.2': dict(canvas=(W0, 900), panels=[('main', (0, 0, 980, 900))],
-                labels=[('main', 'lid', 'Module (lid on top)', L), ('main', 'j1end', 'J1 end: toward the hand', L),
-                        ('main', 'antenna', 'Antenna side', L), ('main', 'slideB', 'Slide B (by pod 5)', L),
-                        ('main', 'button', 'Button side (thumb)', Rr), ('main', 'slideA', 'Slide A (by pod 2)', Rr),
-                        ('main', 'gap', 'The gap (pods 1 and 8):\nopens to slip over the hand', Rr)],
+                labels=[('main', 'lid', 'Module (lid on top)', L), ('main', 'j1end', 'J1 end: toward the hand', (40, 150, 'lt')),
+                        ('main', 'antenna', 'Antenna side\n(little finger)', L), ('main', 'barA', 'Bar A: the strap end\nis locked round it', L),
+                        ('main', 'button', 'Button side (thumb)', Rr), ('main', 'barB', 'Bar B: the hook end goes\nthrough and folds back', Rr),
+                        ('main', 'gap', 'The gap (pods 1 and 8)', Rr)],
                 nums=[('main', 'pod%d' % k, k) for k in range(1, 9)],
-                diagrams=[(dg_wrist, (990, 20, 390, 860))],
-                note='Seen from the hand end. Pods 3 and 4 are under the module; pod 4 sits under the antenna.'),
+                diagrams=[(dg_wrist_r2, (990, 20, 390, 860))],
+                note='Seen from the hand end. Pods 3 and 4 are under the module.'),
     '0.3': dict(canvas=(W0, 900), panels=[('main', (200, 0, 1000, 900))],
                 labels=[('main', 'cap', 'Button cap', L), ('main', 'lid', 'Lid', L), ('main', 'cell', 'Cell', L),
                         ('main', 'board', 'Main board', L), ('main', 'base', 'Module base', L), ('main', 'tail', 'Flex tail', L),
-                        ('main', 'slide', 'Strap slide  x2', Rr), ('main', 'pod', 'Pod  x6', Rr), ('main', 'foam', 'Foam dots  x25', Rr),
-                        ('main', 'flex', 'Electrode flex', Rr), ('main', 'web', 'Webbing loop', Rr)],
+                        ('main', 'pod', 'Pod  x6', Rr), ('main', 'foam', 'Foam dots  x25', Rr),
+                        ('main', 'flex', 'Electrode flex', Rr), ('main', 'web', 'Strap', Rr), ('main', 'hook', 'Hook tab', Rr)],
                 travel=[('main', 't_' + k) for k in ('lid', 'cap', 'cell', 'board', 'base', 'pod')]),
     '0.4': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
-                labels=[('main', 'web', 'Webbing in its sleeve: slides freely', L), ('main', 'flex', 'Flex (0.11 mm)', L),
-                        ('main', 'skin', 'Skin', L), ('main', 'pod', 'TPU pod', Rr), ('main', 'foam', 'Foam dot: the spring', Rr),
-                        ('main', 'pad', 'Gold pad on the skin', Rr), ('main', 'link', 'Flex link to the next pod:\nsets the 18 mm spacing', Rr)],
+                labels=[('main', 'web', 'Strap in the open channel:\nit slides freely', L), ('main', 'flex', 'Flex (0.11 mm)', L),
+                        ('main', 'skin', 'Skin', L), ('main', 'pod', 'TPU pod: two lips\nhold the strap in', Rr),
+                        ('main', 'foam', 'Foam dot: the spring', Rr), ('main', 'pad', 'Gold pad on the skin', Rr),
+                        ('main', 'link', 'Flex link to the next pod:\nsets the 18 mm spacing', Rr)],
                 curve=[('main', 'slide')],
                 note='Section through the middle pad of one pod, worn. The gold pad is drawn thicker than it is.'),
-    '1.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 980, 860))],
-                labels=[('main', 'jig', 'SWD jig (see-through here)', L), ('main', 'pin0', '5 pogo pins, tips up,\npushed in from below', L),
-                        ('main', 'pocket', 'Open pocket underneath:\nthe pin tails end here', L)],
-                travel=[('main', 't%d' % i) for i in range(5)],
-                diagrams=[(dg_pin_lean, (990, 20, 390, 460))]),
-    '1.2': dict(canvas=(W0, 760), panels=[('board', (20, 30, 440, 440))],
-                labels=[('board', 'tp%d' % i, TP_NAMES[i], (0, 0)) for i in range(0)] +
-                       [('board', 'tp2', 'TP1 ... TP5 (board bottom)', (80, 70, 'lt')), ('board', 'j2p', 'J2 (cell, step 2)', (0, 120, 'mt')),
-                        ('board', 'j1', 'J1 edge', (90, 170, 'lt'))],
-                diagrams=[(dg_wiring, (480, 20, 900, 720))],
-                note='Pico 2 pin numbers are the physical pins. Never connect 3V3 once the cell is soldered.'),
-    '1.3': dict(canvas=(W0, 860), panels=[('main', (0, 0, 980, 860))],
-                labels=[('main', 'board', 'Bare board, top up', L), ('main', 'j1', 'J1 edge over the pins', L),
-                        ('main', 'pins', 'Pins land on TP1-TP5', Rr), ('main', 'wires', 'Wires to the Pico', L)],
-                note='Hold the board down with a finger while flashing.',
-                travel=[('main', 't%d' % i) for i in range(3)],
-                diagrams=[(dg_tp_section, (990, 20, 390, 330))]),
+    '1.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 600, 860))],
+                labels=[('main', 'tp0', 'TP1  +3V3', (90, 70, 'lt')), ('main', 'tp4', 'TP5  GND', (-60, -110, 'rb')),
+                        ('main', 'board', 'Bare board,\nbottom side up', (60, 90, 'lt')), ('main', 'j1', 'J1 edge', (0, 60, 'mt')),
+                        ('main', 'wires', '30 AWG wires,\n10 cm', (-30, 90, 'rt'))],
+                diagrams=[(dg_wiring_r2, (610, 20, 780, 820))],
+                note='TP4 (NRST) is not needed. Pico 2 pin numbers are the physical pins.'),
     '2.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 980, 860))],
-                labels=[('main', 'j2p', 'J2 +  (VBAT): red lead', (60, -110, 'lb')), ('main', 'j2m', 'J2 -  (GND): black lead', (-60, -110, 'rb')),
-                        ('main', 'cell', 'Cell beyond the J1 edge,\nlead end toward the board', L),
-                        ('main', 'kap', 'Kapton over both joints', Rr), ('main', 'tp2', 'TP1-TP5 (SWD)', Rr),
-                        ('main', 'j3v', 'Charge pads (5V, GND)', Rr), ('main', 'edge', 'J1 edge', Rr)],
+                labels=[('main', 'j2p', 'J2 +  (VBAT): red lead', (-60, -130, 'rb')), ('main', 'j2m', 'J2 -  (GND): black lead', (60, -130, 'lb')),
+                        ('main', 'cell', 'Cell', L), ('main', 'kap', 'Kapton over both joints', Rr),
+                        ('main', 'tp', 'TP1-TP5 (step 1)', L), ('main', 'j3v', 'J3 charge pads (2.2)', L), ('main', 'edge', 'Button-side edge', Rr)],
                 diagrams=[(dg_joint, (990, 20, 390, 330))],
                 note='Board bottom side up. Do one lead at a time, so they never touch.'),
+    '2.2': dict(canvas=(W0, 860), panels=[('main', (0, 0, 980, 860))],
+                labels=[('main', 'j3v', 'J3 pad 1 (5 V): red', (-60, 80, 'rt')), ('main', 'j3g', 'J3 pad 2 (GND): black', (60, 80, 'lt')),
+                        ('main', 'conn', 'Female connector: red to the pin\nthat meets the cable\'s red', (0, -90, 'mb')),
+                        ('main', 'wires', 'Flat along the button-side edge,\nKapton every 10 mm', Rr),
+                        ('main', 'j2', 'J2 (cell leads, 2.1)', (-60, -90, 'rb'))],
+                note='Board bottom side up; the cell is left out of the picture. 50 mm of 30 AWG per wire.'),
     '3.1': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
-                labels=[('main', 'saddle', 'Saddle for the base\n(pods 3 and 4)', (-60, 150, 'mt')), ('main', 'pin', '16 pins for the flex holes', (-20, 190, 'mt')),
+                labels=[('main', 'saddle', 'Saddle for the pod 3/4 part\n(the base goes on in step 4)', (-60, 150, 'mt')),
+                        ('main', 'pin', '16 pins for the flex holes', (-20, 190, 'mt')),
                         ('main', 'gap', 'Fence gap for the tail', (-120, -170, 'mb')), ('main', 'fence', 'Fence', (40, -150, 'lb')),
-                        ('main', 'ledge', 'Ledges: the pod stops here', (-60, -230, 'mb')), ('main', 'stops', 'Stop pads for the base', (150, 150, 'lt'))],
+                        ('main', 'ledge', 'Ledges: the pod stops here', (-60, -230, 'mb'))],
                 nums=[('main', 'n%d' % k, k) for k in (1, 2, 5, 6, 7, 8)]),
     '3.2': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
                 labels=[('main', 'flex', 'Flex, gold pads DOWN', L), ('main', 'short', 'Pods 1-2: the short side', L),
@@ -2281,151 +3067,95 @@ SPECS = {
                 travel=[('main', 't%d' % i) for i in range(3)],
                 insets=[dict(shot='zoom', at=(1200, 600), r=150, anchor=('main', 'pinhole'), caption='each hole over its pin')]),
     '3.3': dict(canvas=(W0, 860), panels=[('main', (0, 0, 980, 860))],
-                labels=[('main', 'pod', 'Pod, pocket side up', L), ('main', 'd1', 'Foam dot  x3', Rr), ('main', 'sleeve', 'Sleeve', L)],
+                labels=[('main', 'pod', 'Pod, pocket side up', L), ('main', 'd1', 'Foam dot  x3', Rr), ('main', 'sleeve', 'Strap channel', L)],
                 travel=[('main', 't%d' % i) for i in range(3)],
                 diagrams=[(dg_dot_pocket, (990, 20, 390, 330))],
                 insets=[dict(shot='zoom', at=(1185, 600), r=150, caption='pressed in, flush round the edge')]),
-    '3.4': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1100, 860))],
-                labels=[('main', 'base', 'Base, upside down', L), ('main', 'dots', '7 dots: 6 pad pockets', L),
-                        ('main', 'rootdot', '+ the root dot by the tail slot\n(it holds the flex root)', Rr),
-                        ('main', 'slot', 'Tail slot', Rr)]),
-    '3.5': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
-                labels=[('main', 'pod5', 'Pod, pocket side DOWN', (60, -150, 'lb')), ('main', 'sleeve', 'Sleeve runs along the strip\n(around the wrist)', Rr),
-                        ('main', 'pod1', 'Pods 1, 2 already in', L)],
+    '3.4': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
+                labels=[('main', 'pod5', 'Pod, pocket side DOWN', (60, -150, 'lb')),
+                        ('main', 'sleeve', 'Channel runs along the strip\n(around the wrist)', Rr), ('main', 'pod1', 'Pods 1, 2 already in', L)],
                 nums=[('main', 'n%d' % k, k) for k in (1, 2, 5, 6, 7, 8)],
                 travel=[('main', 't0'), ('main', 't1')],
                 diagrams=[(dg_pod_ledge, (1010, 470, 370, 310))],
                 note='Order: 1, 2, 5, 6, 7, 8. Press straight down until the pod stops on its ledges; hold 10 s.'),
-    '3.6': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1100, 860))],
-                labels=[('main', 'base', 'Base, right way up', L), ('main', 'tail', 'Tail up through the floor slot first', L),
-                        ('main', 'saddle', 'Saddle', L)],
-                travel=[('main', 't0'), ('main', 't1'), ('main', 'tail')],
-                insets=[dict(shot='zoom', at=(1240, 520), r=145, caption='tail out of the slot')]),
-    '3.7': dict(canvas=(W0, 760), panels=[('main', (0, 0, W0, 760))],
-                labels=[('main', 'base', 'Base (pods 3, 4 under it)', Rr), ('main', 'tail', 'Tail', (-80, -80, 'rb')),
+    '3.5': dict(canvas=(W0, 760), panels=[('main', (0, 0, W0, 760))],
+                labels=[('main', 'mid', 'Pod 3/4 part: the base\ngoes on in step 4', (0, 110, 'mt')), ('main', 'tail', 'Tail', (-80, -80, 'rb')),
                         ('main', 'spine', 'Flex links between the pods', L)],
                 nums=[('main', 'p%d' % k, k) for k in (1, 2, 5, 6, 7, 8)],
                 note='Lift it off the pins after 10 minutes. The gold pads are underneath.'),
-    '4.1': dict(canvas=(W0, 760), panels=[('a', (0, 0, 520, 700), 'a  latch up, tail in'), ('b', (520, 0, 520, 700), 'b  latch down')],
+    '4.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1100, 860))],
+                labels=[('main', 'base', 'Base, upside down', L), ('main', 'dots', '6 dots: the pad pockets', L),
+                        ('main', 'rootdot', '+ the root dot by the tail slot\n(it holds the flex root)', Rr),
+                        ('main', 'slot', 'Tail slot', Rr)],
+                note='Peel the top liner of each dot after pressing it in.'),
+    '4.2': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1100, 860))],
+                labels=[('main', 'base', 'Base, right way up,\ntail through its floor slot', Rr), ('main', 'saddle', 'Saddle', L),
+                        ('main', 'pins', '4 pins in the\nflex holes', Rr), ('main', 'fence', 'Fence', L),
+                        ('main', 'pedestal', 'Pedestal: the free pods\nhang down its sides', L),
+                        ('main', 'flex', 'Pod 3/4 part,\ngold pads down', L), ('main', 'bar', 'Bars overhang\nthe ends', Rr)],
+                travel=[('main', 't0'), ('main', 't1')],
+                note='The free pods are left out of the picture. Press until the base stops; hold 10 s, wait 10 minutes.'),
+    '5.1': dict(canvas=(W0, 760), panels=[('a', (0, 0, 520, 700), 'a  latch up, tail in'), ('b', (520, 0, 520, 700), 'b  latch down')],
                 labels=[('a', 'latch', 'Latch flipped up', L), ('a', 'fingers', 'Gold fingers\ntoward the board', L),
                         ('a', 'down', 'DOWN mark', L), ('b', 'latch', 'Latch pressed down', Rr)],
                 travel=[('a', 't0')],
                 diagrams=[(dg_j1, (1050, 20, 340, 330))],
                 note='Board upright above the base, J1 at the bottom. Push the tail in square until it stops.'),
-    '4.2': dict(canvas=(W0, 700), panels=[('a', (0, 0, 460, 640), 'a  upright'), ('b', (470, 0, 460, 640), 'b  fold down'),
+    '5.2': dict(canvas=(W0, 700), panels=[('a', (0, 0, 460, 640), 'a  upright'), ('b', (470, 0, 460, 640), 'b  fold down'),
                                           ('c', (940, 0, 460, 640), 'c  seated')],
                 labels=[('a', 'j1', 'J1, tail in', (60, -60, 'lb')), ('a', 'base', 'Base (see-through)', (20, 90, 'lt')),
                         ('c', 'wall', 'Tail U along the end wall', (60, -120, 'lb'))],
                 curve=[('b', 'fold')]),
-    '4.3': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860))],
-                labels=[('main', 'j2', 'J2 under the board (seen through)', L), ('main', 'corner', 'Round the board corner', L),
-                        ('main', 'gate', 'Through the lead gate', L), ('main', 'cellend', 'To the cell\'s lead end', L),
-                        ('main', 'j1', 'J1', L)],
-                insets=[dict(shot='zoom', at=(1200, 560), r=150, anchor=('main', 'gate'), caption='lead gate (button side)')],
-                note='Top view, lid off; the board is drawn see-through.'),
-    '5.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860)), ('b', (1010, 420, 380, 340), 'b  401120 cell', True)],
-                labels=[('main', 'cell', 'Cell, flat', L), ('main', 'leadend', 'Lead end toward J1', L), ('main', 'outline', 'Inside the CELL outline', Rr),
-                        ('main', 'j1', 'J1', L), ('b', 'spacer', 'Spacer at the far end', (0, 90, 'mt'))],
-                travel=[('main', 't0'), ('main', 't1')]),
-    '5.2': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860))],
-                labels=[('main', 'cap', 'Button cap, stem down on SW1', L), ('main', 'lid', 'Lid', L), ('main', 'led', 'LED hole over D1', Rr),
-                        ('main', 'snap0', 'Snap catch', Rr), ('main', 'snap1', 'Snap catch', Rr), ('main', 'snap2', 'Snap catch', L),
-                        ('main', 'snap3', 'Snap catch', L)],
-                travel=[('main', 't0'), ('main', 't1')],
+    '5.3': dict(canvas=(W0, 860), panels=[('main', (0, 0, W0, 860))],
+                labels=[('main', 'conn', 'Female connector in its bay:\nface flush, glued by its flange', Rr),
+                        ('main', 'wires', 'J3 wires in the channel\nunder the board edge', Rr), ('main', 'j3', 'J3', Rr),
+                        ('main', 'leads', 'Cell leads past the board\nedge, level with J2', Rr),
+                        ('main', 'cellend', 'Cell lead end\ntoward J1', L), ('main', 'barA', 'Bar A', L), ('main', 'barB', 'Bar B', Rr)],
+                note='Top view, lid off; the board and cell are drawn see-through.'),
+    '6.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860))],
+                labels=[('main', 'cap', 'Button cap in the lid,\ndomed stem on SW1', L), ('main', 'lid', 'Lid', L), ('main', 'led', 'LED hole over D1', Rr),
+                        ('main', 'snap1', 'Snap catch', Rr), ('main', 'snap2', 'Snap catch', L),
+                        ('main', 'snap3', 'Snap catch', L), ('main', 'bay', 'Connector bay', Rr)],
+                travel=[('main', 't0'), ('main', 't1'), ('main', 't2')],
                 diagrams=[(dg_snap, (1010, 20, 370, 330))],
                 note='Press the lid down at all four corners until each catch clicks.'),
-    '6.1': dict(canvas=(W0, 760), panels=[('a', (0, 0, 690, 700), 'a  end view at slide A'), ('b', (700, 0, 690, 700), 'b  from the side')],
-                labels=[('a', 'bar', 'Hidden bar in the module', (30, -190, 'lb')), ('a', 'ghost', 'Opening up toward the bar:\npush the clip up onto it', (60, 90, 'lt')),
-                        ('a', 'slide', 'On: the slide lies in line\nwith the band', (60, -80, 'lb')), ('b', 'A', 'Slide A (pod 2 side)', (40, -90, 'lb')),
-                        ('b', 'B', 'Slide B (pod 5 side)', (-40, -90, 'rb'))],
-                travel=[('a', 'push')], curve=[('a', 'swing')],
-                note='The clip is split: its two halves sit either side of the bar\'s centre rib.'),
-    '6.2': dict(canvas=(W0, 760), panels=[('3d', (930, 310, 450, 430), 'finished lock', True)],
-                labels=[('3d', 'tail', 'tail under the bar', (-30, 80, 'rt'))],
-                diagrams=[(dg_lock4, (10, 10, 1380, 280))],
-                post=[lambda C: text_block(C.d, (30, TITLE_H + 340), 'Why it holds: the band pulls on the strand that\n'
-                      'runs under the friction bar. That strand presses\nthe tucked tip against the bar\'s corner, so the\n'
-                      'harder the band pulls, the harder it grips.\n\nTo adjust, untuck the tip first (6.4).', font=fonts()['sub'])]),
-    '6.3': dict(canvas=(W0, 860), panels=[('main', (0, 0, W0, 420))],
-                labels=[('main', 'A', 'Start: slide A', (-30, -110, 'rb')), ('main', 'B', 'End: slide B', (30, -110, 'lb'))],
-                insets=[dict(shot='zoom', at=(1060, 640), r=175, anchor=('main', 'p7'),
-                             caption='Into the sleeve flat: no twist')],
-                post=[],
-                diagrams=[(lambda C, b: text_block(C.d, (b[0], b[1]), 'Seen from outside, strip laid flat.\n'
-                           'The numbered markers give the order:\n1 into pod 2, 2 into pod 1, 3 across the gap\n'
-                           'into pod 8, then 4, 5, 6 into pods 7, 6, 5,\nand on to slide B.', font=fonts()['sub']),
-                           (40, 520, 600, 200))],
-                ),
-    '6.4': dict(canvas=(W0, 540), diagrams=[(dg_length, (0, 10, W0, 520))]),
-    '7.1': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
+    '7.2': dict(canvas=(W0, 470), diagrams=[(dg_cut, (0, 10, W0, 450))]),
+    '7.3': dict(canvas=(W0, 760), panels=[('3d', (930, 10, 460, 440), 'finished lock', True)],
+                labels=[('3d', 'bar', 'Bar A', (-40, -80, 'rb')), ('3d', 'lock', 'tucked end', (40, 90, 'lt'))],
+                diagrams=[(dg_lock, (10, 10, 900, 730))],
+                post=[_post_text((940, 480), 'Why it holds: the loaded band bends\nround the tucked end at the bar\'s\n'
+                                             'lower inner corner and pinches it\nagainst the bar. The harder it pulls,\n'
+                                             'the harder it pinches. It can only\nslip, never break.')]),
+    '7.4': dict(canvas=(W0, 800), panels=[('main', (0, 0, 820, 760))],
+                labels=[('main', 'pod', 'Pod (on the flex)', (60, 120, 'lt')), ('main', 'lip', '1  this edge under\n    one lip first', (-40, -150, 'rb')),
+                        ('main', 'lip2', '2  push this edge down\n    past the other lip', (-10, -230, 'rb')),
+                        ('main', 'web', 'Strap, loop panel out', (-30, -130, 'mb')), ('main', 'floor', 'Channel floor', (-60, 120, 'rt'))],
+                travel=[('main', 't0')],
+                diagrams=[(dg_channel, (830, 20, 550, 420))],
+                post=[_post_text((850, 560), 'Order: pods 5, 6, 7, 8, across the gap,\nthen 1 and 2.\n\n'
+                                             'Press one edge of the strap under one lip,\nthen push the other edge down past the\n'
+                                             'other lip until it clicks in.')]),
+    '7.5': dict(canvas=(W0, 760), panels=[('3d', (930, 10, 460, 440), 'finished', True)],
+                labels=[('3d', 'bar', 'Bar B', (40, -80, 'lb')), ('3d', 'tail', 'Hook tab on the panel', (-40, 90, 'rt'))],
+                diagrams=[(dg_fold, (10, 10, 900, 730))],
+                post=[_post_text((940, 480), 'Up through slot B from under the\nmodule, over bar B, fold back and\n'
+                                             'press the hook tab onto the loop panel.\nTo take it off, peel the tab and pull\n'
+                                             'the end out of slot B.')]),
+    '8.1': dict(canvas=(W0, 820), panels=[('main', (0, 0, W0, 820))],
                 labels=[('main', 'module', 'Module on the back of the forearm', L), ('main', 'cap', 'Button toward the thumb', Rr),
-                        ('main', 'crease', '~25 mm above the wrist crease', L), ('main', 'web', 'A finger fits under the webbing', Rr),
-                        ('main', 'slide', 'Slides', Rr)],
-                travel=[('main', 'slip')],
-                note='Slip it over the hand like a bracelet; every pod touches the skin.'),
-    '8.1': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860))],
-                labels=[('main', 'vchg', 'VCHG (+): the pin nearer\nthe back plate and key: RED', (170, 20, 'lt')), ('main', 'gnd', 'GND (-): the other pin: BLACK', L),
-                        ('main', 'key', 'Key', Rr), ('main', 'hook', 'Hook', Rr), ('main', 'red', 'USB +5 V (red),\nGND (black)', Rr)],
-                travel=[('main', 't0'), ('main', 't1')],
-                diagrams=[(dg_clip_tip, (1010, 20, 370, 330))],
-                note='Clip drawn see-through, from the side: the back plate is on the right. Cut the USB cable; insulate its data wires.'),
-    '8.2': dict(canvas=(W0, 880), panels=[('below', (0, 0, 860, 820), 'a  cut through the pins'),
-                                          ('main', (870, 0, 520, 430), 'b  from the side', True)],
-                labels=[('below', 'arm', 'Clip\'s lower arm, under the module\nbetween the pads of pods 3 and 4', (-80, 170, 'rt')),
-                        ('below', 'vchg', 'VCHG (+) pin: nearer the back', (40, -130, 'lb')), ('below', 'gnd', 'GND (-) pin', (-150, 60, 'rm')),
-                        ('below', 'window', 'Charge window in the base', (-80, 90, 'rt')), ('below', 'pads', 'Charge pads on the board', (-80, -110, 'rb')),
-                        ('below', 'back', 'Back plate', (60, 40, 'lt')),
-                        ('main', 'clip', '1  slides on from the\nproximal end', (60, 80, 'lt')),
-                        ('main', 'key', '2  key drops into\nthe pry notch', (-60, -70, 'rb')), ('main', 'hook', 'hook over\nthe lid edge', (40, -50, 'lb'))],
-                travel=[('main', 'slide'), ('main', 'drop')],
-                diagrams=[(dg_window, (875, 450, 510, 360))],
-                note='Band off the wrist. The clip only fits on the proximal end (away from J1). LED solid while charging.'),
-    '9.1': dict(canvas=(W0, 720), panels=[('a', (0, 0, 690, 660), 'a  open the lid'), ('b', (700, 0, 690, 660), 'b  re-flash')],
-                labels=[('a', 'notch', 'Pry notch', (-40, 90, 'rt')), ('b', 'cell', 'Cell rests on the board', (40, -90, 'lb')),
-                        ('b', 'board', 'Tail out of J1, board top up', (-30, 100, 'rt')), ('b', 'wires', 'SWDIO, SWDCLK, GND only', (60, 40, 'lt'))],
-                curve=[('a', 'lever')],
-                note='Re-flash on the cell: never connect the probe\'s 3V3 (TP1).'),
+                        ('main', 'crease', '~25 mm above the wrist crease', L), ('main', 'web', 'A finger fits under the strap', Rr),
+                        ('main', 'bar', 'Bar B: pull the tail\nhere to tighten', Rr)],
+                note='Snug, not tight: every pod touches the skin.'),
+    '9.1': dict(canvas=(W0, 460), diagrams=[(dg_cable, (0, 10, W0, 440))]),
+    '9.2': dict(canvas=(W0, 860), panels=[('main', (0, 0, 1000, 860))],
+                labels=[('main', 'bay', 'Connector in the\nelbow end', L), ('main', 'head', 'Cable head: the magnets\npull it on, one way round', Rr),
+                        ('main', 'lid', 'Lid', L)],
+                travel=[('main', 't0')],
+                note='Band off the wrist. The LED stays solid while it charges.'),
+    '10.1': dict(canvas=(W0, 720), panels=[('a', (0, 0, 690, 660), 'a  open the lid'), ('b', (700, 0, 690, 660), 'b  board out, wires on')],
+                 labels=[('a', 'notch', 'Pry notch above\nthe connector', (-40, 90, 'rt')), ('a', 'conn', 'Connector', (60, 60, 'lt')),
+                         ('b', 'board', 'Board folded out\n(reverse 5.2)', (-30, -100, 'rb')),
+                         ('b', 'tp', 'TP1-TP5: re-attach\nthe wires', (60, 40, 'lt'))],
+                 curve=[('a', 'lever')],
+                 note='Re-flash with SWDIO, SWDCLK and GND only: the cell powers the board, so never connect TP1.'),
 }
-
-
-def _thread_post(C):
-    """6.3: one webbing path slide A -> pod 2 -> pod 1 -> (gap) -> pod 8 -> 7 -> 6 -> 5 -> slide B, with the
-    threading order as numbered markers on the arrow segments; pods carry only their names."""
-    if 'main' not in C.xf:
-        return
-    d = C.d
-    F = fonts()
-    web = col255('web')
-    seq = ['A', 'p2', 'p1', 'p8', 'p7', 'p6', 'p5', 'B']
-    pts = [C.P('main', k) for k in seq]
-    ybot = max(C.P('main', 'b%d' % k)[1] for k in (1, 2, 5, 6, 7, 8))
-    for k in ('p1', 'p2', 'p5', 'p6', 'p7', 'p8'):
-        x, y = C.P('main', 'b' + k[1])
-        text_block(d, (x, y + 8), 'pod ' + k[1], anchor='ma', font=F['lab'])
-
-    def marker(x, y, n):
-        r = 15
-        d.ellipse([x - r, y - r, x + r, y + r], fill=ACC, outline=(255, 255, 255), width=2)
-        d.text((x, y + 1), str(n), font=F['num'], fill=(255, 255, 255), anchor='mm')
-    n = 0
-    for i in range(len(pts) - 1):
-        p0, p1 = pts[i], pts[i + 1]
-        if seq[i] == 'p1':                               # across the gap: round the wrist, drawn below the strip
-            yb = ybot + 62
-            path = [p0, (p0[0] - 60, p0[1] + 20), (p0[0] - 60, yb), (p1[0] + 60, yb), (p1[0] + 60, p1[1] + 20), p1]
-            for a_, b_ in zip(path[:-2], path[1:-1]):
-                arrow(d, a_, b_, col=web, w=4, head=1, dashed=True)
-            arrow(d, path[-2], path[-1], col=web, w=4, head=16, dashed=True)
-            n += 1
-            marker((p0[0] + p1[0]) / 2, yb, n)
-            d.text(((p0[0] + p1[0]) / 2, yb + 22), 'across the gap (round the wrist) into pod 8', font=F['sub'], fill=web, anchor='ma')
-            continue
-        q0 = (p0[0] + (p1[0] - p0[0]) * 0.12, p0[1] + (p1[1] - p0[1]) * 0.12)
-        q1 = (p0[0] + (p1[0] - p0[0]) * 0.80, p0[1] + (p1[1] - p0[1]) * 0.80)
-        arrow(d, q0, q1, col=web, w=5, head=16)
-        if seq[i + 1] != 'B':
-            n += 1
-            marker((q0[0] + q1[0]) / 2, (q0[1] + q1[1]) / 2 - 22, n)
-
-
-SPECS['6.3']['post'] = [_thread_post]

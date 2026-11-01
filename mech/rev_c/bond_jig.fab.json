@@ -9,11 +9,11 @@
     "color": "white"
   },
   "features": {
-    "volume_cm3": 21.684,
-    "area_cm2": 166.85,
+    "volume_cm3": 21.655,
+    "area_cm2": 166.41,
     "size_x_mm": 142.61,
     "size_y_mm": 46.5,
-    "size_z_mm": 5.55
+    "size_z_mm": 5.54
   },
   "min_wall_mm": 1.0
 }

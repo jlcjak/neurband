@@ -13,14 +13,13 @@ charging connector. Each step says which part, where it goes, which way round, a
 - flashing **once, through five soldered wires**, in place of the SWD jig;
 - a second bonding jig, the pedestal, for the base.
 
-Figures marked *(r1 figure)* still show the earlier parts. The text is current; see "Figures to
-redraw" at the end.
-
 ![The r2 module and band](img/r2_hero.jpg)
 
 ## Part 0: Before you start
 
 ### 0.1 Kit of parts
+
+![0.1 Kit of parts](img/m0-1_kit.png)
 
 | Part | Qty per band | Notes |
 |---|---|---|
@@ -40,7 +39,7 @@ redraw" at the end.
 
 ### 0.2 Names and directions
 
-![Module, r2: base and lid](img/r2_module.jpg)
+![0.2 Names and directions](img/m0-2_names.png)
 
 - **The J1 end** of the module points toward the hand. The **button side** goes toward the thumb, and
   the **antenna side** toward the little finger.
@@ -56,7 +55,7 @@ redraw" at the end.
 
 ### 0.3 Exploded overview
 
-![0.3 Exploded overview, r2](img/r2_exploded.jpg)
+![0.3 Exploded overview](img/m0-3_exploded.png)
 
 From the skin out:
 
@@ -70,7 +69,7 @@ plugs into J1), the **cell**, the **lid** and the **button cap**.
 
 ### 0.4 One pod on the skin
 
-![0.4 One pod on the skin (r1 figure)](img/m0-4_section.png)
+![0.4 One pod on the skin](img/m0-4_section.png)
 
 - **Foam dot.** It is the spring that keeps the **gold pad** on the skin, at about 3-15 kPa depending
   on how tight the strap is.
@@ -128,7 +127,11 @@ Retired in r2 and not ordered (`"order": false`): `strap_slide`, `charge_clip`, 
 
 ## Step 1: Flash and test the bare board (once, with soldered wires)
 
-The board is flashed **once**, before anything else. Later updates go over Bluetooth.
+The board is flashed through five soldered wires on its SWD pads, before assembly. To re-flash later, open
+the module, fold the board out and re-attach the wires (or leave them as short pigtails). Bluetooth
+updates (MCUboot + SMP) are planned but not yet in the firmware.
+
+![1.1 Wires on the SWD pads](img/m1-1_swd_wires.png)
 
 1. Turn the bare board over. The five SWD test pads **TP1-TP5** are in a short diagonal row in the
    corner by the LED, on the antenna side at the far end from J1. Counted from the board edge they are:
@@ -152,15 +155,15 @@ The board is flashed **once**, before anything else. Later updates go over Bluet
    - a phone sees `neurband`;
    - the ADS ID is 0x92;
    - the test signal shows on all 8 channels.
-
-   Make sure the Bluetooth bootloader / DFU works before you go on: from here on, updates go over the
-   air.
-6. **Unsolder the wires** and wipe the pads flat with the iron. The base has a 0.5 mm relief under these
-   pads, so a small leftover bump is fine. Nothing may stand more than 0.4 mm proud.
+6. **Unsolder the wires** and wipe the pads flat with the iron. Or leave them as short pigtails, about
+   15 mm, folded flat under the board, for re-flashing later. The base has a 0.5 mm relief under these
+   pads: a leftover bump or flat pigtail joint may stand at most 0.4 mm proud.
 
 ## Step 2: Solder the cell leads and the charging wires
 
 ### 2.1 Cell leads onto J2
+
+![2.1 Cell leads onto J2](img/m2-1_cell_leads.png)
 
 1. Lay the board **bottom side up**. **J2** (two 1.5 x 2 mm pads, 3 mm apart) is on the **button
    side**, about 8 mm from J1's edge:
@@ -179,6 +182,8 @@ The board is flashed **once**, before anything else. Later updates go over Bluet
 
 ### 2.2 Charging wires from J3 to the magnetic connector
 
+![2.2 Charging wires from J3](img/m2-2_j3_wires.png)
+
 1. **J3** is the pair of pads in the board's **button-side corner at the J1 end**, also on the bottom:
    - **J3 pad 1** (5 V in, VCHG) is the inner one;
    - **J3 pad 2** (GND) is the one at the edge.
@@ -194,7 +199,7 @@ The board is flashed **once**, before anything else. Later updates go over Bluet
 
 ### 3.1 The bonding jig
 
-![3.1 The bonding jig (r1 figure; the base fence and stop pads are gone in r2)](img/m3-1_jig.png)
+![3.1 The bonding jig (stage 1)](img/m3-1_jig.png)
 
 - The jig has a **nest** for each free pod: 1 and 2 on the short side, 5-8 on the long side.
 - The **saddle** in the middle carries the pod 3/4 section of the flex; the base is bonded later, in
@@ -219,37 +224,45 @@ The board is flashed **once**, before anything else. Later updates go over Bluet
    1.0 mm proud of the pod's face.
 2. **Peel each dot's top liner** after pressing it in. Do all six pods.
 
-### 3.5 Pods into their fences
+### 3.4 Pods into their fences
 
-![3.5 Pods into their fences](img/m3-5_pods_in.png)
+![3.4 Pods into their fences](img/m3-4_pods_in.png)
 
 1. Turn a pod **pocket side DOWN** and lower it straight into its fence. Its **sleeve runs along the
    strip** (around the wrist).
-2. Press until it **stops on the ledges** (inset), and hold for 10 s.
+2. Press until it **stops on the ledges** (section, right), and hold for 10 s.
 3. Order: **1, 2, 5, 6, 7, 8**.
 
+### 3.5 The strip after stage 1
 
-### 3.6 The strip after stage 1
+![3.5 The strip after stage 1](img/m3-5_strip.png)
 
 1. Wait 10 minutes, then lift the strip off the pins, pulling each pod straight up.
 2. Check that every gold pad sits centred on its dot.
 
 ## Step 4: Bond the base (pedestal jig, stage 2)
 
-![The pedestal jig with the base on it](img/r2_base_jig.jpg)
-
 In r2 the module base carries the two strap bars outboard of its ends. On the flat jig they would land
 on pods 2 and 5, so the base is pressed on here instead. Pods 2 and 5 hang down the pedestal's sides,
 clear of the bars, as they do on a wrist.
+
+### 4.1 Foam dots into the base
+
+![4.1 Foam dots into the base](img/m4-1_dots_base.png)
+
+1. Turn the base upside down. Press a dot into each of the **six pad pockets** and the **root dot**
+   into the small pocket by the tail slot. Peel the liners.
+
+### 4.2 Base onto the pedestal
+
+![4.2 Base onto the pedestal (stage 2)](img/m4-2_base_jig.png)
 
 1. Stand the **base jig** on the table. Lay the strip on the pedestal **gold pads down**:
    - the pod 3/4 section goes on the curved saddle;
    - its four 1.2 mm holes go over the four pins;
    - the free pods hang down both sides.
-2. Turn the base upside down. Press a dot into each of the **six pad pockets** and the **root dot**
-   into the small pocket by the tail slot. Peel the liners.
-3. Thread the flex **tail up through the base's floor slot** from underneath.
-4. Lower the base, **right way up**, onto the saddle between the two fences, with the J1 end on the
+2. Thread the flex **tail up through the base's floor slot** from underneath.
+3. Lower the base, **right way up**, onto the saddle between the two fences, with the J1 end on the
    tail's side. Press until it stops on the four pads, and hold for 10 s. The bars overhang the
    pedestal's open ends. Wait 10 minutes.
 
@@ -257,7 +270,7 @@ clear of the bars, as they do on a wrist.
 
 ### 5.1 Tail into J1
 
-![5.1 Tail into J1](img/m4-1_j1.png)
+![5.1 Tail into J1](img/m5-1_j1.png)
 
 1. Put the strip down, base the right way up. Hold the board **upright above the base's J1 end**,
    with J1 at the bottom and its mouth down. Let the cell hang beside the module on its leads.
@@ -267,14 +280,14 @@ clear of the bars, as they do on a wrist.
 
 ### 5.2 Book-fold the board down
 
-![5.2 Book-fold the board down](img/m4-2_fold.png)
+![5.2 Book-fold the board down](img/m5-2_fold.png)
 
 1. Fold the board down onto the base like closing a book (a to c). The tail forms a smooth **U along
    the end wall**. Don't crease it.
 
 ### 5.3 Connector into its bay; leads and wires
 
-![Base, r2: bars, bay, channels](img/r2_base.jpg)
+![5.3 Connector, leads and wires](img/m5-3_bay.png)
 
 1. Put a little 5-minute epoxy (or thick CA) on the **flange** of the female connector. Push it into
    the **bay** in the elbow-end wall from the inside, so that:
@@ -290,7 +303,7 @@ clear of the bars, as they do on a wrist.
 
 ## Step 6: Close the module
 
-![Lid, r2](img/r2_lid.jpg)
+![6.1 Button cap and lid](img/m6-1_lid.png)
 
 1. Stand the **button cap** stem-down on SW1. In r2 the button sits on the lid's sloped shoulder.
    Its opening is drilled square to the shell, about 28 deg off vertical, so the cap is tilted the same
@@ -315,6 +328,8 @@ clear of the bars, as they do on a wrist.
 
 ### 7.2 Cut the ring end
 
+![7.2 Cutting the strap](img/m7-2_cut.png)
+
 Cut the steel ring end off: at least the 10 mm sewn loop. For a smaller wrist, cut more:
 
 | Wrist at the band line | Cut off the ring end | Hook tab on the loop panel |
@@ -334,6 +349,8 @@ Heat-seal the cut with a quick pass of the lighter flame. Keep the bead small.
 
 ### 7.3 Lock the cut end round bar A
 
+![7.3 Locking the cut end round bar A](img/m7-3_lock_a.png)
+
 This is set once.
 
 1. From under the module, push the cut end **up through slot A**, on the **end-wall side** of the
@@ -346,12 +363,16 @@ This is set once.
 
 ### 7.4 Press the band into the pods
 
+![7.4 Pressing the strap into the pods](img/m7-4_press.png)
+
 1. Starting next to bar A, press the band into the open channel of **pods 5, 6, 7, 8**, across the gap,
    then **1 and 2**.
 2. Press one edge of the band under one lip, then push the other edge down past the other lip until
    it clicks in. Keep the band flat, with the **loop panel facing out**.
 
 ### 7.5 Through bar B and fold back
+
+![7.5 Through bar B and fold back](img/m7-5_fold_b.png)
 
 1. Push the hook end **up through slot B** from under the module.
 2. Take it **over bar B** and fold it back down over the band.
@@ -362,7 +383,7 @@ This is set once.
 
 ### 8.1 On the wrist
 
-![8.1 On the wrist, r2](img/r2_on_wrist_wide.jpg)
+![8.1 On the wrist](img/m8-1_wear.png)
 
 1. **Put it on.** Lay the module on the back of the forearm, wrap the strap round, pull the tail through slot B and press it down (7.5). Wear it with:
    - the module on the back of the forearm, **about 25 mm above the wrist crease**;
@@ -385,6 +406,8 @@ This is set once.
 
 ### 9.1 Build the charging cable
 
+![9.1 The charging cable](img/m9-1_cable.png)
+
 1. Take the **male** half of the magnetic pair (the one with the sprung pins) and a USB-A lead.
 2. Solder **red (5 V) to one pin** and **black to the other**. Mark the red pin's side on the male
    housing.
@@ -392,16 +415,25 @@ This is set once.
 
 ### 9.2 Charge
 
+![9.2 Charging](img/m9-2_charge.png)
+
 1. Take the band **off the wrist**.
 2. Bring the cable's head to the window in the elbow end of the module. The magnets pull it on, and
    only one way round.
 3. Plug into a USB charger. The LED stays **solid** while it charges and goes back to flashing when
    the cell is full.
 
-## Step 10: Opening and updates
+## Step 10: Opening and re-flashing
 
-1. **Updates** go over Bluetooth ([docs/firmware_c.md](../firmware_c.md)). There is no SWD access with
-   the module closed. If a board ever needs SWD again, open it and solder the five wires as in step 1.
+![10.1 Opening and re-flashing](img/m10-1_open.png)
+
+1. **Re-flashing.** There is no SWD access with the module closed, and Bluetooth updates (MCUboot +
+   SMP) are planned but not yet in the firmware
+   ([docs/firmware_c.md](../firmware_c.md)). To re-flash:
+   - open the module (below);
+   - fold the board out (reverse 5.2);
+   - re-attach the wires to the SWD pads (or the pigtails), as in step 1;
+   - flash with SWDIO, SWDCLK and GND only: the cell powers the board, so never connect TP1.
 2. **Open.** Put a fingernail or a plastic pry tool in the **pry notch** at the elbow end, just above the
    connector, and lever the lid up. The catches let go.
 3. **Strap off.** Peel the hook tab, pull the band out of slot B, lift it out of the pods, and untuck
@@ -438,15 +470,3 @@ These numbers come from CAD and hand calculations (`mech/rev_c/logs/strap_streng
 7. **Connector.** 20 connections; it stays on while you move the band on the table. Nothing gets warm
    while it charges.
 8. **Comfort.** Wear it for 30 minutes and check for pressure marks under the bars and pods 2 and 5.
-
-## Figures to redraw for r2
-
-These need new figures (render/manual_figs.py, render/guide_figures.py):
-
-- **New r2 parts:** 0.1 kit, 0.2 names, 2.1 cell leads and route, 2.2 J3 wires to the connector, 3.1
-  jig (no base fence), 3.4 (now done in step 4), stage-2 pedestal, 5.3 connector bay, 6 lid, 7.3 lock at bar A, 7.4 snap-in
-  channel, 7.5 fold at bar B, 9.1-9.2 charging.
-- **Removed steps:** the old SWD jig (1.1-1.3), slides (6.1-6.4) and charge clip (8.1-8.2).
-- **Still valid:** 3.2-3.5, 5.1 (J1) and 5.2 (book-fold).
-
-0.3 and the hero images are the new renders in `docs/media/*_r2.jpg`.

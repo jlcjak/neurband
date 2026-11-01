@@ -80,8 +80,10 @@ def layout(c):
     xp = (M.R_U - SM) * math.sin(th)
     zp = (M.R_U - SM) * math.cos(th) - M.R_U
     z0 = b * math.sqrt(1 - (xp / a) ** 2) - zp
-    mod_pod = {3: dict(x=-M.R_U * math.sin(th), z=z0 + M.R_U * math.cos(th) - M.R_U, ang=th),
-               4: dict(x=M.R_U * math.sin(th), z=z0 + M.R_U * math.cos(th) - M.R_U, ang=-th)}
+    # real flex order: pod 3 on the button side (+X), pods 2, 1 beyond it; pod 4 under the antenna (-X),
+    # pods 5-8 beyond it (r1 had this mirrored and the renders mirrored it back)
+    mod_pod = {3: dict(x=M.R_U * math.sin(th), z=z0 + M.R_U * math.cos(th) - M.R_U, ang=-th),
+               4: dict(x=-M.R_U * math.sin(th), z=z0 + M.R_U * math.cos(th) - M.R_U, ang=th)}
     a2, b2 = G.section(c, R.BAND_Y + 5.0)
     a1, b1 = G.section(c, R.BAND_Y - 5.0)
     def taper_tilt(x, z, ang):
@@ -91,14 +93,14 @@ def layout(c):
         nx, nz = -math.sin(ang), math.cos(ang)          # outward normal of the curve
         return math.atan(dx * nx + dz * nz)
     mod_tilt = math.atan((b2 - b1) / 10.0)
-    s4 = nearest_s(face, mod_pod[4]['x'], mod_pod[4]['z'])
-    s3 = -s4
+    s3 = nearest_s(face, mod_pod[3]['x'], mod_pod[3]['z'])
+    s4 = -s3
     pods = {}
     for i in range(1, R.N_PODS + 1):
         if i in (3, 4):
             d = dict(mod_pod[i]); d['s'] = s3 if i == 3 else s4; d['on_module'] = True
         else:
-            s = s4 + (i - 4) * R.PITCH if i > 4 else s3 - (3 - i) * R.PITCH
+            s = s4 - (i - 4) * R.PITCH if i > 4 else s3 + (3 - i) * R.PITCH
             x, z, ang = face.at(s)
             d = dict(x=x, z=z, ang=ang, s=s, on_module=False)
         d['i'] = i
@@ -106,9 +108,9 @@ def layout(c):
         pods[i] = d
     # gap (edge to edge along the face curve) and where it is
     s1, s8 = pods[1]['s'], pods[8]['s']
-    chain = s8 - s1 + R.POD_W
+    chain = s1 - s8 + R.POD_W
     gap = face.P - chain
-    gap_mid = s1 - R.POD_W / 2 - gap / 2
+    gap_mid = s1 + R.POD_W / 2 + gap / 2
     gap_deg = -gap_mid / face.P * 360.0
     cover = chain / face.P
     # bend radius of each spine link: free length / turning (tangent angles of the pod faces)
@@ -119,12 +121,12 @@ def layout(c):
             radii['3-4'] = round(M.R_U - STACK, 2)
             continue
         d = pods[i]['ang'] - pods[i + 1]['ang']
-        d = (d + math.pi) % (2 * math.pi) - math.pi
+        d = abs((d + math.pi) % (2 * math.pi) - math.pi)
         L = R.PITCH - R.POD_W
         radii[f'{i}-{i + 1}'] = round(L / d, 2) if d > 1e-6 else float('inf')
     # module-edge links: straight-line distance between the pod edges vs. the 11 mm link
     edge_slack = {}
-    for i, j, si in ((4, 5, 1), (3, 2, -1)):
+    for i, j, si in ((4, 5, -1), (3, 2, 1)):
         e0 = loc(pods[i], si * R.POD_W / 2, -R.FLEX_T / 2)
         e1 = loc(pods[j], -si * R.POD_W / 2, -R.FLEX_T / 2)
         edge_slack[f'{i}-{j}'] = round(R.PITCH - R.POD_W - math.dist(e0, e1), 2)
@@ -289,7 +291,7 @@ def layout(c):
     tail = [tail0]
     for q in band_out:
         qq = q
-        for i in (5, 6, 7, 8):                        # over a pod: ride on its lips
+        for i in [k for k, p_ in pods.items() if not p_['on_module'] and p_['x'] > 0]:   # over a pod (B side): ride on its lips
             p = pods[i]
             c_, s_ = math.cos(p['ang']), math.sin(p['ang'])
             dx, dz = qq[0] - p['x'], qq[1] - p['z']
@@ -323,7 +325,7 @@ def layout(c):
         loads[i] = sum(ext(k) for k in ks)
     # edge links: from the module pod edge to pod 2 / 5, under the band's wrap round the bar's lower end
     edge_links = {}
-    for i, j, si in ((3, 2, -1), (4, 5, 1)):
+    for i, j, si in ((3, 2, 1), (4, 5, -1)):
         e0 = loc(pods[i], si * R.POD_W / 2, -R.FLEX_T / 2)
         e1 = loc(pods[j], -si * R.POD_W / 2, -lift - R.FLEX_T / 2)
         t0 = (si * math.cos(pods[i]['ang']), si * math.sin(pods[i]['ang']))
@@ -467,7 +469,8 @@ def build_band(c, log, with_wrist=True, cad=True):
             if bm is not None:                         # leaves the tilted module, drapes on the tapered skin
                 bm.rotate(V(0, y, L['z0']), V(1, 0, 0), math.degrees(L['mod_tilt']))
         else:
-            s0, s1 = pods[i]['s'] + R.POD_W / 2, pods[i + 1]['s'] - R.POD_W / 2
+            sg = 1.0 if pods[i + 1]['s'] > pods[i]['s'] else -1.0
+            s0, s1 = pods[i]['s'] + sg * R.POD_W / 2, pods[i + 1]['s'] - sg * R.POD_W / 2
             q = [lcurve.at(s0 + (s1 - s0) * k / 12)[:2] for k in range(13)]
             bm = S.sweep_band(q, ys, w=sw, t=R.FLEX_T)
         if bm is not None:

@@ -4,7 +4,7 @@
 wrist, a 24-bit biopotential front end, Bluetooth LE, and a module the size of a small watch face — designed
 from first principles to record data good enough to train gesture models, and cheap enough to just build.
 
-![neurband on the wrist](docs/media/hero_arm_wide.jpg)
+![neurband on the wrist](docs/media/hero_arm_wide_r2.jpg)
 
 > **Status: design complete, not yet built.** Schematics, both PCBs (DRC-clean), mechanics, firmware
 > (builds and links, untested on hardware), recorder and analysis code are done; everything below that says
@@ -17,19 +17,20 @@ from first principles to record data good enough to train gesture models, and ch
 | Electrodes | 24 dry 6.5 mm ENIG gold pads on a 2-layer polyimide flex, foam-backed, 1 mm proud |
 | Radio | nRF52832, BLE 5 2M PHY, printed antenna; 2 kSPS × 8 ch, 16-bit stream |
 | IMU | LSM6DSL accel + gyro, 208 Hz |
-| Power | 401223-class LiPo, about 130 mAh, ~12 h streaming (estimate); printed charge clip with two pogo pins that only fits when the band is off the wrist |
-| Module | 31.9 × 34.3 × 9.9 mm, ~15 g total, one size for 145–180 mm wrists |
+| Power | 401223-class LiPo, about 130 mAh, ~12 h streaming (estimate); 2-pin magnetic charging connector in the module's end wall (charge with the band off the wrist) |
+| Module | 31.6 × 37.1 × 9.65 mm body (48 mm across the strap bars), tapered and crowned, one size for 145–180 mm wrists |
+| Strap | 20 mm hook-and-loop watch strap through two thick bars moulded into the base; the electrode pods snap onto it |
 | Cost | ≈ $290–350 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
 ## Gallery
 
 | | |
 |---|---|
-| ![](docs/media/turntable.gif) | ![](docs/media/hero_dark.jpg) |
-| ![](docs/media/hero_crop.jpg) | ![](docs/media/band_product.jpg) |
-| ![](docs/media/xray.jpg) | ![](docs/media/exploded.jpg) |
-| ![](docs/media/flatlay.jpg) | ![](docs/media/pods_inside.jpg) |
-| ![](docs/media/pcb_top.jpg) | ![](docs/media/flex_detail.jpg) |
+| ![](docs/media/turntable_r2.gif) | ![](docs/media/hero_dark_r2.jpg) |
+| ![](docs/media/hero_crop_r2.jpg) | ![](docs/media/band_product_r2.jpg) |
+| ![](docs/media/xray_r2.jpg) | ![](docs/media/exploded_r2.jpg) |
+| ![](docs/media/flatlay_r2.jpg) | ![](docs/media/pods_inside_r2.jpg) |
+| ![](docs/media/pcb_top_r2.jpg) | ![](docs/media/flex_detail_r2.jpg) |
 
 The boards as laid out (KiCad renders, main board top and bottom; 28.7 × 27 mm):
 
@@ -41,7 +42,7 @@ All four copper layers (`python3 tools/copper_layers.py`):
 
 ![four copper layers of the main board](docs/media/board_layers_r2.png)
 
-A 1080 × 1350 turntable video is in [docs/media/turntable.mp4](docs/media/turntable.mp4).
+A 1080 × 1350 turntable video is in [docs/media/turntable_r2.mp4](docs/media/turntable_r2.mp4).
 All images are rendered from the real CAD and KiCad files with `python3 render/make_renders.py` (Blender Cycles);
 see [docs/renders.md](docs/renders.md).
 
@@ -54,7 +55,7 @@ see [docs/renders.md](docs/renders.md).
           │ SPI
         nRF52832 ─ printed 2.4 GHz antenna ─ BLE ─► nRF52840 USB dongle ─► host/neurband_ble.py ─► .npz
           ├ LSM6DSL IMU, button (wake/marker), LED
-        LiPo ─ XC6206 3.3 V ─ RC filter ─ AVDD          charge pads (recessed) ─ TP4054
+        LiPo ─ XC6206 3.3 V ─ RC filter ─ AVDD          magnetic charge connector ─ TP4054
 ```
 
 Like Meta's research band (*A generic non-invasive neuromotor interface for
@@ -99,16 +100,15 @@ fab's assembly fees.
 1. **Order** two things:
    - the assembled main board, the electrode flex and the prints, with **Buy it** in Backplane
      (`boards/neurband_c/ORDERING.md`, `boards/neurband_c_flex/ORDERING.md`, `mech/rev_c/*.fab.json`);
-   - about EUR 60 of off-the-shelf parts ([docs/build/sourcing.md](docs/build/sourcing.md)): 20 mm
-     elastic, 6 mm foam dots, a 401223 LiPo, pogo pins, a Pico 2 as the SWD probe and an nRF52840
-     dongle.
-2. **Build** it in eight steps, with no sewing, magnets or tape other than Kapton:
-   - flash the bare board in the printed SWD jig;
-   - solder the cell;
-   - bond the flex and pods in the printed bonding jig;
-   - fold the tail into J1;
-   - close the module;
-   - thread the webbing loop through the two slides.
+   - about EUR 75 of off-the-shelf parts ([docs/build/sourcing.md](docs/build/sourcing.md)): a 20 mm
+     hook-and-loop watch strap, 6 mm foam dots, a 401223 LiPo, a 2-pin magnetic charging connector and
+     cable, a Pico 2 as the SWD probe and an nRF52840 dongle.
+2. **Build** it ([docs/build/assembly.md](docs/build/assembly.md), PDF alongside):
+   - flash the bare board once through five soldered wires on the SWD pads;
+   - solder the cell and the charging connector;
+   - bond the six free pods in the flat jig and the base in the pedestal jig;
+   - fold the tail into J1 and close the module;
+   - snap the strap into the pods, lock one end on bar A, tighten through bar B.
 
    Design details are in [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
 3. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
@@ -125,7 +125,7 @@ grounded instrument while the pads touch skin. This is a research prototype, not
 |---|---|
 | `boards/neurband_c/` | main board: schematic generator (`gen_c_sch.py`), KiCad project, layout scripts |
 | `boards/neurband_c_flex/` | electrode flex: schematic + parametric PCB generator |
-| `mech/rev_c/` | FreeCAD scripts and STEP for module, pods, strap, charger, fit checks |
+| `mech/rev_c/` | FreeCAD scripts and STEP for the module, pods, strap path, bonding jigs and fit checks |
 | `firmware_c/` | nRF52832 Zephyr firmware |
 | `host/` | BLE recorder and packet tests |
 | `analysis/` | quality gates, features, baseline models, collection prompts, Meta dataset reader |
