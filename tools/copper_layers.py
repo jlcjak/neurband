@@ -15,10 +15,10 @@ PCB = os.path.join(ROOT, 'boards/neurband_c/neurband_c.kicad_pcb')
 KCLI = os.environ.get('KICAD_CLI', os.path.expanduser('~/.backplane-bend/kicad/10.99.0-bp.4/bin/kicad-cli'))
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'docs/media/board_layers.png')
 
-LAYERS = [('F.Cu', 'L1  F.Cu', 'parts, signal routing, GND pour'),
+LAYERS = [('F.Cu', 'L1  F.Cu', 'parts and most signal routing'),
           ('In1.Cu', 'L2  In1.Cu', 'solid GND reference plane'),
-          ('In2.Cu', 'L3  In2.Cu', '+3V3 and VBAT, signals, GND fill'),
-          ('B.Cu', 'L4  B.Cu', 'routing, GND pour, service pads')]
+          ('In2.Cu', 'L3  In2.Cu', 'second solid GND plane'),
+          ('B.Cu', 'L4  B.Cu', 'power and signal routing, SWD, battery and charge pads')]
 PANEL_W = 960                      # board raster width per panel, px
 BG = (14, 15, 17)
 SUBSTRATE = (30, 34, 38)
