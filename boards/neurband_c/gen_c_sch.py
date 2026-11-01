@@ -3,6 +3,11 @@
 Cost-first: one AFE, chip-down nRF52832 with a printed antenna (TI SWRA117D), a single basic LDO,
 basic/preferred passives wherever the fab stocks them. Run: python3 gen_c_sch.py
 """
+# SUPERSEDED (2026-11-01): neurband_c.kicad_sch has since been edited by hand in KiCad (J1 pin swaps and the
+# RN2 reversal, IN1P..IN8N labels, VBAT_SENSE on P0.28/AIN4, IMU_INT on P0.31, C9/C31 1 uF, small passive
+# footprints). The saved .kicad_sch is the source of truth; do not regenerate it from this script without
+# porting those changes first, or schematic-to-board parity breaks.
+
 import os
 import sys
 

@@ -42,6 +42,38 @@ IMU_META = {"model": "LSM6DSL", "odr_hz": 208, "accel_fs_g": 4, "gyro_fs_dps": 5
             "columns": ["ax", "ay", "az", "gx", "gy", "gz"], "units": ["g", "g", "g", "dps", "dps", "dps"]}
 F_MARKER, F_CHARGING, F_LOFF_EN, F_LOFF_ANY, F_MISSED, F_CLIP, F_LOWBAT, F_TEST = (1 << i for i in range(8))
 PACKET_VERSION = "c1"
+# Electrode pods -> ADS1298 channels (rev C main board as routed 2026-11-01 + electrode flex rev C.2).
+# Pod k (1..8, the flex numbering) is recorded as V(proximal pad) - V(distal pad) = sign * ADS channel.
+# The board routes each J1 pair to whichever ADS input was convenient, the flex lands each pod on whichever
+# J1 pair keeps its fan-in planar; this table undoes both. Source: boards/neurband_c_flex/flex_pinmap.py and
+# the main-board netlist (J1 pin -> RN -> INxP/INxN), docs/firmware_c.md "Channel map".
+POD_MAP = {1: (4, +1), 2: (2, -1), 3: (1, +1), 4: (3, +1), 5: (8, -1), 6: (7, -1), 7: (6, -1), 8: (5, -1)}
+_POD_CH = np.array([POD_MAP[k][0] - 1 for k in range(1, 9)])
+_POD_SIGN = np.array([POD_MAP[k][1] for k in range(1, 9)])
+
+
+def _pod_bits(word, sign_pos):
+    """Permute an ADS-channel bit mask into pod order (bit k-1 = pod k)."""
+    return sum(((word >> int(c)) & 1) << k for k, c in enumerate(_POD_CH) if sign_pos is None or sign_pos[k])
+
+
+def to_pods(p):
+    """Return a parsed packet with its samples, DC and lead-off/rail/clip bits in pod order and polarity.
+    rld_cfg/rld_active stay in ADS-channel bit order (they are firmware register masks)."""
+    q = dict(p)
+    for k in ("volts", "codes"):
+        if k in q:
+            q[k] = q[k][:, _POD_CH] * _POD_SIGN
+    if "dc" in q:
+        q["dc"] = q["dc"][_POD_CH] * _POD_SIGN
+    pos = _POD_SIGN > 0
+    lp, ln = p.get("loff_p", 0), p.get("loff_n", 0)
+    q["loff_p"] = _pod_bits(lp, pos) | _pod_bits(ln, ~pos)   # P = the pod's proximal pad
+    q["loff_n"] = _pod_bits(ln, pos) | _pod_bits(lp, ~pos)
+    for k in ("rail", "clip"):
+        if k in q:
+            q[k] = _pod_bits(q[k], None)
+    return q
 
 
 def lsb_volts(gain):
@@ -166,6 +198,7 @@ class Recorder:
         self.next_sample = None
 
     def add(self, p, t_mono_ns=None, t_wall=None):
+        p = to_pods(p)   # everything recorded and shown is in pod order and polarity (POD_MAP)
         t_mono_ns = time.monotonic_ns() if t_mono_ns is None else t_mono_ns
         t_wall = time.time() if t_wall is None else t_wall
         self.seqs.update(p["seq"])
@@ -244,7 +277,8 @@ class Recorder:
         pkt_t_us = ((pk["sample"] - idx[0]) * 1e6 / rate).astype(np.int64)
         gains = np.concatenate(self.gains)
         meta = dict(meta, rate=rate, gain=int(gains[-1]), vref=VREF, lsb_volts=lsb_volts(int(gains[-1])),
-                    n_samples=int(len(emg)), n_channels=NUM_CH, channels=[f"ch{i + 1}" for i in range(NUM_CH)],
+                    n_samples=int(len(emg)), n_channels=NUM_CH, channels=[f"pod{i + 1}" for i in range(NUM_CH)],
+                    pod_map={str(k): list(v) for k, v in POD_MAP.items()},
                     lost_packets=self.seqs.lost, missed_samples=self.missed_samples, restarts=0,
                     fw_drops=int(self.diag["drops"][-1]) if self.diag["drops"] else 0,
                     packet_version=PACKET_VERSION, board="neurband_c",

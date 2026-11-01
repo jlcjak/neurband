@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
-"""REV C deterministic flex artwork, adapted from archived REV B generator.
+"""REV C.2 deterministic flex artwork: every track is placed explicitly, in straight 0/45/90 degree segments.
 
-Explicit paired trunks and pod-local underpasses; clearance-aware routing only
-inside the housing-captured root. KiCad is the connectivity/DRC acceptance gate.
+Paired trunks run on F.Cu through the pod gaps; each proximal (P) electrode crosses under its pod's bias
+electrode on B.Cu; in the housing-captured root every line drops to B.Cu in two staggered via rows and runs
+straight down the tail to its finger. Which pod lands on which finger is flex_pinmap.TAIL, chosen so that
+nothing crosses (firmware maps the channels). KiCad is the connectivity/DRC acceptance gate.
 """
 from __future__ import annotations
 import os
 import argparse
-import copy
-import heapq
 import json
 import math
 from pathlib import Path
 import re
 import subprocess
 import uuid
-import numpy as np
 import pyclipper
 import shapely
-from shapely.geometry import LineString, Point, box
+from shapely.geometry import box
 from shapely.ops import unary_union
 from KicadModTree import Footprint, FootprintType, Pad, Polygon, Property, KicadFileHandler
 
@@ -32,10 +31,18 @@ TAIL_LENGTH = 8.5
 STIFFENER_LENGTH = 3.7
 WIDTH = 0.1
 CLEARANCE = 0.1
-VIA_D = 0.55
+VIA_D = 0.6      # 0.15 mm annular ring on the 0.30 mm drill (flex: more ring than rigid minimum)
 VIA_DRILL = 0.3
 ORIGIN = (65.0, 35.0)
 NS = uuid.UUID('973b1454-8245-4b50-a64c-3bf6d0613e84')
+from flex_pinmap import TAIL                                  # noqa: E402
+LANES = [3.55, 3.75, 3.95, 4.15, 5.85, 6.05, 6.25, 6.45]    # trunk lanes through every pod's B-N gap
+ROW = {1: 7.0, 0: 7.7}       # root via rows for the trunk lines (odd / even finger), staggered
+POD4 = {'E4P': (8.25, 9.85), 'E4N': (8.45, 9.15)}           # pod 4 pair across the root: (lane y, via y)
+NECK_W, NECK_L = 0.2, 0.45   # widened track at electrode exits and vias (teardrop-like strain relief)
+TAIL_W = 0.2                 # tail lines: 0.20 mm from the root vias to the fingers (stiffener edge, U-bend)
+DISC_CLEAR = 3.6             # no B-side hatch within this radius of a P/N electrode centre (less C to GND)
+ELECTRODE_MASK = -0.1        # coverlay overlaps each electrode edge by 0.1 mm (captures the pad)
 
 
 def q(s):
@@ -89,8 +96,7 @@ def contract():
         for node in net:
             if isinstance(node, list) and node[0] == 'node':
                 pads[(child(node, 'ref')[1], child(node, 'pin')[1])] = name
-    expected = {1: 'GND', 2: '/BIAS_E', 19: '/BIAS_E', 20: 'GND'}
-    expected.update({3+2*(i-1)+k: f'/E{i}{kind}' for i in range(1,9) for k,kind in enumerate('PN')})
+    expected = {pin: (net if net == 'GND' else '/'+net) for pin, net in TAIL.items()}
     assert {n:pads['J1',str(n)] for n in range(1,21)} == expected
     assert all(pads[f'E{i}B','1']=='/BIAS_E' for i in range(1,9))
     return root, refs, pads, expected
@@ -150,7 +156,8 @@ class Board:
             net=self.pads[ref,str(num)]
             self.pad_shapes.append((net,(p[0]+local[0],p[1]+local[1]),dims,shape,0 if side=='F' else 1))
             layers=f'"{side}.Cu"' if ref=='J1' else f'"{side}.Cu" "{side}.Mask"'
-            body.append(f'(pad "{num}" smd {shape} (at {f(local[0])} {f(local[1])}) (size {f(dims[0])} {f(dims[1])}) (layers {layers}) (solder_mask_margin 0) (net {self.nets[net]} {q(net)}) (uuid "{uid(ref+str(num))}"))')
+            margin=0 if ref=='J1' else ELECTRODE_MASK
+            body.append(f'(pad "{num}" smd {shape} (at {f(local[0])} {f(local[1])}) (size {f(dims[0])} {f(dims[1])}) (layers {layers}) (solder_mask_margin {margin}) (net {self.nets[net]} {q(net)}) (uuid "{uid(ref+str(num))}"))')
         if ref=='J1':
             pts=' '.join(f'(xy {f(x)} {f(y)})' for x,y in [(-5.25,-1.65),(5.25,-1.65),(5.25,1.9),(-5.25,1.9)])
             body.append(f'(fp_poly (pts {pts}) (stroke (width 0) (type default)) (fill solid) (layer "B.Mask") (uuid "{self.id()}"))')
@@ -182,71 +189,129 @@ class Board:
         self.text('1',(4.3,self.tip-4.3),'B.SilkS',0.8)
         self.text('20',(-3.8,self.tip-4.3),'B.SilkS',0.8)
         self.text('1',(4.3,self.tip-7.1),'F.SilkS',0.8)
-        self.text('C / SKIN',(0,9),'F.SilkS',0.8)
-        self.text('OUTER',(0,9),'B.SilkS',0.8)
+        self.text('C / SKIN',(0,12.6),'F.SilkS',0.8)
+        self.text('OUTER',(0,12.6),'B.SilkS',0.8)
         self.text('Optional: 2-3 SMD spring pins, 2 mm heads per round ENIG pad; no paste stencil',(self.xs[4],-19),'F.Fab',0.8)
         stiff=[(-5.25,self.tip-STIFFENER_LENGTH),(5.25,self.tip-STIFFENER_LENGTH),(5.25,self.tip),(-5.25,self.tip)]
         self.items.append(f'(gr_rect (start {xy(stiff[0])}) (end {xy(stiff[2])}) (stroke (width 0) (type default)) (fill yes) (layer "User.2") (uuid "{self.id()}"))')
         self.text('F-side PI stiffener; total 0.30 +/-0.03 mm',(0,self.tip+3),'User.2',0.7)
         self.text('Root y3..15 captured; bend only y15..stiffener',(0,17),'User.1',0.65)
 
-    def trunks(self):
-        # At the alignment holes, split the trunk into two four-track banks.
-        # Each new pair joins above existing tracks; order anticipates mirrored fingers.
-        lanes=[3.55,3.75,3.95,4.15,5.85,6.05,6.25,6.45]
-        for group,direction in [(list(range(1,4)),1),(list(range(8,4,-1)),-1)]:
-            for rank,i in enumerate(group):
-                x=self.xs[i]
-                ys=lanes[2*rank:2*rank+2]
-                for k,kind in enumerate('PN' if direction==1 else 'NP'):
-                    net=self.pads[f'E{i}{kind}','1']
-                    # Upper lane joins rootward of lower lane; mirrored at the root.
-                    vx=x+direction*(-2.45 if k==0 else 2.45)
-                    landing=(vx,7.1)
-                    if kind=='P':
-                        source=(vx,-6.8)
-                        self.track(net,[(x,-10),source])
-                        self.via(net,source)
-                        self.track(net,[source,landing],'B.Cu')
-                        self.via(net,landing)
-                    else:
-                        self.track(net,[(x,10),landing])
-                    endpoint=(-4.4 if direction==1 else 4.4,ys[k])
-                    self.track(net,[landing,(vx,ys[k]),endpoint])
-                    self.endpoints[net]=(*endpoint,0)
-        # Pod 4 terminates directly into the captured root, not through its hole.
-        x=self.xs[4]
-        for kind,y,ey in [('P',-10,-6.7),('N',10,11.8)]:
-            net=self.pads[f'E4{kind}','1']
-            self.track(net,[(x,y),(x-1.8,ey)])
-            target_y=5.0 if kind=='P' else ey
-            if kind=='P':
-                self.via(net,(x-1.8,ey))
-                self.track(net,[(x-1.8,ey),(x-1.8,target_y)],'B.Cu')
-                self.via(net,(x-1.8,target_y))
-            self.track(net,[(x-1.8,target_y),(3.5,target_y)])
-            self.endpoints[net]=(3.5,target_y,0)
-        # One simple bias bus directly joins the middle electrodes.
-        self.track('/BIAS_E',[(self.xs[1],0),(self.xs[8],0)],width=0.2)
-        # A covered B-side return crosses each free link; F-side pod underpasses
-        # avoid the B-side signal crossings. The root underpass is also F.Cu.
-        for i,x in self.xs.items():
-            for dx in (-2.95,2.95):
-                self.via('GND',(x+dx,-6))
-                if not (i==1 and dx<0 or i==8 and dx>0):
-                    self.track('GND',[(x+dx,-6),(x+dx,3.41)],'B.Cu')
-            self.track('GND',[(x-2.95,-6),(x+2.95,-6)])
-        for i in range(1,8):
-            a,b=self.xs[i],self.xs[i+1]
-            if i==3:
-                for x in (a+2.95,b-2.95):
-                    self.track('GND',[(x,3.41),(x,2.3)],'B.Cu')
-                    self.via('GND',(x,2.3))
-                self.track('GND',[(a+2.95,2.3),(b-2.95,2.3)])
+    def path(self, net, points, layer='F.Cu', start=None, end=None):
+        """Straight segments through `points`, widened to NECK_W at either end (teardrop-like strain relief):
+        start/end = 'via' widens the first/last NECK_L mm; a number r (an electrode radius, the path starting at
+        the pad centre) widens through the pad and NECK_L beyond its edge. The rest is WIDTH."""
+        def cut(pts, length):
+            out, cur = [pts[0]], pts[0]
+            for i, nxt in enumerate(pts[1:], 1):
+                d = math.dist(cur, nxt)
+                if d >= length:
+                    t = length / d if d else 0
+                    c = (cur[0] + (nxt[0] - cur[0]) * t, cur[1] + (nxt[1] - cur[1]) * t)
+                    return out + [c], [c] + pts[i:]
+                out.append(nxt); length -= d; cur = nxt
+            return out, None
+        def width(spec):
+            return None if spec is None else NECK_L + (0 if spec == 'via' else spec)
+        head, body, tail = None, points, None
+        if width(start):
+            head, body = cut(body, width(start))
+        if body and width(end):
+            rev, rest = cut(body[::-1], width(end))
+            if rest is None:             # short path: wide all the way
+                head, body = (head or []) + body[1:] if head else body, None
             else:
-                self.track('GND',[(a+2.95,3.41),(b-2.95,3.41)],'B.Cu')
+                tail, body = rev[::-1], rest[::-1]
+        for seg, w in ((head, NECK_W), (body, WIDTH), (tail, NECK_W)):
+            if seg and len(seg) > 1:
+                self.track(net, seg, layer, w)
+
+    def route(self):
+        """Explicit straight-line routing; see the module docstring."""
+        pin_of = {net: pin for pin, net in TAIL.items()}
+        tip_y = self.tip - 1.9
+        R = 3.25
+        # ---- pods 1-3 (heading +x to the root) and 5-8 (heading -x), as paired lanes through the pod gaps
+        for group, direction in ((list(range(1, 4)), 1), (list(range(8, 4, -1)), -1)):
+            for rank, i in enumerate(group):
+                x = self.xs[i]
+                ys = LANES[2 * rank:2 * rank + 2]
+                kinds = 'PN' if direction == 1 else 'NP'          # upper lane first
+                for k, kind in enumerate(kinds):
+                    name = f'E{i}{kind}'
+                    net = '/' + name
+                    lane = ys[k]
+                    xf = contact_x(pin_of[name])
+                    vy = ROW[pin_of[name] % 2]
+                    if kind == 'P':
+                        vx = x - 2.45
+                        self.path(net, [(x, -10), (vx, -10 + 2.45), (vx, -6.8)], start=R, end='via')
+                        self.via(net, (vx, -6.8))
+                        self.path(net, [(vx, -6.8), (vx, 7.05)], 'B.Cu', 'via', 'via')   # under the bias electrode
+                        self.via(net, (vx, 7.05))
+                        self.path(net, [(vx, 7.05), (vx, lane), (xf, lane), (xf, vy)], start='via', end='via')
+                    else:
+                        vx = x + 2.45
+                        self.path(net, [(x, 10), (vx, 10 - 2.45), (vx, lane), (xf, lane), (xf, vy)], start=R, end='via')
+                    self.via(net, (xf, vy))
+                    self.track(net, [(xf, vy), (xf, tip_y)], 'B.Cu', TAIL_W)
+        # ---- pod 4 sits at the root: its pair runs across the root below the via rows
+        x = self.xs[4]
+        p_lane, p_via = POD4['E4P']
+        n_lane, n_via = POD4['E4N']
+        xp, xn = contact_x(pin_of['E4P']), contact_x(pin_of['E4N'])
+        vx = x - 2.45
+        self.path('/E4P', [(x, -10), (vx, -10 + 2.45), (vx, -6.8)], start=R, end='via')
+        self.via('/E4P', (vx, -6.8))
+        self.path('/E4P', [(vx, -6.8), (vx, 7.05)], 'B.Cu', 'via', 'via')
+        self.via('/E4P', (vx, 7.05))
+        b = (vx - (p_lane - 7.05), p_lane)                            # 45 deg down-left onto its lane
+        self.path('/E4P', [(vx, 7.05), b, (xp, p_lane), (xp, p_via)], start='via', end='via')
+        c = (x - (10 - n_lane), n_lane)                               # 45 deg up-left out of the pad
+        self.path('/E4N', [(x, 10), c, (xn, n_lane), (xn, n_via)], start=R, end='via')
+        for net, xv, yv in (('/E4P', xp, p_via), ('/E4N', xn, n_via)):
+            self.via(net, (xv, yv))
+            self.track(net, [(xv, yv), (xv, tip_y)], 'B.Cu', TAIL_W)
+        # ---- bias: one bus straight through the middle electrodes; tail fingers 2/19 join it by vias
+        xb = [contact_x(19), contact_x(2)]                            # -4.25, +4.25
+        self.track('/BIAS_E', [(self.xs[1], 0), (xb[0], 0)], width=0.25)
+        self.track('/BIAS_E', [(xb[0], 0), (xb[1], 0)], width=0.25)
+        self.track('/BIAS_E', [(xb[1], 0), (self.xs[8], 0)], width=0.25)
+        for xv in xb:
+            self.via('/BIAS_E', (xv, 0))
+            self.track('/BIAS_E', [(xv, 0), (xv, tip_y)], 'B.Cu', TAIL_W)
+        # ---- ground: per pod an F-side bar through the P-B gap and two B-side verticals; the free links
+        # carry one 0.2 mm B-side return at y GY, away from the F-side lanes (no copper stacked across a bend);
+        # across the root the two sides meet on F.Cu at y 2.3 and run down the tail to fingers 1 and 20
+        GY = 1.5
+        for i, x in self.xs.items():
+            for dx in (-2.95, 2.95):
+                self.via('GND', (x + dx, -6))
+                if not (i == 1 and dx < 0 or i == 8 and dx > 0):
+                    self.track('GND', [(x + dx, -6), (x + dx, GY)], 'B.Cu')
+            self.track('GND', [(x - 2.95, -6), (x + 2.95, -6)])
+        for i in range(1, 8):
+            a_, b_ = self.xs[i] + 2.95, self.xs[i + 1] - 2.95
+            if i == 3:
+                for xg, pin in ((a_, 20), (b_, 1)):
+                    xc = contact_x(pin)
+                    self.track('GND', [(xg, GY), (xc, GY), (xc, 2.3)], 'B.Cu', 0.2)
+                    self.via('GND', (xc, 2.3))
+                    self.track('GND', [(xc, 2.3), (xc, tip_y)], 'B.Cu', 0.2)
+                self.track('GND', [(contact_x(20), 2.3), (contact_x(1), 2.3)], 'F.Cu', 0.2)
+            else:
+                self.track('GND', [(a_, GY), (b_, GY)], 'B.Cu', 0.2)
 
     def shield(self):
+        # Rule areas: no B-side pour behind the P/N skin discs. A grounded hatch right behind a 6.5 mm disc is
+        # ~20 pF per electrode, which converts electrode-impedance mismatch into differential mains pickup.
+        for x in self.xs.values():
+            for y in (-10, 10):
+                pts=' '.join(f'(xy {xy((x+DISC_CLEAR*math.cos(a/32*2*math.pi), y+DISC_CLEAR*math.sin(a/32*2*math.pi)))})' for a in range(32))
+                self.items.append(f'''(zone (net 0) (net_name "") (layer "B.Cu") (uuid "{self.id()}") (hatch edge 0.5)
+                  (connect_pads (clearance 0)) (min_thickness 0.25)
+                  (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed) (footprints allowed))
+                  (polygon (pts {pts})))''')
         contours=[[(x-POD_WIDTH/2,-POD_LENGTH/2),(x+POD_WIDTH/2,-POD_LENGTH/2),(x+POD_WIDTH/2,POD_LENGTH/2),(x-POD_WIDTH/2,POD_LENGTH/2)] for x in self.xs.values()]
         contours.append([(-5.25,3),(5.25,3),(5.25,self.tip-STIFFENER_LENGTH),(-5.25,self.tip-STIFFENER_LENGTH)])
         for contour in contours:
@@ -273,188 +338,6 @@ class Board:
           (layer "B.SilkS" (type "Bottom Silk Screen")) (copper_finish "ENIG") (dielectric_constraints no)) (tenting front back))'''
         nets='\n'.join(f'(net {n} {q(name)})' for name,n in self.nets.items())
         path.write_text(header+'\n'+nets+'\n'+'\n'.join(self.items)+'\n)\n')
-
-
-class Fanout:
-    """Local two-layer root fanout, 0.10 mm grid and 0.10 mm tracks."""
-    STEP = 0.1
-    def __init__(self, board):
-        self.b=board
-        self.x0,self.y0=-12.0,-14.65
-        self.nx,self.ny=241,292
-        self.occ=np.zeros((2,self.ny,self.nx),dtype=np.int16)
-        ys,xs=np.mgrid[:self.ny,:self.nx]
-        xx,yy=xs*self.STEP+self.x0,ys*self.STEP+self.y0
-        self.outside=~shapely.contains_xy(board.outline.buffer(-0.36),xx,yy)
-        # Root crossovers may also use the two supported adjacent pod columns.
-        # Drilled holes block both routing layers, including prospective vias.
-        for x in board.xs.values():
-            for y in (-5,5):
-                self.outside |= (xx-x)**2+(yy-y)**2 < (0.6+0.2+WIDTH/2)**2
-        self.owners=None
-        self.penalty=None
-        for net,p,dims,shape,layer in board.pad_shapes:
-            self.shape(net,p,dims,shape,layer)
-        for net,a,b,layer,width in board.segments:
-            self.segment(net,a,b,0 if layer=='F.Cu' else 1,width)
-        for net,p in board.vias:
-            for layer in (0,1):
-                self.shape(net,p,(VIA_D,VIA_D),'circle',layer)
-        self.dist=np.empty_like(self.occ,dtype=np.float32)
-        self.prev=np.empty_like(self.occ,dtype=np.int32)
-        self.owners=np.zeros_like(self.occ,dtype=np.uint64)
-
-    def grid(self,p):
-        return round((p[0]-self.x0)/self.STEP),round((p[1]-self.y0)/self.STEP)
-
-    def point(self,x,y):
-        return round(x*self.STEP+self.x0,6),round(y*self.STEP+self.y0,6)
-
-    def paint(self,net,xmin,xmax,ymin,ymax,test,layer):
-        xa,ya = self.grid((xmin,ymin)); xb,yb = self.grid((xmax,ymax))
-        xa,xb=max(0,xa-1),min(self.nx,xb+2); ya,yb=max(0,ya-1),min(self.ny,yb+2)
-        if xa>=xb or ya>=yb:
-            return
-        yy,xx=np.mgrid[ya:yb,xa:xb]
-        mask=test(xx*self.STEP+self.x0,yy*self.STEP+self.y0)
-        region=self.occ[layer,ya:yb,xa:xb]
-        # Overlapping clearance envelopes are blocked for every net.
-        n=self.b.nets[net]
-        if self.owners is not None:
-            owners=self.owners[layer,ya:yb,xa:xb]
-            owners[mask] |= np.uint64(1) << np.uint64(n)
-        region[mask & (region!=0) & (region!=n)] = -1
-        region[mask & (region==0)] = n
-
-    def shape(self,net,p,dims,shape,layer):
-        extra=0.1+0.05-1e-7
-        rx,ry=dims[0]/2+extra,dims[1]/2+extra
-        def test(x,y):
-            if shape=='circle':
-                return (x-p[0])**2+(y-p[1])**2<=rx**2
-            return (abs(x-p[0])<=rx)&(abs(y-p[1])<=ry)
-        self.paint(net,p[0]-rx,p[0]+rx,p[1]-ry,p[1]+ry,test,layer)
-
-    def segment(self,net,a,b,layer,width):
-        r=width/2+0.1+0.05-1e-7
-        dx,dy=b[0]-a[0],b[1]-a[1]
-        ll=dx*dx+dy*dy
-        def test(x,y):
-            t=np.clip(((x-a[0])*dx+(y-a[1])*dy)/ll,0,1)
-            return (x-a[0]-t*dx)**2+(y-a[1]-t*dy)**2<=r*r
-        self.paint(net,min(a[0],b[0])-r,max(a[0],b[0])+r,min(a[1],b[1])-r,max(a[1],b[1])+r,test,layer)
-
-    def route(self,net,start,end):
-        sx,sy=self.grid(start[:2]); ex,ey=self.grid(end[:2]); sl,el=start[2],end[2]
-        n=self.b.nets[net]
-        valid=((self.occ==0)|(self.occ==n)) & ~self.outside[None,:,:]
-        row_y=np.arange(self.ny)*self.STEP+self.y0
-        # The free tail is prewired on B.Cu; search only the captured root.
-        valid[:,row_y>14.5+1e-6,:]=False
-        if not valid[sl,sy,sx] or not valid[el,ey,ex]:
-            raise RuntimeError(f'{net} blocked endpoints {start} {end}')
-        # Evaluate via geometry directly; grid erosion over-reserves diagonal
-        # channels and cannot accurately distinguish 0.45/0.50/0.55 mm pads.
-        yy,xx=np.mgrid[:self.ny,:self.nx]
-        physical_x=xx*self.STEP+self.x0
-        physical_y=yy*self.STEP+self.y0
-        extra=VIA_D/2+CLEARANCE+0.003
-        obstacles=[]
-        for pad_net,p,dims,shape,layer in self.b.pad_shapes:
-            if pad_net==net and not (layer==0 and shape=='circle'):
-                continue
-            if shape=='circle':
-                obstacles.append(Point(p).buffer(dims[0]/2+extra,quad_segs=32))
-            else:
-                obstacles.append(box(p[0]-dims[0]/2,p[1]-dims[1]/2,
-                                     p[0]+dims[0]/2,p[1]+dims[1]/2).buffer(extra,quad_segs=32))
-        for track_net,a,b,layer,width in self.b.segments:
-            if track_net!=net:
-                obstacles.append(LineString([a,b]).buffer(width/2+extra,quad_segs=32))
-        for x in self.b.xs.values():
-            for y in (-5,5):
-                obstacles.append(Point(x,y).buffer(0.6+0.2+VIA_D/2+0.003,quad_segs=32))
-        existing_vias={}
-        for via_net,p in self.b.vias:
-            if via_net!=net:
-                obstacles.append(Point(p).buffer(VIA_D+CLEARANCE+0.003,quad_segs=32))
-            else:
-                vx,vy=self.grid(p)
-                if 0<=vx<self.nx and 0<=vy<self.ny:
-                    existing_vias[vx,vy]=p
-        via_valid=valid[0]&valid[1]&(physical_y<=14.0)
-        via_valid &= shapely.contains_xy(self.b.outline.buffer(-(0.3+VIA_D/2+0.003)),
-                                        physical_x,physical_y)
-        via_valid &= ~shapely.contains_xy(unary_union(obstacles),physical_x,physical_y)
-        for (vx,vy),p in existing_vias.items():
-            via_valid[vy,vx] = valid[0,vy,vx] and valid[1,vy,vx]
-        self.dist.fill(np.inf); self.prev.fill(-1)
-        self.dist[sl,sy,sx]=0
-        def h(x,y,l):
-            a,b=abs(x-ex),abs(y-ey)
-            return max(a,b)+0.414214*min(a,b)+(35 if l!=el else 0)
-        queue=[(h(sx,sy,sl),0,sx,sy,sl)]
-        moves=[(1,0,1),(-1,0,1),(0,1,1),(0,-1,1),(1,1,1.414214),(1,-1,1.414214),(-1,1,1.414214),(-1,-1,1.414214)]
-        found=False
-        while queue:
-            _,cost,x,y,l=heapq.heappop(queue)
-            if cost>self.dist[l,y,x]+1e-3:
-                continue
-            if (x,y,l)==(ex,ey,el):
-                found=True;break
-            idx=(l*self.ny+y)*self.nx+x
-            for dx,dy,w in moves:
-                xx,yy=x+dx,y+dy
-                if not (0<=xx<self.nx and 0<=yy<self.ny and valid[l,yy,xx]):
-                    continue
-                if dx and dy and not (valid[l,y,xx] and valid[l,yy,x]):
-                    continue
-                new=cost+w
-                if self.penalty is not None:
-                    new+=float(self.penalty[l,yy,xx])
-                if new+1e-4<self.dist[l,yy,xx]:
-                    self.dist[l,yy,xx]=new;self.prev[l,yy,xx]=idx
-                    heapq.heappush(queue,(new+h(xx,yy,l),new,xx,yy,l))
-            if via_valid[y,x]:
-                ll=1-l;new=cost+35
-                if new+1e-4<self.dist[ll,y,x]:
-                    self.dist[ll,y,x]=new;self.prev[ll,y,x]=idx
-                    heapq.heappush(queue,(new+h(x,y,ll),new,x,y,ll))
-        if not found:
-            raise RuntimeError(f'No tail fanout for {net}')
-        path=[];x,y,l=ex,ey,el
-        while True:
-            path.append((x,y,l))
-            prev=int(self.prev[l,y,x])
-            if prev<0:break
-            x=prev%self.nx;v=prev//self.nx;y=v%self.ny;l=v//self.ny
-        path.reverse()
-        self.last_path=path
-        # Compress only collinear grid runs; retain layer transitions as actual vias.
-        points=[path[0]]
-        for k in range(1,len(path)-1):
-            a,b,c=path[k-1:k+2]
-            if (b[0]-a[0],b[1]-a[1],b[2]-a[2])!=(c[0]-b[0],c[1]-b[1],c[2]-b[2]):
-                points.append(b)
-        points.append(path[-1])
-        # Exact physical endpoints also support pitches not aligned to this grid.
-        grid_start=self.point(*points[0][:2]);grid_end=self.point(*points[-1][:2])
-        self.b.track(net,[start[:2],grid_start], 'F.Cu' if sl==0 else 'B.Cu',0.1)
-        for a,b in zip(points,points[1:]):
-            pa,pb=self.point(*a[:2]),self.point(*b[:2])
-            if a[2]!=b[2]:
-                existing = existing_vias.get(a[:2])
-                if existing is not None:
-                    for layer in ('F.Cu','B.Cu'):
-                        self.b.track(net,[pa,existing],layer,0.1)
-                else:
-                    self.b.via(net,pa)
-                    for layer in (0,1):self.shape(net,pa,(VIA_D,VIA_D),'circle',layer)
-            else:
-                self.b.track(net,[pa,pb],'F.Cu' if a[2]==0 else 'B.Cu',0.1)
-                self.segment(net,pa,pb,a[2],0.1)
-        self.b.track(net,[grid_end,end[:2]],'F.Cu' if el==0 else 'B.Cu',0.1)
-        print(f'{self.b.size} fanout {net}: {len(points)} corners',flush=True)
 
 
 def library():
@@ -492,101 +375,9 @@ def library():
 
 def route_board(board):
     board.geometry()
-    board.trunks()
-    contacts={}
-    for pin in range(1,21):
-        net=board.tail[pin]
-        x=contact_x(pin)
-        board.track(net,[(x,board.tip-1.9),(x,14.5)],'B.Cu')
-        contacts[pin]=(x,14.5,1)
-    for pin in (1,20):
-        x=contact_x(pin)
-        board.track('GND',[(x,14.5),(x,2.3)],'B.Cu')
-        board.via('GND',(x,2.3))
-    for pin in (2,19):
-        x=contact_x(pin)
-        board.track('/BIAS_E',[(x,14.5),(x,0)],'B.Cu')
-        board.via('/BIAS_E',(x,0))
-    grid=Fanout(board)
-    # Reserve the exact-to-grid stubs before any route; otherwise a later
-    # route can obstruct another contact's off-grid access point.
-    for net,p in list(board.endpoints.items()):
-        point=grid.point(*grid.grid(p[:2]))
-        board.track(net,[p[:2],point],'F.Cu' if p[2]==0 else 'B.Cu')
-        board.endpoints[net]=(*point,p[2])
-    for pin,p in list(contacts.items()):
-        if pin not in range(3,19):
-            continue
-        point=grid.point(*grid.grid(p[:2]))
-        board.track(board.tail[pin],[p[:2],point],'B.Cu')
-        contacts[pin]=(*point,p[2])
-    base=Fanout(board)
-    history=np.zeros_like(base.occ,dtype=np.float32)
-    routes={}
-
-    def restore(records):
-        fan=copy.deepcopy(base)
-        for segments,vias in records.values():
-            for net,a,b,layer,width in segments:
-                fan.b.track(net,[a,b],layer,width)
-                fan.segment(net,a,b,0 if layer=='F.Cu' else 1,width)
-            for net,p in vias:
-                fan.b.via(net,p)
-                for layer in (0,1):
-                    fan.shape(net,p,(VIA_D,VIA_D),'circle',layer)
-        fan.penalty=history
-        return fan
-
-    pending=[9,10,4,3,6,5,8,7,18,17,16,15,14,13,12,11]
-    for step in range(384):
-        if not pending:
-            result=restore(routes).b
-            result.shield()
-            return result
-        pin=pending.pop(0)
-        net=board.tail[pin]
-        fan=restore(routes)
-        # Left-bank crossovers favour B, right-bank crossovers favour F.
-        # This separates the two opposing bundles instead of braiding both layers.
-        fan.penalty=history.copy()
-        fan.penalty[0 if board.endpoints[net][0]<0 else 1]+=2
-        ns,nv=len(fan.b.segments),len(fan.b.vias)
-        try:
-            fan.route(net,board.endpoints[net],contacts[pin])
-        except RuntimeError as exc:
-            if not str(exc).startswith('No tail fanout'):
-                raise
-            own={p:r for p,r in routes.items() if board.tail[p]==net}
-            soft=restore(own)
-            foreign=fan.owners & np.uint64(~(1<<board.nets[net]) & ((1<<64)-1))
-            soft.penalty=history+(foreign!=0)*8
-            soft.penalty[0 if board.endpoints[net][0]<0 else 1]+=2
-            ns,nv=len(soft.b.segments),len(soft.b.vias)
-            soft.route(net,board.endpoints[net],contacts[pin])
-            used_cells=set(soft.last_path)
-            for a,b in zip(soft.last_path,soft.last_path[1:]):
-                if a[2]==b[2] and a[0]!=b[0] and a[1]!=b[1]:
-                    used_cells.update([(a[0],b[1],a[2]),(b[0],a[1],a[2])])
-            bits=0
-            for x,y,layer in used_cells:
-                bits |= int(foreign[layer,y,x])
-            for _,p in soft.b.vias[nv:]:
-                x,y=soft.grid(p)
-                bits |= int(np.bitwise_or.reduce(foreign[:,max(0,y-4):y+5,max(0,x-4):x+5].ravel(),initial=np.uint64(0)))
-            blocked=[p for p in routes if bits & (1<<board.nets[board.tail[p]])]
-            if not blocked:
-                raise RuntimeError(f'Cannot identify root blocker for pin {pin}') from exc
-            for x,y,layer in used_cells:
-                if foreign[layer,y,x]:
-                    patch=history[layer,max(0,y-2):y+3,max(0,x-2):x+3]
-                    np.minimum(patch+0.5,8,out=patch)
-            for p in blocked:
-                del routes[p]
-            pending.extend(p for p in blocked if p not in pending)
-            print(f'Root: rip up {blocked} for pin {pin}',flush=True)
-            fan=soft
-        routes[pin]=(fan.b.segments[ns:],fan.b.vias[nv:])
-    raise RuntimeError('Root fanout negotiation did not converge')
+    board.route()
+    board.shield()
+    return board
 
 
 def verify(path):
@@ -620,7 +411,8 @@ def shield_areas(path):
                 at=next((x for x in item if isinstance(x,list) and x[0]=='at'),None)
                 position=at if at is not None else child(child(item,'transform'),'translate')
                 pods[props['Reference']]=tuple(map(float,position[1:3]))
-        if item[0]=='zone' and child(item,'net')[1]=='GND':
+        net=next((x for x in item if isinstance(x,list) and x[0]=='net'),None)
+        if item[0]=='zone' and net is not None and net[1]=='GND':
             for filled in item:
                 if isinstance(filled,list) and filled[0]=='filled_polygon' and child(filled,'layer')[1]=='B.Cu':
                     copper.append([(round(float(p[1])*scale),round(float(p[2])*scale)) for p in child(filled,'pts')[1:]])

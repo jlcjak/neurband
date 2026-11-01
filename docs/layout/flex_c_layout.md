@@ -1,5 +1,48 @@
 # Electrode flex — REV C, medium
 
+## Rev C.2 routing (2026-11-01): explicit straight lines, planar fan-in
+
+The outline, the 24 electrodes, the alignment holes, the tail, the fingers and the stiffener are unchanged
+from rev C. Only the copper routing was redone, and it is now placed explicitly by `gen_flex_c_pcb.py`
+(no grid router): 217 track segments (was 447) and 52 vias (was 60), DRC/ERC/parity 0/0/0.
+
+- **Free pin assignment.** Any pod may use any J1 pair, in either orientation, because the host maps channels
+  (`host/neurband_ble.py` `POD_MAP`, see `docs/firmware_c.md` "Channel map"). `boards/neurband_c_flex/flex_pinmap.py`
+  picks the assignment that makes the root fan-in planar: each trunk lane turns down into the tail in lane
+  order, so no two signal lines cross. Pods 5-8 land on fingers 3-10, pod 4 on 11/12, pods 1-3 on 13-18.
+- **Trunks.** P/N pairs on F.Cu, 0.10 mm track / 0.10 mm gap, in the eight lanes through each pod's B-N gap
+  (Y +3.55...+6.45, two banks around the alignment hole), straight across the wrist links. Each proximal (P)
+  electrode crosses under its pod's bias electrode on B.Cu (vias at Y -6.8 and +7.05, inside the pod).
+- **Root.** In the housing-captured root every trunk line drops to B.Cu in two staggered via rows
+  (Y 7.0 / 7.7) and runs straight down the tail to its finger; pod 4's pair crosses the root just below them
+  (Y 8.25 / 8.45, vias at 9.15 / 9.85). The bias bus (0.25 mm) runs straight through all middle electrodes and
+  drops to fingers 2/19 by vias at Y 0. Ground: an F-side bar through each pod's P-B gap, B-side verticals,
+  a 0.20 mm B-side return across each free link at Y 1.5, an F-side link across the root at Y 2.3, fingers 1/20.
+
+**Reliability rules applied (flex-specific):**
+1. **No vias in bend zones.** Vias only inside pods (held by the printed pod shell and foam) and in the
+   root (captured by the module). None in the free wrist links or the free tail.
+2. **Single-layer copper through the bends.** In the free links the F-side lanes and the B-side return are
+   offset (Y 3.55-6.45 vs 1.5), so no copper is stacked on both faces across a bend. The tail is B.Cu only;
+   the F side carries nothing but the stiffener at the tip, outside the U-bend.
+3. **Traces run along the bend** (around the wrist), perpendicular to the bend axis.
+4. **Strain relief at every transition.** Each signal and bias track is 0.20 mm wide for 0.45 mm out of
+   every via and through every electrode edge (teardrop-like neck), 0.10 mm elsewhere. The 20 tail lines are
+   0.20 mm all the way from the root vias to the fingers, so they are wide where they cross the stiffener edge
+   (Y 19.8) and through the U-bend. (Pod ground vias sit in the hatch and need no neck.)
+5. **Vias 0.60 / 0.30 mm** (0.15 mm annular ring, above the rigid-board minimum).
+6. **Coverlay captures every electrode:** the F-side opening is 0.1 mm smaller than the 6.5 mm pad on each
+   side (6.3 mm exposed), anchoring the pad edge against peel from skin rubbing and foam pressure.
+7. **No ground hatch behind the P/N skin discs** (keep-out radius 3.6 mm). A grounded hatch right behind a
+   6.5 mm disc is ~20 pF per electrode, which turns electrode-impedance mismatch into differential mains pickup
+   (~ -49 dB); without it each line has ~2-3 pF to GND. The hatch stays behind the traces, the bias discs and
+   the gaps (~33 mm2 of filled hatch per pod).
+8. Stack unchanged: two-layer polyimide (25 um core), 12 um rolled-annealed copper, coverlay both sides,
+   0.11 mm finished, ENIG 2 u", PI 0.225 stiffener only under the fingers (0.30 +/- 0.03 mm there).
+
+The sections below describe the rev C routing and stay valid for the outline, the pods, the tail and the
+mating interface; where they describe trunk/root routing, the rev C.2 section above supersedes them.
+
 Native project and generators: `boards/neurband_c_flex/`. This is a **passive, two-layer polyimide flex**, not a rigid PCB. Eight pods, 24 fabricated electrodes, no purchased components or flex assembly BOM. Other boards, mechanical files and their generators are not changed.
 
 ## Dimensions and coordinate frame

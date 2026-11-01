@@ -111,7 +111,7 @@ class RecorderTest(unittest.TestCase):
             self.assertEqual(int(z["sample_index"][bt]), 20 * n)
             meta = json.loads(str(z["meta"]))
             self.assertEqual((meta["rate"], meta["n_channels"], meta["lost_packets"]), (2000, 8, 1))
-            np.testing.assert_allclose(z["diag_dc"][0], 1000 * nb.lsb_volts(6), rtol=1e-6)
+            np.testing.assert_allclose(z["diag_dc"][0], 1000 * nb.lsb_volts(6) * nb._POD_SIGN, rtol=1e-6)  # pod order/polarity
             self.assertEqual(z["imu"].shape, (2, 6))
             np.testing.assert_array_equal(z["imu_sample"], [50, 60])
             np.testing.assert_allclose(z["imu"][0], [0, 0, 1.0, 1.75, -1.75, 0], atol=2e-3)

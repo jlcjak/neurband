@@ -157,6 +157,30 @@ The script also checks the FIR response and the float32 rounding error.
 All of this sits in one place: `firmware_c/boards/nrf52dk_nrf52832.overlay`. If the layout
 swaps pins, only the overlay changes.
 
+
+## Channel map (electrode pods -> ADS1298 channels)
+
+The main board routes each J1 pair to whichever ADS input was convenient, sometimes with P and N swapped, and
+the electrode flex lands each pod on whichever J1 pair keeps its routing planar. Each pod still maps to exactly
+one ADS channel. The firmware streams ADS channels in order (its DSP, lead-off and bias loop work per ADS
+channel); the host (`host/neurband_ble.py`, `POD_MAP` / `to_pods`) reorders and signs them, so recordings,
+plots and the analysis package see **pod 1..8, each as V(proximal pad) - V(distal pad)**.
+
+| Pod | J1 pins (flex finger = board pin) | ADS channel | Sign |
+|---|---|---|---|
+| 1 | 13 (P), 14 (N) | ch4: IN4P = pin 13, IN4N = pin 14 | + |
+| 2 | 15 (P), 16 (N) | ch2: IN2P = pin 16, IN2N = pin 15 | - |
+| 3 | 17 (P), 18 (N) | ch1: IN1P = pin 17, IN1N = pin 18 | + |
+| 4 | 12 (P), 11 (N) | ch3: IN3P = pin 12, IN3N = pin 11 | + |
+| 5 | 3 (P), 4 (N) | ch8: IN8P = pin 4, IN8N = pin 3 | - |
+| 6 | 5 (P), 6 (N) | ch7: IN7P = pin 6, IN7N = pin 5 | - |
+| 7 | 7 (P), 8 (N) | ch6: IN6P = pin 8, IN6N = pin 7 | - |
+| 8 | 9 (P), 10 (N) | ch5: IN5P = pin 10, IN5N = pin 9 | - |
+
+Sources: `boards/neurband_c_flex/flex_pinmap.py` and the main-board netlist (J1 pin -> RN array -> INxP/INxN).
+If either board's pin assignment changes, update `POD_MAP` and this table together. The lead-off and
+rail/clip bits are remapped to pods too; `rld_cfg`/`rld_active` stay in ADS-channel bit order.
+
 ## Architecture
 
 ```

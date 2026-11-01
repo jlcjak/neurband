@@ -13,11 +13,9 @@ from schgen import Schematic  # noqa: E402
 HERE = os.path.dirname(os.path.abspath(__file__))
 s = Schematic("neurband REV C passive flex: 8 pods x 3 electrodes", paper="A3", project="neurband_c_flex")
 
-# Matches boards/neurband_c/gen_c_sch.py J1_MAP; no zero-padded channel names.
-TAIL = {1: "GND", 2: "BIAS_E", 19: "BIAS_E", 20: "GND"}
-for ch in range(8):
-    TAIL[3 + 2 * ch] = f"E{ch + 1}P"
-    TAIL[4 + 2 * ch] = f"E{ch + 1}N"
+# Which pod electrode lands on which finger: flex_pinmap.TAIL (planar fan-in; firmware maps channels).
+sys.path.insert(0, HERE)
+from flex_pinmap import TAIL  # noqa: E402
 
 j = s.add("Connector_Generic:Conn_01x20", "J1", "Fabricated tail 20 fingers 0.5mm", 309.88, 99.06,
           footprint="neurband_c_flex:FPC_Tail_20_P0.5mm", in_bom=False,
