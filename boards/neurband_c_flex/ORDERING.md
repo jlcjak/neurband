@@ -17,7 +17,7 @@ FS2–FS4) and the design in [docs/layout/flex_c_layout.md](../../docs/layout/fl
 | Mating thickness | **0.30 ±0.03 mm total at the gold fingers** (0.11 build − one coverlay − one copper + 0.225 PI ≈ 0.296 mm). If the fab's stack differs, choose the stiffener that reaches 0.30 ±0.03 |
 | Fingers | B side, 20 × 0.30 mm at 0.50 mm pitch, 3.2 mm exposed; tab width 10.50 mm |
 | Outline | Laser cut per `Edge_Cuts`. Request **±0.05 mm on the 10.50 mm tail**; obtain the fab's tolerance confirmation before production |
-| Holes | 52 × 0.30 mm plated vias, 0.60 mm pads (tented). **16 × 1.2 mm NPTH alignment holes, drilled through both coverlays, no coverlay pre-opening** |
+| Holes | 50 × 0.30 mm plated vias, 0.60 mm pads (tented). **16 × 1.2 mm NPTH alignment holes, drilled through both coverlays, no coverlay pre-opening** |
 | Quantity | 5 |
 
 Files the fab needs: `F_Cu`, `B_Cu`, `F_Mask`, `B_Mask`, `F_Silkscreen`, `B_Silkscreen`, `Edge_Cuts`,

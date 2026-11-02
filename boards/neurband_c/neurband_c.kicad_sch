@@ -10304,7 +10304,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 180.34 53.53 0)
 			(hide yes)
 			(show_name no)
@@ -10469,108 +10469,6 @@
 			(project "neurband_c"
 				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
 					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 217.17 50.8 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "09dfd994-559b-5df8-9286-b268ec7b7347")
-		(property "Reference" "C11"
-			(at 219.07 50.2 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 219.07 52.7 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
-			(at 217.17 54.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 217.17 56.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 217.17 50.8 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CL05B104KO5NNNC"
-			(at 217.17 58.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C1525"
-			(at 217.17 60.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0d0e4143-fc51-559b-a967-56130a9a004e")
-		)
-		(pin "2"
-			(uuid "56d07fdf-75e4-52ef-89a8-9d9dc948c2f5")
-		)
-		(instances
-			(project "neurband_c"
-				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
-					(reference "C11")
 					(unit 1)
 				)
 			)
@@ -10785,7 +10683,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 88.9 57.34 0)
 			(hide yes)
 			(show_name no)
@@ -11421,7 +11319,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 190.5 75.12 0)
 			(hide yes)
 			(show_name no)
@@ -11718,7 +11616,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 386.08 59.88 0)
 			(hide yes)
 			(show_name no)
@@ -11820,7 +11718,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 101.6 57.34 0)
 			(hide yes)
 			(show_name no)
@@ -12220,7 +12118,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small_US")
+		(lib_id "Device:L_Small")
 		(at 261.62 86.36 90)
 		(unit 1)
 		(body_style 1)
@@ -12230,7 +12128,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "21a48c3a-c7b0-526e-8f77-2e3d2d1efe06")
-		(property "Reference" "R3"
+		(property "Reference" "L2"
 			(at 261.62 83.46 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12240,7 +12138,7 @@
 				)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "5.1nH"
 			(at 261.62 89.76 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12250,7 +12148,7 @@
 				)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:L_0402_Small"
 			(at 261.62 90.36 90)
 			(hide yes)
 			(show_name no)
@@ -12282,7 +12180,7 @@
 				)
 			)
 		)
-		(property "MPN" "0402WGF0000TCE"
+		(property "MPN" "SDCL1005C5N1STDF"
 			(at 261.62 94.36 90)
 			(hide yes)
 			(show_name no)
@@ -12293,7 +12191,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C17168"
+		(property "LCSC" "C33114"
 			(at 261.62 96.36 90)
 			(hide yes)
 			(show_name no)
@@ -12313,7 +12211,7 @@
 		(instances
 			(project "neurband_c"
 				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
-					(reference "R3")
+					(reference "L2")
 					(unit 1)
 				)
 			)
@@ -12595,7 +12493,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 243.84 224.98 0)
 			(hide yes)
 			(show_name no)
@@ -13137,7 +13035,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 182.88 230.06 0)
 			(hide yes)
 			(show_name no)
@@ -13239,7 +13137,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 147.32 273.24 0)
 			(hide yes)
 			(show_name no)
@@ -13341,7 +13239,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 365.76 59.88 0)
 			(hide yes)
 			(show_name no)
@@ -13812,7 +13710,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 129.54 273.24 0)
 			(hide yes)
 			(show_name no)
@@ -15327,7 +15225,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 271.78 242.76 0)
 			(hide yes)
 			(show_name no)
@@ -15581,7 +15479,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 187.96 53.53 0)
 			(hide yes)
 			(show_name no)
@@ -15683,7 +15581,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 266.7 92.9 0)
 			(hide yes)
 			(show_name no)
@@ -16013,7 +15911,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 261.62 115.76 0)
 			(hide yes)
 			(show_name no)
@@ -16657,7 +16555,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 194.31 53.53 0)
 			(hide yes)
 			(show_name no)
@@ -16835,7 +16733,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 375.92 59.88 0)
 			(hide yes)
 			(show_name no)
@@ -16935,7 +16833,7 @@
 				)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_L_0402_Small"
+		(property "Footprint" "neurband:L_0402_Small"
 			(at 276.86 90.36 90)
 			(hide yes)
 			(show_name no)
@@ -17297,7 +17195,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 198.12 75.12 0)
 			(hide yes)
 			(show_name no)
@@ -17475,7 +17373,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 195.58 87.82 0)
 			(hide yes)
 			(show_name no)
@@ -17575,7 +17473,7 @@
 				)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 205.74 72.58 90)
 			(hide yes)
 			(show_name no)
@@ -17677,7 +17575,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 157.48 273.24 0)
 			(hide yes)
 			(show_name no)
@@ -17779,7 +17677,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 345.44 42.1 0)
 			(hide yes)
 			(show_name no)
@@ -18109,7 +18007,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 243.84 214.82 0)
 			(hide yes)
 			(show_name no)
@@ -18363,7 +18261,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 353.06 42.1 0)
 			(hide yes)
 			(show_name no)
@@ -18465,7 +18363,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 261.62 105.6 0)
 			(hide yes)
 			(show_name no)
@@ -18565,7 +18463,7 @@
 				)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 203.2 214.82 90)
 			(hide yes)
 			(show_name no)
@@ -19423,7 +19321,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0603_Small"
+		(property "Footprint" "neurband:C_0603_Small"
 			(at 124.46 214.82 0)
 			(hide yes)
 			(show_name no)
@@ -19525,7 +19423,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 96.52 138.62 0)
 			(hide yes)
 			(show_name no)
@@ -19779,7 +19677,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 68.58 240.22 0)
 			(hide yes)
 			(show_name no)
@@ -20304,7 +20202,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 209.55 54.8 0)
 			(hide yes)
 			(show_name no)
@@ -20732,7 +20630,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 127 146.24 0)
 			(hide yes)
 			(show_name no)
@@ -21127,7 +21025,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 88.9 52.26 0)
 			(hide yes)
 			(show_name no)
@@ -21381,7 +21279,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 215.9 230.06 0)
 			(hide yes)
 			(show_name no)
@@ -21483,7 +21381,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 86.36 136.08 0)
 			(hide yes)
 			(show_name no)
@@ -21737,7 +21635,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 172.72 53.53 0)
 			(hide yes)
 			(show_name no)
@@ -21839,7 +21737,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 142.24 230.06 0)
 			(hide yes)
 			(show_name no)
@@ -21941,7 +21839,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0603_Small"
+		(property "Footprint" "neurband:C_0603_Small"
 			(at 337.82 42.1 0)
 			(hide yes)
 			(show_name no)
@@ -22323,7 +22221,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "d82f15a1-c43e-5b35-9d04-781c029884f1")
 		(property "Reference" "C23"
 			(at 258.44 88.3 0)
@@ -22336,7 +22234,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "DNP"
+		(property "Value" "0.5pF"
 			(at 258.44 90.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22347,7 +22245,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 256.54 92.9 0)
 			(hide yes)
 			(show_name no)
@@ -22379,7 +22277,7 @@
 				)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "0402CG0R5B500NT"
 			(at 256.54 96.9 0)
 			(hide yes)
 			(show_name no)
@@ -22390,7 +22288,7 @@
 				)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C285052"
 			(at 256.54 98.9 0)
 			(hide yes)
 			(show_name no)
@@ -22449,7 +22347,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0603_Small"
+		(property "Footprint" "neurband:C_0603_Small"
 			(at 76.2 133.54 0)
 			(hide yes)
 			(show_name no)
@@ -22898,7 +22796,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 251.46 222.44 0)
 			(hide yes)
 			(show_name no)
@@ -23193,7 +23091,7 @@
 				)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_R_0402_Small"
+		(property "Footprint" "neurband:R_0402_Small"
 			(at 297.18 227.52 90)
 			(hide yes)
 			(show_name no)
@@ -23295,7 +23193,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 210.82 77.66 0)
 			(hide yes)
 			(show_name no)
@@ -23847,7 +23745,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 109.22 214.82 0)
 			(hide yes)
 			(show_name no)
@@ -23949,7 +23847,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 106.68 141.16 0)
 			(hide yes)
 			(show_name no)
@@ -24127,7 +24025,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0603_Small"
+		(property "Footprint" "neurband:C_0603_Small"
 			(at 116.84 146.24 0)
 			(hide yes)
 			(show_name no)
@@ -24381,7 +24279,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0402_Small"
+		(property "Footprint" "neurband:C_0402_Small"
 			(at 281.94 92.9 0)
 			(hide yes)
 			(show_name no)
@@ -24887,7 +24785,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "neurband:Avizo_C_0603_Small"
+		(property "Footprint" "neurband:C_0603_Small"
 			(at 208.28 230.06 0)
 			(hide yes)
 			(show_name no)
@@ -24951,6 +24849,108 @@
 			(project "neurband_c"
 				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
 					(reference "C28")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
+		(at 217.17 50.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "fb1a1309-1bc2-4211-80d1-e69c68258cd7")
+		(property "Reference" "C11"
+			(at 219.07 50.2 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 219.07 52.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "neurband:C_0402_Small"
+			(at 217.17 54.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 217.17 56.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 217.17 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL05A105KA5NQNC"
+			(at 217.17 58.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C52923"
+			(at 217.17 60.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "66132bcf-2e5e-426d-aee0-e76f4b971af7")
+		)
+		(pin "2"
+			(uuid "24e21aa2-860e-4419-86b0-60ba772e1a42")
+		)
+		(instances
+			(project "neurband_c"
+				(path "/efa9219e-5236-5975-b4d5-0fcd4e0556e8"
+					(reference "C11")
 					(unit 1)
 				)
 			)

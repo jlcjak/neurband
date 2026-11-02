@@ -18,10 +18,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 s = Schematic("neurband rev C: 8-ch sEMG, nRF52832 BLE, ADS1298", paper="User 420 310", project="neurband_c")
 
 FP = {
-    "R0402": "neurband:Avizo_R_0402_Small",
-    "C0402": "neurband:Avizo_C_0402_Small",
-    "C0603": "neurband:Avizo_C_0603_Small",
-    "L0402": "neurband:Avizo_L_0402_Small",
+    "R0402": "neurband:R_0402_Small",
+    "C0402": "neurband:C_0402_Small",
+    "C0603": "neurband:C_0603_Small",
+    "L0402": "neurband:L_0402_Small",
     "LED": "LED_SMD:LED_0603_1608Metric",
     "RN": "neurband:R_Array_Convex_4x0603_FabZero",
 }

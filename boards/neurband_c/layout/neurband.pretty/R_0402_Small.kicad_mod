@@ -1,32 +1,32 @@
-(footprint "Avizo_R_01005_Small"
+(footprint "R_0402_Small"
 	(version 20260206)
-	(generator "avizo-small-tmp")
+	(generator "neurband-small-passive")
 	(generator_version "1.0")
 	(layer "F.Cu")
-	(descr "Project-local 01005 resistor land pattern from small.tmp; pad 0.20 x 0.22 mm at +/-0.190 mm")
-	(tags "resistor 01005 small.tmp")
+	(descr "Project-local 0402 resistor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
+	(tags "resistor 0402")
 	(property "Reference" "REF**"
-		(at 0 -0.470 0)
+		(at 0 -0.625 0)
 		(layer "F.Fab")
 		(effects (font (size 0.25 0.25) (thickness 0.04)))
 	)
-	(property "Value" "Avizo_R_01005_Small"
-		(at 0 0.470 0)
+	(property "Value" "R_0402_Small"
+		(at 0 0.625 0)
 		(layer "F.Fab")
 		(effects (font (size 0.25 0.25) (thickness 0.04)))
 	)
 	(attr smd)
 	(duplicate_pad_numbers_are_jumpers no)
 	(fp_rect
-		(start -0.350 -0.170)
-		(end 0.350 0.170)
+		(start -0.700 -0.325)
+		(end 0.700 0.325)
 		(stroke (width 0.03) (type solid))
 		(fill no)
 		(layer "F.CrtYd")
 	)
 	(fp_rect
-		(start -0.200 -0.100)
-		(end 0.200 0.100)
+		(start -0.500 -0.250)
+		(end 0.500 0.250)
 		(stroke (width 0.04) (type solid))
 		(fill no)
 		(layer "F.Fab")
@@ -37,19 +37,19 @@
 		(effects (font (size 0.20 0.20) (thickness 0.03)))
 	)
 	(pad "1" smd roundrect
-		(at -0.190 0)
-		(size 0.200 0.220)
+		(at -0.450 0)
+		(size 0.450 0.550)
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(roundrect_rratio 0.20)
 	)
 	(pad "2" smd roundrect
-		(at 0.190 0)
-		(size 0.200 0.220)
+		(at 0.450 0)
+		(size 0.450 0.550)
 		(layers "F.Cu" "F.Paste" "F.Mask")
 		(roundrect_rratio 0.20)
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/layout/models/R_01005_0402Metric.step"
+	(model "${KIPRJMOD}/layout/models/R_0402_1005Metric.step"
 		(offset (xyz 0 0 0))
 		(scale (xyz 1 1 1))
 		(rotate (xyz 0 0 0))

@@ -1,16 +1,16 @@
-(footprint "Avizo_R_0805_Small"
+(footprint "R_0805_Small"
 	(version 20260206)
-	(generator "avizo-small-tmp")
+	(generator "neurband-small-passive")
 	(generator_version "1.0")
 	(layer "F.Cu")
-	(descr "Project-local 0805 resistor land pattern from small.tmp; pad 0.75 x 1.00 mm at +/-0.825 mm")
-	(tags "resistor 0805 small.tmp")
+	(descr "Project-local 0805 resistor land pattern; pad 0.75 x 1.00 mm at +/-0.825 mm")
+	(tags "resistor 0805")
 	(property "Reference" "REF**"
 		(at 0 -0.900 0)
 		(layer "F.Fab")
 		(effects (font (size 0.25 0.25) (thickness 0.04)))
 	)
-	(property "Value" "Avizo_R_0805_Small"
+	(property "Value" "R_0805_Small"
 		(at 0 0.900 0)
 		(layer "F.Fab")
 		(effects (font (size 0.25 0.25) (thickness 0.04)))

@@ -6,14 +6,14 @@
   "options": {
     "layers": 4,
     "thickness_mm": 1.0,
-    "color": "black",
-    "finish": "enig"
+    "color": "green",
+    "finish": "osp"
   },
   "features": {
     "width_mm": 28.7,
     "height_mm": 27.0,
     "min_drill_mm": 0.3
   },
-  "order": false,
-  "note": "Routed by the owner. 2026-11-01: U1 paste reworked around the 13 EP vias, C21 grounded through VSS31 only, mask web rule 0.13 mm (black). Owner adding stitching vias; re-run DRC and the review scripts, then set order to true."
+  "order": true,
+  "note": "Routed by the owner. Reviewed and fixed 2026-11-02 (U1 paste, C21 to VSS31, mask web 0.13, stitching, antenna match L2/C23). Stackup JLC04101H-3313."
 }

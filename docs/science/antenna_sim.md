@@ -1,5 +1,14 @@
 # neurband rev C: 2.4 GHz antenna on the wrist (openEMS FDTD)
 
+> **Owner's layout and pre-tuned match (2026-11-02).** Re-run on the owner's board (147 GND vias incl. stitching,
+> no B.Cu pour, 11.8 mm feed): free space S11 -5.5 dB at 2.44 GHz, Z 21.6 - j29.9, radiation eff. 74-77 %;
+> worn S11 -3.8 dB, Z 13.7 + j25.8, radiation eff. 13-15 %, total -10.7 to -11.2 dB. Within 0.5 dB of the
+> runs below. The matching pi is now populated for the wrist: **L2 = 5.1 nH series (was R3, 0 ohm), C23 =
+> 0.5 pF shunt, C22 DNP** (`sim/antenna/match_v3.py`, `results/match_v3.json`). Worst delivered power
+> 2.40-2.48 GHz, worn: -0.8 dB (0 ohm: -3.0); with the model off by -75/+75 MHz: -1.0/-1.4 dB (0 ohm:
+> -2.0/-4.1); skin 1.5 mm farther: -0.9 dB (0 ohm: -2.4). Off the wrist it costs about 4 dB (-5.7 vs -1.7 dB),
+> irrelevant on the bench. If a worn VNA/RSSI check disagrees, fit 0 ohm at L2 and remove C23.
+
 > **Re-run on the reworked board (2026-10-29).** The main board's ground was reworked: GND
 > vias went from 63 to 103 (including nine in the nRF exposed pad), and pours and routing
 > changed. Re-reading the file confirms the antenna copper, keepout, fence and feed track are

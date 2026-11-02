@@ -1,0 +1,19 @@
+victim,channel,kind,aggressor,cm_fF,uV_100k||10n,uV_1M||10n,uV_1M||1n (adverse)
+/IN8N,E8N,electrode (ADS side),+3V3,10.0,0.0072,0.0092,0.0646
+/IN8N,E8N,electrode (ADS side),/I2C_SCL,0.03,0.0011,0.0011,0.0096
+/IN8P,E8P,electrode (ADS side),+3V3,0.79,0.0006,0.0007,0.0051
+/E1P,E1P,electrode (J1 side),+3V3,0.33,0.0002,0.0003,0.0021
+/IN7N,E7N,electrode (ADS side),+3V3,0.28,0.0002,0.0003,0.0018
+/IN1P,E1P,electrode (ADS side),+3V3A,0.97,0.0002,0.0002,0.0016
+/IN7P,E7P,electrode (ADS side),+3V3,0.08,0.0001,0.0001,0.0005
+/BIAS_E,/BIAS_E,bias/RLD,+3V3,0.07,0.0,0.0,0.0
+/E1N,E1N,electrode (J1 side),/BUTTON,0.07,0.0,0.0,0.0
+/E1N,E1N,electrode (J1 side),VCHG,0.48,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),/BUTTON,0.61,0.0,0.0,0.0
+/E1P,E1P,electrode (J1 side),VCHG,8.24,0.0,0.0,0.0
+/E2P,E2P,electrode (J1 side),VCHG,0.07,0.0,0.0,0.0
+/IN1N,E1N,electrode (ADS side),+3V3A,0.06,0.0,0.0,0.0001
+/RLDREF,/RLDREF,bias/RLD,+3V3A,52.33,0.0,0.0,0.0
+/RLDREF,/RLDREF,bias/RLD,/I2C_SCL,0.02,0.0,0.0,0.0
+/RLD_DRV,/RLD_DRV,bias/RLD,+3V3A,0.07,0.0,0.0,0.0
+Net-(U2-RLDINV),Net-(U2-RLDINV),bias/RLD,+3V3A,0.64,0.0,0.0,0.0

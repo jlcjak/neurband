@@ -280,27 +280,33 @@ class Board:
         for xv in xb:
             self.via('/BIAS_E', (xv, 0))
             self.track('/BIAS_E', [(xv, 0), (xv, tip_y)], 'B.Cu', TAIL_W)
-        # ---- ground: per pod an F-side bar through the P-B gap and two B-side verticals; the free links
-        # carry one 0.2 mm B-side return at y GY, away from the F-side lanes (no copper stacked across a bend);
-        # across the root the two sides meet on F.Cu at y 2.3 and run down the tail to fingers 1 and 20
-        GY = 1.5
+        # ---- ground: one continuous return. In each free link it runs on B.Cu at y GY (away from the F-side
+        # lanes: no copper stacked across a bend). In each pod it climbs a B-side guard beside the P line,
+        # hops over the P line on a 1.1 mm F-side bridge at y BY (above the bias electrode), crosses the pod
+        # on B.Cu at BY and drops back to GY on the far side. The pod's hatch (shield()) sits on this line.
+        # Across the root the two sides meet on F.Cu at y 2.3 and run down the tail to fingers 1 and 20.
+        GY, BY, GW = 1.5, -3.6, 0.3          # GW: ground width in pods and links (mechanical robustness)
         for i, x in self.xs.items():
-            for dx in (-2.95, 2.95):
-                self.via('GND', (x + dx, -6))
-                if not (i == 1 and dx < 0 or i == 8 and dx > 0):
-                    self.track('GND', [(x + dx, -6), (x + dx, GY)], 'B.Cu')
-            self.track('GND', [(x - 2.95, -6), (x + 2.95, -6)])
+            if i == 1:                   # end pod: the return from pod 2 simply ends on this pod's hatch
+                continue
+            self.track('GND', [(x - 2.95, GY), (x - 2.95, BY)], 'B.Cu', GW)
+            for dx in (-2.95, -1.85):
+                self.via('GND', (x + dx, BY))
+            self.track('GND', [(x - 2.95, BY), (x - 1.85, BY)], 'F.Cu', GW)
+            if i < 8:
+                self.track('GND', [(x - 1.85, BY), (x + 2.95, BY), (x + 2.95, GY)], 'B.Cu', GW)
         for i in range(1, 8):
             a_, b_ = self.xs[i] + 2.95, self.xs[i + 1] - 2.95
             if i == 3:
                 for xg, pin in ((a_, 20), (b_, 1)):
                     xc = contact_x(pin)
-                    self.track('GND', [(xg, GY), (xc, GY), (xc, 2.3)], 'B.Cu', 0.2)
+                    self.track('GND', [(xg, GY), (xc, GY)], 'B.Cu', GW)
+                    self.track('GND', [(xc, GY), (xc, 2.3)], 'B.Cu', GW)
                     self.via('GND', (xc, 2.3))
-                    self.track('GND', [(xc, 2.3), (xc, tip_y)], 'B.Cu', 0.2)
-                self.track('GND', [(contact_x(20), 2.3), (contact_x(1), 2.3)], 'F.Cu', 0.2)
+                    self.track('GND', [(xc, 2.3), (xc, tip_y)], 'B.Cu', GW)   # outermost fingers: 0.25 mm to BIAS, 0.35 mm to the edge
+                self.track('GND', [(contact_x(20), 2.3), (contact_x(1), 2.3)], 'F.Cu', GW)
             else:
-                self.track('GND', [(a_, GY), (b_, GY)], 'B.Cu', 0.2)
+                self.track('GND', [(a_, GY), (b_, GY)], 'B.Cu', GW)
 
     def shield(self):
         # Rule areas: no B-side pour behind the P/N skin discs. A grounded hatch right behind a 6.5 mm disc is
@@ -312,7 +318,8 @@ class Board:
                   (connect_pads (clearance 0)) (min_thickness 0.25)
                   (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed) (footprints allowed))
                   (polygon (pts {pts})))''')
-        contours=[[(x-POD_WIDTH/2,-POD_LENGTH/2),(x+POD_WIDTH/2,-POD_LENGTH/2),(x+POD_WIDTH/2,POD_LENGTH/2),(x-POD_WIDTH/2,POD_LENGTH/2)] for x in self.xs.values()]
+        # One hatch per pod, starting just right of the P line (B side, x-2.45): no sliver beside the pod edge.
+        contours=[[(x-2.1,-POD_LENGTH/2),(x+POD_WIDTH/2,-POD_LENGTH/2),(x+POD_WIDTH/2,POD_LENGTH/2),(x-2.1,POD_LENGTH/2)] for x in self.xs.values()]
         contours.append([(-5.25,3),(5.25,3),(5.25,self.tip-STIFFENER_LENGTH),(-5.25,self.tip-STIFFENER_LENGTH)])
         for contour in contours:
             pts=' '.join(f'(xy {xy(p)})' for p in contour)

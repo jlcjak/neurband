@@ -153,6 +153,29 @@ def main():
             gnd.setdefault(lay, []).append(pts(fpoly))
     out['gnd_fill'] = gnd
     out['keepouts'] = keep
+    # Board frame: measure everything from the outline's top-left corner (the owner's board sits at an
+    # absolute KiCad origin; the mechanics in model.py are drawn in the board frame).
+    bx, by = out['board_bbox'][0], out['board_bbox'][1]
+    def P(pts_):
+        return [[x - bx, y - by] for x, y in pts_]
+    out['edge_segments'] = [[s[0], s[1] - bx, s[2] - by, s[3] - bx, s[4] - by] for s in out['edge_segments']]
+    out['board_bbox'] = [0.0, 0.0, out['board_bbox'][2] - bx, out['board_bbox'][3] - by]
+    for rec in [out['antenna']] + list(rf_fps.values()):
+        if rec.get('_shifted'):
+            continue
+        rec['x'] -= bx; rec['y'] -= by
+        for pd in rec['pads']:
+            pd['x'] -= bx; pd['y'] -= by
+        if 'copper_polys' in rec:
+            rec['copper_polys'] = [P(q) for q in rec['copper_polys']]
+        rec['_shifted'] = True
+    for t in out['rf_tracks']:
+        t['x1'] -= bx; t['x2'] -= bx; t['y1'] -= by; t['y2'] -= by
+    for v in out['gnd_vias']:
+        v['x'] -= bx; v['y'] -= by
+    out['gnd_fill'] = {k: [P(q) for q in v] for k, v in gnd.items()}
+    for k in keep:
+        k['outline'] = P(k['outline'])
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(out, open(OUT, 'w'))
     print('bbox', out['board_bbox'])

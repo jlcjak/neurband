@@ -4,7 +4,7 @@
 
 The outline, the 24 electrodes, the alignment holes, the tail, the fingers and the stiffener are unchanged
 from rev C. Only the copper routing was redone, and it is now placed explicitly by `gen_flex_c_pcb.py`
-(no grid router): 217 track segments (was 447) and 52 vias (was 60), DRC/ERC/parity 0/0/0.
+(no grid router): 203 track segments (was 447) and 50 vias (was 60), DRC/ERC/parity 0/0/0.
 
 - **Free pin assignment.** Any pod may use any J1 pair, in either orientation, because the host maps channels
   (`host/neurband_ble.py` `POD_MAP`, see `docs/firmware_c.md` "Channel map"). `boards/neurband_c_flex/flex_pinmap.py`
@@ -16,8 +16,11 @@ from rev C. Only the copper routing was redone, and it is now placed explicitly 
 - **Root.** In the housing-captured root every trunk line drops to B.Cu in two staggered via rows
   (Y 7.0 / 7.7) and runs straight down the tail to its finger; pod 4's pair crosses the root just below them
   (Y 8.25 / 8.45, vias at 9.15 / 9.85). The bias bus (0.25 mm) runs straight through all middle electrodes and
-  drops to fingers 2/19 by vias at Y 0. Ground: an F-side bar through each pod's P-B gap, B-side verticals,
-  a 0.20 mm B-side return across each free link at Y 1.5, an F-side link across the root at Y 2.3, fingers 1/20.
+  drops to fingers 2/19 by vias at Y 0. Ground: one continuous 0.30 mm return. A B-side line crosses each free link at Y 1.5; in each pod
+  it climbs a B-side guard beside the P line, hops over the P line on a 1.1 mm F-side bridge at Y -3.6 (above
+  the bias electrode), crosses the pod on B.Cu at Y -3.6 and drops back to Y 1.5. Each pod has one B-side hatch
+  (to the right of its P line, no slivers) lying on that line, kept out from behind the P/N discs (radius 3.6).
+  An F-side link crosses the root at Y 2.3 to fingers 1/20.
 
 **Reliability rules applied (flex-specific):**
 1. **No vias in bend zones.** Vias only inside pods (held by the printed pod shell and foam) and in the

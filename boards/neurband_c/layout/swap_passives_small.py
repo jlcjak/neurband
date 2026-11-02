@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Swap the board's 0402/0603 R, C and L footprints for the smaller project-local ones in
-layout/neurband.pretty (Avizo_*_Small, copied from the Avizo wearable library).
+layout/neurband.pretty (*_Small: compact project-local passive land patterns).
 
 Each instance keeps its position, rotation, uuid, schematic link, fields, attributes (DNP), pad nets,
 pad uuids and per-pad zone settings. Pads without paste (DNP parts) stay without paste. Only the
@@ -14,10 +14,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 LIB = HERE / 'neurband.pretty'
 SWAP = {
-    'Capacitor_SMD:C_0402_1005Metric': 'Avizo_C_0402_Small',
-    'Capacitor_SMD:C_0603_1608Metric': 'Avizo_C_0603_Small',
-    'Resistor_SMD:R_0402_1005Metric': 'Avizo_R_0402_Small',
-    'Inductor_SMD:L_0402_1005Metric': 'Avizo_L_0402_Small',
+    'Capacitor_SMD:C_0402_1005Metric': 'C_0402_Small',
+    'Capacitor_SMD:C_0603_1608Metric': 'C_0603_Small',
+    'Resistor_SMD:R_0402_1005Metric': 'R_0402_Small',
+    'Inductor_SMD:L_0402_1005Metric': 'L_0402_Small',
 }
 LIB_ONLY_FIELDS = {'KiLib_Generator'}         # fields that came from the old library, not the schematic
 GRAPHICS = {'fp_rect', 'fp_line', 'fp_arc', 'fp_circle', 'fp_poly', 'fp_text', 'fp_text_box'}
