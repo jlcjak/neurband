@@ -14594,15 +14594,15 @@
 		(embedded_fonts no)
 	)
 	(gr_circle
-		(center 100 100.5)
-		(end 117.9 100.5)
+		(center 100 100.3)
+		(end 117.5 100.3)
 		(stroke
 			(width 0.05)
 			(type solid)
 		)
 		(fill no)
 		(layer "Edge.Cuts")
-		(uuid "c6837392-bdb1-4af2-a39e-3246498c766c")
+		(uuid "97860e0f-c132-4e2f-a4ba-7c47ee321d4d")
 	)
 	(point
 		(at 138.335427 150.035411)
