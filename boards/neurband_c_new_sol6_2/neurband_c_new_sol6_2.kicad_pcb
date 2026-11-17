@@ -13016,14 +13016,14 @@
 		(layer "F.Cu")
 		(uuid "f184f9ad-5ad1-4628-a797-46cedf475006")
 		(transform
-			(translate 101.75 85.25)
+			(translate 101.7 84.55)
 			(rotate 90)
 			(scale 1 1)
 		)
 		(descr "Project-local 0402 resistor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
 		(tags "resistor 0402")
 		(property "Reference" "R7"
-			(at -69.955412 35.785427 270)
+			(at -70.655412 35.835427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c3401a12-e2f4-433d-8f96-bc85d4a67706")
@@ -13035,7 +13035,7 @@
 			)
 		)
 		(property "Value" "1M"
-			(at -67.615412 35.785427 270)
+			(at -68.315412 35.835427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "f1265203-639f-44d3-b953-0fb32b00b208")
@@ -13047,7 +13047,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at -68.785412 35.785427 270)
+			(at -69.485412 35.835427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "7705aeab-71c8-47fc-87ed-5391aafb7258")
@@ -13058,7 +13058,7 @@
 			)
 		)
 		(property "Description" ""
-			(at -68.785412 35.785427 270)
+			(at -69.485412 35.835427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "2094e93f-977f-4b1a-8445-2d65de3b6f59")
@@ -13073,7 +13073,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "959a82d7-b961-4303-b0c8-b7fce45467f9")
+			(uuid "5dade53d-f779-4eb4-9da2-7eaa59fe24e8")
 			(effects
 				(font
 					(size 1 1)
@@ -13086,7 +13086,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "3067e854-ef36-4a52-b514-7f5b11ed597b")
+			(uuid "c59deb04-fb12-4f57-b8ef-f6c506cdf25c")
 			(effects
 				(font
 					(size 1 1)
@@ -14643,7 +14643,7 @@
 	)
 	(zone
 		(layers "B.Cu" "In1.Cu" "In2.Cu")
-		(uuid "ae0c23c4-f859-45a1-ae51-5f782eb4d74e")
+		(uuid "e93cc430-c056-4b67-a68f-0e3c2887b9c5")
 		(name "RF matching clearance")
 		(hatch edge 0.1)
 		(connect_pads
@@ -14668,7 +14668,7 @@
 		)
 		(polygon
 			(pts
-				(xy 91.2 94.2) (xy 94.8 94.2) (xy 94.8 95.3) (xy 91.2 95.3)
+				(xy 91.18 95.25) (xy 91.18 88) (xy 95.7 88) (xy 95.7 89.4) (xy 92.75 89.4) (xy 92.75 95.25)
 			)
 		)
 	)
