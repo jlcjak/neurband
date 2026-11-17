@@ -663,6 +663,17 @@
         "via_diameter": 0.45,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "clearance": 0.135,
+        "name": "SPI Clock",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.11,
+        "tuning_profile": "",
+        "via_diameter": 0.45,
+        "via_drill": 0.3
       }
     ],
     "meta": {
@@ -672,7 +683,12 @@
     "net_chain_netclasses": {},
     "net_colors": {},
     "netclass_assignments": {},
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "SPI Clock",
+        "pattern": "/SPI_SCK"
+      }
+    ]
   },
   "pcbnew": {
     "find_by_properties": {
