@@ -20139,6 +20139,27 @@
 		(uuid "b7ad3e39-3861-4f54-bf9d-9d47863022b5")
 	)
 	(zone
+		(net "GND")
+		(layers "F.Cu" "B.Cu")
+		(uuid "9dec6afa-bf95-49c2-bc9b-f94bebdef7d0")
+		(name "Outer ground returns")
+		(hatch edge 0.5)
+		(connect_pads yes
+			(clearance 0.2)
+		)
+		(min_thickness 0.15)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 82 82) (xy 118 82) (xy 118 118) (xy 82 118)
+			)
+		)
+	)
+	(zone
 		(layers "F.Cu" "B.Cu" "In1.Cu" "In2.Cu")
 		(uuid "4b635408-48b9-480b-9e9f-bb6ae77a769b")
 		(name "IFA radiator clearance")
