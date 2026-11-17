@@ -15011,14 +15011,6 @@
 		(uuid "f73113cc-551a-4229-9ac4-fd71ebb89126")
 	)
 	(segment
-		(start 107.9469 103.18)
-		(end 107.9469 104.0487)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "+3V3A")
-		(uuid "f8bde1bd-60a9-4982-aef2-7e6fe30a9963")
-	)
-	(segment
 		(start 92.975 96.95)
 		(end 93.1553 97.1303)
 		(width 0.15)
@@ -15657,14 +15649,6 @@
 		(layer "F.Cu")
 		(net "GND")
 		(uuid "5fc44768-69a4-42a8-8af7-cd0f780fa700")
-	)
-	(segment
-		(start 96.4375 97.55)
-		(end 104.9326 97.55)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "GND")
-		(uuid "625c024d-38bb-46b6-b99a-e8243daf7105")
 	)
 	(segment
 		(start 110.1 99.45)
@@ -16659,14 +16643,6 @@
 		(uuid "160d3dce-b4a0-4d23-879d-439ed7870dcd")
 	)
 	(via
-		(at 94.9095 110.3)
-		(size 0.45)
-		(drill 0.3)
-		(layers "F.Cu" "B.Cu")
-		(net "GND")
-		(uuid "1cd5ba41-3db5-436c-bf29-8384d5e96f72")
-	)
-	(via
 		(at 95.15 98.196)
 		(size 0.45)
 		(drill 0.3)
@@ -16801,14 +16777,6 @@
 		(layers "F.Cu" "B.Cu")
 		(net "GND")
 		(uuid "8c0d7ea1-26b2-44ae-937a-21f2fc23e52a")
-	)
-	(via
-		(at 105.173 91.1515)
-		(size 0.45)
-		(drill 0.3)
-		(layers "F.Cu" "B.Cu")
-		(net "GND")
-		(uuid "ad5d2c12-01cb-467e-9534-a16328b15f94")
 	)
 	(via
 		(at 93.544 95.815)
@@ -21795,14 +21763,6 @@
 		(uuid "0bc8c6d1-dca5-4338-ac74-45f754247992")
 	)
 	(segment
-		(start 94.5661 93.8639)
-		(end 94.5661 94.7839)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "/DEC3")
-		(uuid "0d189031-7464-443b-b157-af16cba3c52e")
-	)
-	(segment
 		(start 94.66665 89.788689)
 		(end 94.66665 89.8152)
 		(width 0.127)
@@ -21817,14 +21777,6 @@
 		(layer "F.Cu")
 		(net "/DEC3")
 		(uuid "33a42361-e859-44f3-b7df-c024cecbb9f8")
-	)
-	(segment
-		(start 92.8943 90.0499)
-		(end 90.7584 90.0499)
-		(width 0.15)
-		(layer "F.Cu")
-		(net "/DEC3")
-		(uuid "435f79a5-7b12-402d-87d0-7925d08583a1")
 	)
 	(segment
 		(start 94.90773 93.52227)
@@ -22569,6 +22521,27 @@
 		(layer "F.Cu")
 		(net "Net-(U2-VCAP4)")
 		(uuid "c2ec7759-6d21-42df-bc68-a7cab1935273")
+	)
+	(zone
+		(net "GND")
+		(layers "F.Cu" "B.Cu")
+		(uuid "e7c8916f-40df-477a-90b9-fd23ba2240fd")
+		(name "Outer ground returns")
+		(hatch edge 0.5)
+		(connect_pads yes
+			(clearance 0.2)
+		)
+		(min_thickness 0.15)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 82 82) (xy 118 82) (xy 118 118) (xy 82 118)
+			)
+		)
 	)
 	(zone
 		(layers "F.Cu" "B.Cu" "In1.Cu" "In2.Cu")
