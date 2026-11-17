@@ -2329,14 +2329,14 @@
 		(layer "F.Cu")
 		(uuid "29ff659c-35d5-40ad-afd0-1532477640de")
 		(transform
-			(translate 137.535427 155.435411)
-			(rotate 180)
+			(translate 103.15 94.5)
+			(rotate 90)
 			(scale 1 1)
 		)
 		(descr "Project-local 0402 capacitor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
 		(tags "capacitor 0402")
 		(property "Reference" "C30"
-			(at 0 -1.16 0)
+			(at -62.095411 34.385427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d474e865-857c-4240-a96c-b39c47dc5fc4")
@@ -2348,7 +2348,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 0 1.16 0)
+			(at -59.775411 34.385427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "95408c7a-7bb0-4f2b-848a-516601ca5eb2")
@@ -2360,7 +2360,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 0)
+			(at -60.935411 34.385427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "56d598a7-49ca-4c9d-8236-6ebf9820aad8")
@@ -2371,7 +2371,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 0)
+			(at -60.935411 34.385427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "4110004f-5d5e-47bd-bd5c-0b2dde5009fe")
@@ -2382,11 +2382,11 @@
 			)
 		)
 		(property "MPN" "CL05B104KO5NNNC"
-			(at 0 0 180)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f82127ea-e167-4d7c-92ac-f6b0b56a929f")
+			(uuid "41522a0d-7740-46d7-b23c-1ef7c02fe8d3")
 			(effects
 				(font
 					(size 1 1)
@@ -2395,11 +2395,11 @@
 			)
 		)
 		(property "LCSC" "C1525"
-			(at 0 0 180)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "eeff3bfc-c268-4829-ac58-61b4f54f7f73")
+			(uuid "88291e65-dd2c-45e8-8886-d673d3ced86a")
 			(effects
 				(font
 					(size 1 1)
@@ -2442,7 +2442,7 @@
 			(uuid "fd90ef75-cb99-401f-9ba7-69373b307314")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
+			(at 0 0 270)
 			(layer "F.Fab")
 			(uuid "8caf2bed-cbf2-499d-ba54-24b4614a34e3")
 			(effects
@@ -2453,7 +2453,7 @@
 			)
 		)
 		(pad "1" smd roundrect
-			(at -0.45 0 180)
+			(at -0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -2462,7 +2462,7 @@
 			(uuid "3c140694-a2c3-4e82-8bfa-816412df440f")
 		)
 		(pad "2" smd roundrect
-			(at 0.45 0 180)
+			(at 0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -13016,14 +13016,14 @@
 		(layer "F.Cu")
 		(uuid "f184f9ad-5ad1-4628-a797-46cedf475006")
 		(transform
-			(translate 137.535427 154.035412)
-			(rotate 180)
+			(translate 101.55 94.5)
+			(rotate 90)
 			(scale 1 1)
 		)
 		(descr "Project-local 0402 resistor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
 		(tags "resistor 0402")
 		(property "Reference" "R7"
-			(at 0 -1.17 0)
+			(at -60.705412 35.985427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c3401a12-e2f4-433d-8f96-bc85d4a67706")
@@ -13035,7 +13035,7 @@
 			)
 		)
 		(property "Value" "1M"
-			(at 0 1.17 0)
+			(at -58.365412 35.985427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "f1265203-639f-44d3-b953-0fb32b00b208")
@@ -13047,7 +13047,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 0)
+			(at -59.535412 35.985427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "7705aeab-71c8-47fc-87ed-5391aafb7258")
@@ -13058,7 +13058,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 0)
+			(at -59.535412 35.985427 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "2094e93f-977f-4b1a-8445-2d65de3b6f59")
@@ -13069,11 +13069,11 @@
 			)
 		)
 		(property "MPN" "0402WGF1004TCE"
-			(at 0 0 180)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "77d55971-32e5-46e9-98e2-b5fd982477ce")
+			(uuid "b1eee2ec-3d67-4d73-9478-4d675faa8c0c")
 			(effects
 				(font
 					(size 1 1)
@@ -13082,11 +13082,11 @@
 			)
 		)
 		(property "LCSC" "C26083"
-			(at 0 0 180)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "47b4dbfd-d1ea-4a04-bfc5-6f5a73bb7275")
+			(uuid "f2630d70-6864-4e61-8fd2-4e6988d643a3")
 			(effects
 				(font
 					(size 1 1)
@@ -13129,7 +13129,7 @@
 			(uuid "f31bf456-9e36-427f-8fbe-0d120e36cf43")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
+			(at 0 0 270)
 			(layer "F.Fab")
 			(uuid "f2343516-4e8e-4677-a9c6-0641fcd8bd63")
 			(effects
@@ -13140,7 +13140,7 @@
 			)
 		)
 		(pad "1" smd roundrect
-			(at -0.45 0 180)
+			(at -0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -13149,7 +13149,7 @@
 			(uuid "8f3d1c64-9417-482b-921f-ff4580f13b38")
 		)
 		(pad "2" smd roundrect
-			(at 0.45 0 180)
+			(at 0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -13177,14 +13177,14 @@
 		(layer "F.Cu")
 		(uuid "f2da90ec-089b-4c64-9946-5cde479b8ecf")
 		(transform
-			(translate 137.535427 154.735411)
-			(rotate 0)
+			(translate 102.35 94.5)
+			(rotate 90)
 			(scale 1 1)
 		)
 		(descr "Project-local 0402 resistor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
 		(tags "resistor 0402")
 		(property "Reference" "R6"
-			(at 0 -1.17 0)
+			(at -59.065411 35.185427 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "b0926a0f-595a-4523-afb4-402c96acd55d")
@@ -13196,7 +13196,7 @@
 			)
 		)
 		(property "Value" "1M"
-			(at 0 1.17 0)
+			(at -61.405411 35.185427 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "56a93a55-ee20-4be3-8da7-01d6b0132adf")
@@ -13208,7 +13208,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 0)
+			(at -60.235411 35.185427 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c8d52569-3dd7-418c-a4d7-cf498d359a4f")
@@ -13219,7 +13219,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 0)
+			(at -60.235411 35.185427 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d700db6a-7db0-48c2-b446-6d15cc1373b3")
@@ -13230,11 +13230,11 @@
 			)
 		)
 		(property "MPN" "0402WGF1004TCE"
-			(at 0 0 0)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "ba8dc2aa-bdb4-419a-9066-f20578a0859d")
+			(uuid "ae5ee64f-64fa-41e0-b413-e59e8a055dae")
 			(effects
 				(font
 					(size 1 1)
@@ -13243,11 +13243,11 @@
 			)
 		)
 		(property "LCSC" "C26083"
-			(at 0 0 0)
+			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "9d0127ca-c7db-494a-a7f0-a12d2b3d3b24")
+			(uuid "aa05203f-a505-478a-b4d3-7f4f88fb6258")
 			(effects
 				(font
 					(size 1 1)
@@ -13290,7 +13290,7 @@
 			(uuid "69f7a151-d983-4cd3-a1fd-4535d0421a26")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(uuid "5ce3192e-ae5b-4c8c-8eff-b1cd17ba8924")
 			(effects
@@ -13301,7 +13301,7 @@
 			)
 		)
 		(pad "1" smd roundrect
-			(at -0.45 0)
+			(at -0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -13310,7 +13310,7 @@
 			(uuid "5db9186d-44ea-4919-aec9-1a50cd2bb065")
 		)
 		(pad "2" smd roundrect
-			(at 0.45 0)
+			(at 0.45 0 90)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
