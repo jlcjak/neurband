@@ -640,7 +640,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "neurband_c_new_sol6_2.kicad_pro",
+    "filename": "neurband_c_new_astra6_2.kicad_pro",
     "version": 4
   },
   "net_settings": {
@@ -830,8 +830,8 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "neurband_c_new_sol6_2.kicad_sch",
-        "name": "neurband_c_new_sol6_2",
+        "filename": "neurband_c_new_astra6_2.kicad_sch",
+        "name": "neurband_c_new_astra6_2",
         "uuid": "efa9219e-5236-5975-b4d5-0fcd4e0556e8"
       }
     ],
