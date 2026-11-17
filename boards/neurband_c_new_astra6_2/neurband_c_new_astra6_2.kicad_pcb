@@ -14604,10 +14604,10 @@
 		(layer "Edge.Cuts")
 		(uuid "97860e0f-c132-4e2f-a4ba-7c47ee321d4d")
 	)
-	(gr_text "FLEX  CONTACTS DOWN"
-		(at 100 116.76 0)
+	(gr_text "CONTACTS DOWN"
+		(at 100 116.57 0)
 		(layer "F.SilkS")
-		(uuid "41230698-7701-4908-b817-84e155ce9163")
+		(uuid "57430c26-3b38-4f8f-8436-f093d44e9156")
 		(effects
 			(font
 				(size 0.8 0.8)
