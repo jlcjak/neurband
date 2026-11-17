@@ -14610,5 +14610,87 @@
 		(layer "F.Cu")
 		(uuid "dcefd684-cfc5-4e55-8bfa-6c313639c527")
 	)
+	(zone
+		(layers "F.Cu" "B.Cu" "In1.Cu" "In2.Cu")
+		(uuid "4b635408-48b9-480b-9e9f-bb6ae77a769b")
+		(name "IFA radiator clearance")
+		(hatch edge 0)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks not_allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 83 91.95) (xy 91.15 91.95) (xy 91.15 107.4) (xy 83 107.4)
+			)
+		)
+	)
+	(zone
+		(layers "B.Cu" "In1.Cu" "In2.Cu")
+		(uuid "ae0c23c4-f859-45a1-ae51-5f782eb4d74e")
+		(name "RF matching clearance")
+		(hatch edge 0)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks not_allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 91.2 94.2) (xy 94.8 94.2) (xy 94.8 95.3) (xy 91.2 95.3)
+			)
+		)
+	)
+	(zone
+		(net "GND")
+		(layers "In1.Cu" "In2.Cu")
+		(uuid "37868e60-30fd-47b6-af00-1e5fb79942d6")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0.2)
+		)
+		(min_thickness 0.25)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 82 82) (xy 118 82) (xy 118 118) (xy 82 118)
+			)
+		)
+	)
 	(embedded_fonts no)
 )
