@@ -8508,14 +8508,14 @@
 		(layer "F.Cu")
 		(uuid "a2f90e67-bf79-4f90-b766-2cadc1cde504")
 		(transform
-			(translate 95.65 93.23)
-			(rotate 0)
+			(translate 93.8 89.75)
+			(rotate 180)
 			(scale 1 1)
 		)
 		(descr "Project-local 0402 capacitor land pattern; pad 0.45 x 0.55 mm at +/-0.450 mm")
 		(tags "capacitor 0402")
 		(property "Reference" "C14"
-			(at 38.285427 59.465411 180)
+			(at -40.135427 -62.945411 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "001552ca-d3c7-4aae-9942-b5b9c7cbee3e")
@@ -8527,7 +8527,7 @@
 			)
 		)
 		(property "Value" "100pF"
-			(at 38.285427 57.145411 180)
+			(at -40.135427 -60.625411 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "3472fddf-de93-43dc-ab6e-f4506c0d7dda")
@@ -8539,7 +8539,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 38.285427 58.305411 180)
+			(at -40.135427 -61.785411 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "27e7a089-cce5-41c8-be7c-709fae2a5c58")
@@ -8550,7 +8550,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 38.285427 58.305411 180)
+			(at -40.135427 -61.785411 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "191b20ef-c1da-4d21-97cd-ba2d15961811")
@@ -8561,11 +8561,11 @@
 			)
 		)
 		(property "MPN" "0402CG101J500NT"
-			(at 0 0 0)
+			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "0d712ef2-0751-438b-80b1-7c3ce5bad91c")
+			(uuid "bbef4662-2986-4656-84fe-49a777bb34bf")
 			(effects
 				(font
 					(size 1 1)
@@ -8574,11 +8574,11 @@
 			)
 		)
 		(property "LCSC" "C1546"
-			(at 0 0 0)
+			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "b720b855-6e7e-4f17-81ee-1c3f09d63bd9")
+			(uuid "5729073b-b769-4c13-aa7f-50573ae8c2e7")
 			(effects
 				(font
 					(size 1 1)
@@ -8621,7 +8621,7 @@
 			(uuid "50871192-a921-43fa-a18e-02f129acd1df")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 180)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "436aaa5d-6222-431a-a28e-3692b3d791f3")
 			(effects
@@ -8632,7 +8632,7 @@
 			)
 		)
 		(pad "1" smd roundrect
-			(at -0.45 0)
+			(at -0.45 0 180)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
@@ -8641,7 +8641,7 @@
 			(uuid "7a22cf7b-4b3e-45a2-823f-c69e15a4d790")
 		)
 		(pad "2" smd roundrect
-			(at 0.45 0)
+			(at 0.45 0 180)
 			(size 0.45 0.55)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.2)
