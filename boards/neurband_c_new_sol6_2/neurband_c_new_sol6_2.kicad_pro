@@ -710,7 +710,9 @@
   "schematic": {
     "annotate_start_num": 0,
     "annotation": {
+      "increment_pasted_suffix": true,
       "method": 0,
+      "reused_sheet_suffixes": false,
       "sort_order": 0
     },
     "bom_export_filename": "${PROJECTNAME}.csv",
