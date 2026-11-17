@@ -14595,14 +14595,14 @@
 	)
 	(gr_circle
 		(center 100 100.5)
-		(end 117.5 100.5)
+		(end 117.9 100.5)
 		(stroke
 			(width 0.05)
 			(type solid)
 		)
 		(fill no)
 		(layer "Edge.Cuts")
-		(uuid "57a5ce98-96b3-4b33-9962-3035093b7419")
+		(uuid "c6837392-bdb1-4af2-a39e-3246498c766c")
 	)
 	(point
 		(at 138.335427 150.035411)
