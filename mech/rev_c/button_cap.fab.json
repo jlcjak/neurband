@@ -1,6 +1,6 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C flush button cap",
+  "name": "Button cap",
   "source": "button_cap.step",
   "qty": 4,
   "options": {
@@ -15,5 +15,6 @@
     "size_y_mm": 5.23,
     "size_z_mm": 4.81
   },
-  "min_wall_mm": 1.0
+  "min_wall_mm": 1.0,
+  "note": "neurband rev C flush button cap"
 }

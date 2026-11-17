@@ -1,6 +1,6 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C cell spacer (only for the shorter 401120-class fallback cell)",
+  "name": "Cell spacer",
   "source": "cell_spacer.step",
   "qty": 2,
   "options": {
@@ -15,5 +15,6 @@
     "size_y_mm": 3.8,
     "size_z_mm": 3.8
   },
-  "min_wall_mm": 3.8
+  "min_wall_mm": 3.8,
+  "note": "neurband rev C cell spacer (only for the shorter 401120-class fallback cell)"
 }

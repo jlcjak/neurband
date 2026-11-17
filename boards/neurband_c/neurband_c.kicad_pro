@@ -163,7 +163,7 @@
       ],
       "drc_exclusions": [],
       "meta": {
-        "version": 3
+        "version": 2
       },
       "rule_severities": {
         "annular_width": "error",
@@ -238,7 +238,8 @@
         "unresolved_variable": "error",
         "via_dangling": "warning",
         "via_diameter": "error",
-        "via_stitch_overlap": "error"
+        "via_stitch_overlap": "error",
+        "zones_intersect": "error"
       },
       "rules": {
         "max_error": 0.005,
@@ -639,7 +640,7 @@
   },
   "meta": {
     "filename": "neurband_c.kicad_pro",
-    "version": 4
+    "version": 3
   },
   "net_settings": {
     "classes": [
@@ -777,7 +778,7 @@
       "sort_asc": true,
       "sort_field": "Reference"
     },
-    "bus_aliases": null,
+    "bus_aliases": {},
     "compare_symbols": {
       "dnp_flags": false,
       "exclude_from_board_flags": true,
@@ -845,7 +846,7 @@
   "text_variables": {},
   "tuning_profiles": {
     "meta": {
-      "version": 2
+      "version": 0
     },
     "tuning_profiles_impedance_geometric": []
   }

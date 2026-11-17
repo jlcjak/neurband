@@ -1,6 +1,6 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C module lid r2 (tapered, crowned shell)",
+  "name": "Module lid r2",
   "source": "module_lid.step",
   "qty": 3,
   "options": {
@@ -15,5 +15,6 @@
     "size_y_mm": 31.81,
     "size_z_mm": 9.53
   },
-  "min_wall_mm": 0.99
+  "min_wall_mm": 0.99,
+  "note": "neurband rev C module lid r2 (tapered, crowned shell)"
 }

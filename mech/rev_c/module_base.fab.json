@@ -1,6 +1,6 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C module base r2 (chassis with two integral strap bars, carries pods 3/4)",
+  "name": "Module base r2",
   "source": "module_base.step",
   "qty": 3,
   "options": {
@@ -15,5 +15,6 @@
     "size_y_mm": 37.37,
     "size_z_mm": 10.77
   },
-  "min_wall_mm": 1.0
+  "min_wall_mm": 1.0,
+  "note": "neurband rev C module base r2 (chassis with two integral strap bars, carries pods 3/4)"
 }
