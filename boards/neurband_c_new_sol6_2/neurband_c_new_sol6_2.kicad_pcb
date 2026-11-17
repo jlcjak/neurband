@@ -3413,13 +3413,13 @@
 		(layer "F.Cu")
 		(uuid "44f01018-36d1-4298-907a-4444918eda35")
 		(transform
-			(translate 133.176218 153.157752)
+			(translate 94.15 99.65)
 			(rotate 0)
 			(scale 1 1)
 		)
 		(descr "SMD2016/4, Crystal, 2.0x1.6mm package, SMD, http://www.q-crystal.com/upload/5/2015552223166229.pdf")
 		(property "Reference" "Y1"
-			(at 0 -2 0)
+			(at 39.026218 51.507752 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "d9cec193-7710-4dc6-af8d-7fd649e349bc")
@@ -3431,7 +3431,7 @@
 			)
 		)
 		(property "Value" "32MHz 8pF"
-			(at 0 2 0)
+			(at 39.026218 55.507752 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "a4be58a0-d818-47ca-9f97-d0e27857b3a2")
@@ -3443,7 +3443,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 0)
+			(at 39.026218 53.507752 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "25e658fd-e521-4eba-abb4-0128ad3487ac")
@@ -3454,7 +3454,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 0)
+			(at 39.026218 53.507752 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "2a8301ca-b84f-43f2-a211-5629a2df3d53")
@@ -3469,7 +3469,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "83b788b8-2606-461c-9222-b5778ad32ee7")
+			(uuid "18c0de94-9166-48ef-adbd-ba85043527f7")
 			(effects
 				(font
 					(size 1 1)
@@ -3481,7 +3481,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "1c950b73-acb4-45cd-a2ca-48926dd84d94")
+			(uuid "26cbe78c-d47f-47dc-a2c6-e777b51039c5")
 			(effects
 				(font
 					(size 1 1)
@@ -3494,7 +3494,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "7449e4be-e8cc-46c5-877a-a699e18a8310")
+			(uuid "59fa6337-0dbb-478b-b5a1-a0553ffaf8d5")
 			(effects
 				(font
 					(size 1 1)
