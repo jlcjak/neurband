@@ -1,0 +1,18 @@
+{
+  "kind": "pcb",
+  "name": "Neurband C circular layout",
+  "source": "neurband_c_new_astra6_2.kicad_pcb",
+  "qty": 5,
+  "options": {
+    "layers": 4,
+    "thickness_mm": 1.0,
+    "color": "green",
+    "finish": "osp"
+  },
+  "features": {
+    "width_mm": 35.0,
+    "height_mm": 35.0,
+    "min_drill_mm": 0.3
+  },
+  "order": false
+}
