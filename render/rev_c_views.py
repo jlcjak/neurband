@@ -22,8 +22,6 @@ SHOTS = {
     'band_quickfit': ('band_assembly.step', (1.15, -0.75, 0.45), 1.55, ()),
     'band_from_hand': ('band_assembly.step', (0.0, -1.0, 0.12), 1.0, ()),
     'band_side': ('band_assembly.step', (1.0, -0.25, 0.25), 1.0, ()),
-    'wrap_on_wrist': ('band_assembly_wrap.step', (0.9, -1.25, 0.95), 1.0, ()),
-    'wrap_from_hand': ('band_assembly_wrap.step', (0.0, -1.0, 0.12), 1.0, ()),
     'module_top': ('module_assy.step', (0.8, -1.2, 1.0), 1.0, ()),
     'module_end': ('module_assy.step', (0.0, -1.0, 0.18), 1.0, ()),
     'module_under': ('module_assy.step', (0.7, -1.1, -1.0), 1.0, ()),
