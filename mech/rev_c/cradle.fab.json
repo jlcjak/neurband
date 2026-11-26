@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Module cradle",
+  "source": "cradle.step",
+  "qty": 1,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 1.952,
+    "area_cm2": 31.2,
+    "size_x_mm": 44.0,
+    "size_y_mm": 35.0,
+    "size_z_mm": 5.71
+  }
+}

@@ -1418,22 +1418,24 @@ a { color: #1d4f9a; text-decoration: none; }
 def build_pdf(md_path=os.path.join(ROOT, 'docs', 'build', 'assembly.md'),
               pdf_path=os.path.join(ROOT, 'docs', 'build', 'neurband_build_manual.pdf')):
     """assembly.md -> HTML (python-markdown) -> PDF (headless Chromium), A4, a page break before each part."""
-    import markdown, tempfile, shutil
+    import base64, io, markdown, re, tempfile
+    from pathlib import Path
     from PIL import Image
-    md = open(md_path).read()
+    md = Path(md_path).read_text()
     tmpd = tempfile.mkdtemp()
-    os.makedirs(os.path.join(tmpd, 'img'))
-    src_img = os.path.join(os.path.dirname(md_path), 'img')
-    for f in os.listdir(src_img):                      # JPEG copies keep the PDF small
-        im = Image.open(os.path.join(src_img, f)).convert('RGB')
-        im.save(os.path.join(tmpd, 'img', os.path.splitext(f)[0] + '.jpg'), quality=85)
-    md = md.replace('.png)', '.jpg)')
-    import re
+    def embed_image(match):
+        path = Path(md_path).parent / match.group(2)
+        with Image.open(path) as image:
+            data = io.BytesIO()
+            image.convert('RGB').save(data, format='JPEG', quality=88)
+        uri = base64.b64encode(data.getvalue()).decode('ascii')
+        return f'![{match.group(1)}](data:image/jpeg;base64,{uri})'
+    md = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', embed_image, md)
     md = re.sub(r'(?m)^   (?=\S)', '    ', md)              # python-markdown nests lists at 4 spaces (GitHub at 3)
     md = re.sub(r'(?m)^(    [^\s].*)\n(\d+\. )', r'\1\n\n\2', md)   # a list item after an indented paragraph
     html = markdown.markdown(md, extensions=['tables', 'toc', 'sane_lists'])
-    base = 'file://' + tmpd + '/'
-    doc = ('<!doctype html><html><head><meta charset="utf-8"><base href="%s"><style>%s</style></head><body>%s</body></html>'
+    base = 'https://github.com/jlcjak/neurband/blob/main/docs/build/'
+    doc = ('<!doctype html><html><head><meta charset="utf-8"><title>Neurband Rev C assembly guide</title><base href="%s"><style>%s</style></head><body>%s</body></html>'
            % (base, PDF_CSS, html))
     tmp = os.path.join(tmpd, 'manual.html')
     open(tmp, 'w').write(doc)

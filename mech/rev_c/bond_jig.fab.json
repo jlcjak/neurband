@@ -1,19 +1,19 @@
 {
   "kind": "3dp",
-  "name": "neurband rev C bonding jig stage 1 (flex + six free pods; print once)",
+  "name": "Bonding jig (tool)",
   "source": "bond_jig.step",
   "qty": 1,
   "options": {
-    "process": "fdm",
-    "material": "pla",
-    "color": "white"
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
   },
   "features": {
-    "volume_cm3": 21.655,
-    "area_cm2": 166.41,
-    "size_x_mm": 142.61,
-    "size_y_mm": 46.5,
-    "size_z_mm": 5.54
+    "volume_cm3": 17.071,
+    "area_cm2": 138.15,
+    "size_x_mm": 139.21,
+    "size_y_mm": 41.0,
+    "size_z_mm": 7.4
   },
-  "min_wall_mm": 1.0
+  "order": false
 }

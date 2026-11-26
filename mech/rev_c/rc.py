@@ -1,113 +1,43 @@
-"""rc.py - shared parameters and helpers for the neurband rev C mechanics (8 pods, one size M).
+"""rc.py - FreeCAD helpers and colours shared by the neurband rev C part scripts.
 
-Wrist frame (same as mech/fitgeom.py): right forearm palm down, X radial(+)/ulnar(-), Y along the
-arm (hand toward -Y = front), Z dorsal (up); wrist crease at y = 0, band centre line at
-y = BAND_Y. Pod-local frame: X around the wrist (pod width), Y along the arm, Z away from the
-skin; z = 0 is the shell face the flex lies on, the skin is at -STACK.
-Rev C stack at a pad (skin -> out): gold pad on 0.2 mm flex, a foam disk that pushes the pad
-FOAM_PROUD mm beyond the shell face, the PA12 shell, the 20 mm elastic strap in a channel.
+Dimensions live in params.py (pure Python, also used by fit.py). Printed parts:
+  cradle.step     x1  rigid (PETG / ABS / PC)  flat top on the bed, curved underside up
+  lid.step        x1  rigid                    flat top on the bed
+  pod_x6.step     x6  rigid                    on its side
+  bond_jig.step   x1  PLA / PETG               flat
 """
 import os, sys, math, json, datetime
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 MECH = os.path.dirname(HERE)
 ROOT = os.path.dirname(MECH)
 sys.path.insert(0, MECH)
+sys.path.insert(0, HERE)
+
 import FreeCAD, Part
 import cadutil as U
-import fitgeom as G
+import params as P
 
 V = FreeCAD.Vector
 
-# ---------------- band / flex (from the flex brief; update from docs/layout/flex_c_layout.md) -------
-N_PODS = 8
-PITCH = 18.0            # pod centre to centre along the flat flex
-POD_W = 7.1             # flex pod width (around the wrist), flex_c_layout.md
-POD_L = 30.0            # flex pod length along the arm (coordinator: <= 31, likely 30)
-PAD_D = 6.5
-PAD_Y = (-10.0, 0.0, 10.0)      # P, bias, N
-HOLE_D = 1.2
-HOLE_Y = (-5.0, 5.0)            # alignment holes on the pod centre line, between the pads
-SPINE_Y = (-7.0, 0.6)   # spine band (flex native Y -0.6..+7.0, +Y distal there; distal = -y here)
-TAIL_AFTER = 3          # tail leaves between pod 3 and pod 4 (dorsal centre)
-TAIL_W = 10.5           # 20 fingers x 0.5 mm, (N+1)*0.5
-TAIL_T = 0.3            # at the stiffened end (connector wants 0.3)
-FLEX_T = 0.2
-
-# ---------------- compliant contact (bought: pre-cut round double-sided foam dots) ----------------
-FOAM_D = 6.0            # pre-cut double-sided foam dot, nominal diameter (sourcing: 6 mm dots)
-FOAM_T = 2.0            # dot thickness (sourcing: pre-cut 6 x 2.0 mm double-sided EVA dots); pocket depth follows
-PAD_PROUD = 1.0         # target: pad stands 1.0 mm proud of the shell face when free (~0.65 worn)
-FOAM_POCKET_D = FOAM_D + 0.4                # dot diameter tolerance +/-0.2
-FOAM_POCKET_H = max(FOAM_T - PAD_PROUD, 0.0)  # 1.0 for the 2.0 mm dots (0.5 for 1.5, 0 for 1.0)
-MODULE_POCKET_H = min(FOAM_POCKET_H, 0.6)   # module pods 3/4 + root: floor 1.1 + 0.6 gap to the board leave 0.6 (1.4 proud with 2.0 dots)
-FOAM_PROUD = FOAM_T - FOAM_POCKET_H         # 1.0 mm free, ~0.6-0.7 mm at 2-5 kPa
-STACK = FOAM_PROUD + FLEX_T                  # shell face above the skin at a pad (free foam)
-STACK_LOADED = 0.65 + FLEX_T                 # nominal worn (foam ~35 % compressed)
-
-# ---------------- strap (bought: 20 mm one-piece "single pass" hook-and-loop watch strap; sourcing.md) ------
-# First pick Amazon.de B0CWH1XS7B (black, size L), fallback B06XRYRDRR (Eichmueller, 325 mm). Ring end cut
-# off and heat-sealed (end A: pinch lock round bar A); plain hook end through slot B, folded back onto the
-# loop panel. Thickness is not stated by these sellers; the same strap type is stated 1.5 mm by another maker
-# (StrapHabit, US) and comparable 20 mm nylon hook-and-loop straps 1.5-2.0 mm: the design takes 1.3-2.4.
-STRAP_L = 302.0         # size L, seller drawing (ring end to tip)
-STRAP_PANEL = (127.0, 202.0)    # loop panel, from the ring end (seller drawing)
-STRAP_HOOK = (258.0, 302.0)     # hook tab, from the ring end
-RING_CUT = 10.0         # cut at least this much off the ring end (the ring's sewn loop)
-STRAP_W = 20.0          # strap width; slots and channels follow
-STRAP_W_TOL = 0.8       # clearance over the nominal width in the pod channels (20.8)
-STRAP_T = 2.0           # band thickness used by the fit model
-STRAP_T_MAX = 2.4       # pod channels and slots clear this
-STRAP_T_MIN = 1.3
-TAB_T = 3.0             # hook end (band + hook tab): must pass slot B when threading
-TAB_L = 44.0            # hook tab length (seller drawing)
-SLOT_GAP_A = 2 * STRAP_T + 0.4  # slot A (4.4): two layers of band (the pinch lock)
-SLOT_GAP_B = TAB_T + 0.5        # slot B (3.5): one layer, and the hook tab passes when threading
-SLOT_GAP = SLOT_GAP_A
-CHANNEL_W = STRAP_W + STRAP_W_TOL
-CHANNEL_H = STRAP_T_MAX + 0.1   # pod channel clear height (2.5): the band is pressed in past two TPU lips
-BASE_T = FOAM_POCKET_H + 1.0  # pod shell face -> channel floor (foam pocket + 1.0 floor)
-LIP_T = 1.0             # channel lips (>= 1.0 for FDM TPU)
-
-# ---------------- magnetic charge connector (bought, device side; sourcing.md) ----------------
-# 2-pin magnetic pogo pair, 2.5 mm pitch (Samzo PR5L4015-2P type; Amazon.de B0FXL1C7N1, Electrokit 41035992):
-# female = flat face with 2 gold pads between 2 magnets; boss 12.5 x 4.0 x 2.0, flange 14.5 x 4.0 x 2.0,
-# 2 pins 0.7 x 1.5 behind it.
-MAG_BOSS = (12.5, 2.0, 4.0)     # X width, Y depth, Z height (sits in the 2.0 mm wall, face flush)
-MAG_FLANGE = (14.5, 2.0, 4.0)   # behind the wall
-MAG_PIN_L = 1.5
-MAG_PITCH = 2.5                 # contact pitch
-MAG_MAG_C = 8.0                 # magnet centre distance
-MAG_PAD_D = 1.2                 # contact face diameter (visual)
-
-# ---------------- pogo pins (bought; charger clip and SWD jig) ----------------
-POGO_D = 0.68           # P50 barrel diameter (sourcing); plunger 0.48
-POGO_L = 16.2           # overall length, plunger extended (sourcing 16.0-16.35)
-POGO_TRAVEL = 2.6       # full plunger travel
-POGO_WORK = 1.3         # working compression (half travel)
-POGO_F_WORK = 0.74      # N per pin (~75 g, sourcing; taken as the force at the working point)
-POGO_HOLE = 0.72        # printed hole for a glued pin (sourcing: 0.70-0.75; a drop of CA from below)
-POGO_TIP_FREE = 1.7 + POGO_WORK   # charger: tip above the clip's contact face at rest (window depth + working)
-
-# ---------------- cell (bought; sourcing) ----------------
-CELL_MAX = (12.0, 25.0, 4.0)    # 401223-class protected cell, incl. board and tabs (pocket 12.4 x 25.5 x 4.2)
-CELL_FALLBACK = (11.0, 21.0, 4.0)   # 401120-class: held by the cell_spacer
-
-# ---------------- wrist sizes for the fit check ----------------
-SIZES = (145.0, 160.0, 180.0)
-BAND_Y = G.BAND_Y
-
 # ---------------- colours ----------------
-C_HOUSING = (0.62, 0.63, 0.65)     # matte grey MJF PA12 (natural); dyed black also fine
-C_POD = (0.20, 0.20, 0.22)         # charcoal TPU
+C_CRADLE = C_HOLDER = C_LID = C_POD = (0.13, 0.14, 0.15)
+C_INLAY = (0.11, 0.49, 0.96)
+C_JIG = (0.80, 0.80, 0.78)
+C_STRAP = (0.11, 0.19, 0.36)    # Midnight Blue woven nylon (Tech-Protect Nylon Classic 51mm)
+C_STITCH = (0.16, 0.27, 0.48)   # nylon stitching & keeper detail
+C_QF = (0.13, 0.14, 0.16)       # matte black PVD QuickFit latch & tang buckle
+C_PIN = (0.76, 0.78, 0.82)      # stainless QuickFit lug pins & Torx screws
+C_RING = (0.80, 0.82, 0.85)
 C_GOLD = U.C_GOLD
-C_FLEX = (0.85, 0.50, 0.10)        # amber polyimide
+C_FLEX = (0.85, 0.50, 0.10)
 C_PCB = U.C_PCB
-C_FOAM = (0.10, 0.10, 0.11)
-C_STRAP = (0.30, 0.31, 0.34)       # graphite woven webbing
+C_PARTS = (0.15, 0.15, 0.15)
+C_FOAM = (0.94, 0.94, 0.92)
 C_LIPO = U.C_LIPO
-C_METAL = U.C_METAL
+C_PCM = (0.86, 0.70, 0.12)
 C_SKIN = U.C_SKIN
-C_CLEAR = (0.95, 0.75, 0.55)
+C_WIRE = (0.75, 0.12, 0.10)
 
 
 class Log:
@@ -129,20 +59,6 @@ def save(stem, items, log):
     return U.save(stem, items, log, folder=HERE)
 
 
-def fab(stem, name, shape, qty, process, material, color, log, extra=None):
-    d = {"kind": "3dp", "name": name, "source": stem + ".step", "qty": qty,
-         "options": {"process": process, "material": material, "color": color},
-         "features": U.features(shape)}
-    if extra:
-        d.update(extra)
-    p = os.path.join(HERE, stem + '.fab.json')
-    with open(p, 'w') as f:
-        json.dump(d, f, indent=2)
-        f.write('\n')
-    log(f"  fab {os.path.relpath(p, ROOT)}: {d['features']}")
-    return d
-
-
 def finish(log):
     log("done")
     log.f.close()
@@ -160,9 +76,16 @@ def rrect(w, l, r, h, z0=0.0, cx=0.0, cy=0.0):
     return s
 
 
-def cyl_y(r, cx, cz, y0=-100.0, length=200.0):
-    """Cylinder with its axis along Y through (cx, cz)."""
-    return Part.makeCylinder(r, length, V(cx, y0, cz), V(0, 1, 0))
+def prism_xz(pts, y0, y1):
+    """Polygon given in (x, z), extruded along Y from y0 to y1."""
+    w = Part.makePolygon([V(x, y0, z) for x, z in pts] + [V(pts[0][0], y0, pts[0][1])])
+    return Part.Face(w).extrude(V(0, y1 - y0, 0))
+
+
+def prism_yz(pts, x0, x1):
+    """Polygon given in (y, z), extruded along X from x0 to x1."""
+    w = Part.makePolygon([V(x0, y, z) for y, z in pts] + [V(x0, pts[0][0], pts[0][1])])
+    return Part.Face(w).extrude(V(x1 - x0, 0, 0))
 
 
 def fillet_edges(shape, r, pick, log=None, tag=''):
@@ -171,33 +94,42 @@ def fillet_edges(shape, r, pick, log=None, tag=''):
         return shape
     try:
         s = shape.makeFillet(r, edges)
-        if s.isValid():
+        if s.isValid() and s.Volume > 0:
             return s
     except Exception as ex:
         if log:
-            log(f"  fillet {tag} r={r} failed on {len(edges)} edges: {ex}")
+            log(f"  fillet {tag} r={r} skipped on {len(edges)} edges: {ex}")
     return shape
 
 
-def flex_pod(lift=FOAM_PROUD, pocket=None):
-    """Flex pod (visual) in the pod-local frame with the pads lifted `lift` by the foam
-    (FOAM_PROUD free, STACK_LOADED - FLEX_T worn): returns (polyimide, gold pads, foam disks).
-    The flex between pads bridges at pad height and ramps down to the face at the pod ends."""
-    L, w = POD_L, POD_W
-    yp = PAD_Y[-1] + PAD_D / 2           # outer pad edge
-    # side profile (Y, Z) of the flex underside (skin side), extruded across X
-    prof = [(-L / 2, -0.25), (-yp, -lift), (yp, -lift), (L / 2, -0.25)]
-    pts = [V(-w / 2, y, z - FLEX_T) for y, z in prof] + [V(-w / 2, y, z) for y, z in reversed(prof)]
-    pts.append(pts[0])
-    face = Part.Face(Part.makePolygon(pts))
-    poly = face.extrude(V(w, 0, 0))
-    for y in HOLE_Y:
-        poly = poly.cut(Part.makeCylinder(HOLE_D / 2, 5, V(0, y, -3)))
-    gold = []
-    for y in PAD_Y:
-        gold.append(Part.makeCylinder(PAD_D / 2, 0.04, V(0, y, -lift - FLEX_T - 0.04)))
-    foam = []
-    pocket = FOAM_POCKET_H if pocket is None else pocket
-    for y in PAD_Y:
-        foam.append(Part.makeCylinder(FOAM_D / 2, lift + pocket, V(0, y, -lift)))
-    return poly, gold, foam
+def chamfer_edges(shape, d, pick, log=None, tag=''):
+    edges = [e for e in shape.Edges if pick(e)]
+    if not edges:
+        return shape
+    try:
+        s = shape.makeChamfer(d, edges)
+        if s.isValid() and s.Volume > 0:
+            return s
+    except Exception as ex:
+        if log:
+            log(f"  chamfer {tag} d={d} skipped on {len(edges)} edges: {ex}")
+    return shape
+
+
+def clash(a, b):
+    try:
+        return round(a.common(b).Volume, 3)
+    except Exception:
+        return -1.0
+
+
+def flex_pod_visual(lift):
+    """One flex paddle with its three gold pads and foam dots, pod frame (Z = 0 is the pod face, skin at -Z)."""
+    w, L = P.POD_W, P.POD_L
+    pad = box(-w / 2, w / 2, -L / 2, L / 2, -lift - P.FLEX_T, -lift)
+    pad = fillet_edges(pad, 0.8, lambda e: e.BoundBox.ZLength > P.FLEX_T - 0.01)
+    for y in P.HOLE_Y:
+        pad = pad.cut(Part.makeCylinder(P.HOLE_D / 2, 3, V(0, y, -lift - 1.5)))
+    gold = [Part.makeCylinder(P.PAD_D / 2, 0.04, V(0, y, -lift - P.FLEX_T - 0.04)) for y in P.PAD_Y]
+    foam = [Part.makeCylinder(P.FOAM_D / 2, lift + P.FOAM_POCKET_H, V(0, y, -lift)) for y in P.PAD_Y]
+    return pad, gold, foam

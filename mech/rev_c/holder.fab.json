@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Board holder & battery deck",
+  "source": "holder.step",
+  "qty": 1,
+  "options": {
+    "process": "mjf",
+    "material": "pa12",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 0.897,
+    "area_cm2": 17.53,
+    "size_x_mm": 35.0,
+    "size_y_mm": 31.0,
+    "size_z_mm": 4.87
+  }
+}

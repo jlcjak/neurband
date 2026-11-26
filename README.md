@@ -4,11 +4,9 @@
 wrist, a 24-bit biopotential front end, Bluetooth LE, and a module the size of a small watch face — designed
 from first principles to record data good enough to train gesture models, and cheap enough to just build.
 
-![neurband on the wrist](docs/media/hero_arm_wide_r2.jpg)
+![neurband on the wrist](mech/rev_c/renders/band_assembly.iso.png)
 
-> **Status: design complete, not yet built.** Schematics, both PCBs (DRC-clean), mechanics, firmware
-> (builds and links, untested on hardware), recorder and analysis code are done; everything below that says
-> "simulated" or "estimated" has not been measured on a real board yet. See [what's next](#status-and-next-steps).
+> Rev C boards have arrived and the printed housing is being fit-tested. The revised lug has been checked in CAD and sliced. Its physical pull strength still needs testing.
 
 | | |
 |---|---|
@@ -17,12 +15,12 @@ from first principles to record data good enough to train gesture models, and ch
 | Electrodes | 24 dry 6.5 mm ENIG gold pads on a 2-layer polyimide flex, foam-backed, 1 mm proud |
 | Radio | nRF52832, BLE 5 2M PHY, printed antenna; 2 kSPS × 8 ch, 16-bit stream |
 | IMU | LSM6DSL accel + gyro, 208 Hz |
-| Power | 401223-class LiPo, about 130 mAh, ~12 h streaming (estimate); 2-pin magnetic charging connector in the module's end wall (charge with the band off the wrist) |
-| Module | 31.6 × 37.1 × 9.65 mm body (48 mm across the strap bars), tapered and crowned, one size for 145–180 mm wrists |
-| Strap | 20 mm hook-and-loop watch strap through two thick bars moulded into the base; the electrode pods snap onto it |
+| Power | Protected 302030 LiPo on the holder deck |
+| Module | 31 × 35 mm case, 44 mm across the lugs, 9.84 mm through the centre |
+| Strap | 22 mm two-piece nylon buckle strap, two removable printed bars and six sliding pod clips |
 | Cost | ≈ $290–350 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
-## Gallery
+## Earlier housing renders
 
 | | |
 |---|---|
@@ -89,29 +87,8 @@ typing, fluent handwriting.
 
 ## Build one
 
-**Build guide: [docs/build/assembly.md](docs/build/assembly.md)**: the shopping list, the prints, ten
-illustrated steps, troubleshooting and the tests to run on a first band (also as a
-[PDF](docs/build/neurband_build_manual.pdf)). There is also a 36 s
-[assembly animation](docs/media/assembly_r2.mp4).
-
-A first prototype costs around $300 (≈ $290–350 for five main boards with two assembled, five electrode flexes,
-the prints and the off-the-shelf parts; [breakdown](docs/rev_c/cost.md)). Most of it is the ADS1298 and the
-fab's assembly fees.
-
-1. **Order** two things:
-   - the assembled main board, the electrode flex and the prints, with **Buy it** in Backplane
-     (`boards/neurband_c/ORDERING.md`, `boards/neurband_c_flex/ORDERING.md`, `mech/rev_c/*.fab.json`);
-   - about EUR 75 of off-the-shelf parts ([docs/build/sourcing.md](docs/build/sourcing.md)): a 20 mm
-     hook-and-loop watch strap, 6 mm foam dots, a 401223 LiPo, a 2-pin magnetic charging connector and
-     cable, a Pico 2 as the SWD probe and an nRF52840 dongle.
-2. **Build** it ([docs/build/assembly.md](docs/build/assembly.md), PDF alongside):
-   - flash the bare board once through four soldered wires on the SWD pads (3V3, SWDIO, SWDCLK, GND);
-   - solder the cell and the charging connector;
-   - bond the six free pods in the flat jig and the base in the pedestal jig;
-   - fold the tail into J1 and close the module;
-   - snap the strap into the pods, lock one end on bar A, tighten through bar B.
-
-   Design details are in [docs/mech/mechanical_c.md](docs/mech/mechanical_c.md).
+1. Print the case, matched bars, six pods and jig shim from the [complete X2D project](mech/rev_c/to_print/neurband_22mm_complete_x2d.3mf). The [print notes](mech/rev_c/to_print/README.md) cover the separate bonding jig and older jig sizes.
+2. Follow the illustrated [assembly guide](docs/build/assembly.md) or [download the PDF](docs/build/neurband_build_manual.pdf) for the 22 mm strap, foam dots, 302030 cell and three-piece case.
 3. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
    `python3 -m analysis collect basic --out data/s1`.
 4. **Check and train**: `python3 -m analysis report data/*.npz`, `python3 -m analysis train data/*.npz`.

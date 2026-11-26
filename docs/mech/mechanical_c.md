@@ -1,5 +1,8 @@
 # neurband rev C mechanical design (8 pods, one size M)
 
+> **Superseded for the housing (2026-11-26).** The module is now a cradle, a latched board holder and a lid with six rigid pod clips;
+> see [mech/rev_c/README.md](../../mech/rev_c/README.md). This page describes the earlier housings.
+
 Rev C is a small, clean 8-channel bipolar band. The design language is a premium consumer
 wearable: one **continuous woven band**, a small pebble module and no visible clips, lugs or pins.
 It comes in **one size, worn on 145-180 mm wrists**.
