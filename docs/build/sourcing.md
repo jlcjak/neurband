@@ -6,6 +6,17 @@ on 2026-10-29 from Greece. Prices are in EUR with VAT for the variant the page s
 a lot (AliExpress runs 11.11 sales). Delivery dates are the ones the page gave for Greece. "Not
 stated" means the listing does not give that number in its text or photos.
 
+## What the built band uses (rev C2 housing, 2026-11-28)
+
+| Part | What was bought | Notes |
+|---|---|---|
+| Strap | Tech-Protect Nylon Classic, QuickFit 22: 22 mm, two-piece nylon with a buckle | Pop the two QuickFit clips off to expose the sewn loops; the printed bars go through them. Thickness taken as 1.85 mm. Fits wrists up to about 160 mm round; for a bigger wrist buy a longer 22 mm two-piece strap |
+| Double-sided tape | Kafuty thermal tape, 8 mm x 25 m, double-sided, heat conductive (Amazon, about EUR 11) | Thin, not foam. 8 mm matches the pod pads. See the [assembly guide](assembly.md#tape-the-flex-on) |
+| Cell | Protected 302030 LiPo, about 20 x 32 x 3 mm, 4 mm at the protection board | |
+
+The sections below are the earlier survey (straps, foam dots, cells) and are kept for reference; the foam
+dots and the hook-and-loop strap are no longer used.
+
 Notes on the sources:
 
 - AliExpress photos are often mock-ups. A drawing that disagrees with the cell's own name, for

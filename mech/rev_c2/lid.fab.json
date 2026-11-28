@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Module lid",
+  "source": "lid.step",
+  "qty": 1,
+  "options": {
+    "process": "fdm",
+    "material": "pla",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 1.336,
+    "area_cm2": 31.17,
+    "size_x_mm": 36.0,
+    "size_y_mm": 31.0,
+    "size_z_mm": 6.8
+  }
+}

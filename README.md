@@ -4,7 +4,7 @@
 wrist, a 24-bit biopotential front end, Bluetooth LE, and a module the size of a small watch face — designed
 from first principles to record data good enough to train gesture models, and cheap enough to just build.
 
-![neurband on the wrist](mech/rev_c/renders/band_assembly.iso.png)
+![neurband on the wrist](mech/rev_c2/renders/band_assembly.iso.png)
 
 > Rev C boards have arrived and the printed housing is being fit-tested. The revised lug has been checked in CAD and sliced. Its physical pull strength still needs testing.
 
@@ -12,12 +12,13 @@ from first principles to record data good enough to train gesture models, and ch
 |---|---|
 | Channels | 8 bipolar (P–N 20 mm along the forearm) + a driven bias pad in every pod |
 | Front end | TI ADS1298, 24 bit, gain 6, 4 kSPS acquisition, ~1.2 µVrms (20–850 Hz) |
-| Electrodes | 24 dry 6.5 mm ENIG gold pads on a 2-layer polyimide flex, foam-backed, 1 mm proud |
+| Electrodes | 24 dry 6.5 mm ENIG gold pads on a 2-layer polyimide flex, taped to flat pads under the case and to printed spring wings on the pods |
 | Radio | nRF52832, BLE 5 2M PHY, printed antenna; 2 kSPS × 8 ch, 16-bit stream |
 | IMU | LSM6DSL accel + gyro, 208 Hz |
-| Power | Protected 302030 LiPo on the holder deck |
-| Module | 31 × 35 mm case, 44 mm across the lugs, 9.84 mm through the centre |
-| Strap | 22 mm two-piece nylon buckle strap, two removable printed bars and six sliding pod clips |
+| Power | Protected 302030 LiPo on two shelves over the board |
+| Module | 31 × 36 mm case, 44.4 mm across the lugs, 11.75 mm from the electrode pads to the top |
+| Strap | Tech-Protect Nylon Classic, QuickFit 22 (22 mm two-piece nylon, buckle; clips removed), two printed bars and six sliding pods |
+| Wear | Case on the underside of the wrist (palm side), hand end toward the hand. Wrists up to about 160 mm round with this strap; bigger wrists need a longer 22 mm two-piece strap |
 | Cost | ≈ $290–350 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
 ## Earlier housing renders
@@ -87,8 +88,8 @@ typing, fluent handwriting.
 
 ## Build one
 
-1. Print the case, matched bars, six pods and jig shim from the [complete X2D project](mech/rev_c/to_print/neurband_22mm_complete_x2d.3mf). The [print notes](mech/rev_c/to_print/README.md) cover the separate bonding jig and older jig sizes.
-2. Follow the illustrated [assembly guide](docs/build/assembly.md) or [download the PDF](docs/build/neurband_build_manual.pdf) for the 22 mm strap, foam dots, 302030 cell and three-piece case.
+1. Print the tub, lid, two bars, six pods and the bonding tray from the [one-filament X2D project](mech/rev_c2/to_print/neurband_c2_x2d_plain.3mf), or use the [two-colour project](mech/rev_c2/to_print/neurband_c2_x2d.3mf) for the lid with the blue logo. The [housing notes](mech/rev_c2/README.md#print) cover the settings.
+2. Follow the illustrated [assembly guide](docs/build/assembly.md) for the 22 mm strap, 302030 cell and two-piece case. The flex is held by thin double-sided tape (the build uses Kafuty 8 mm thermal tape); tape each pod's middle pad to the flex first and its two spring wings afterwards, as the guide explains. The [PDF manual](docs/build/neurband_build_manual.pdf) still describes the earlier three-piece case with foam dots.
 3. **Record**: `python3 host/neurband_ble.py -o rec.npz`, and in a second terminal
    `python3 -m analysis collect basic --out data/s1`.
 4. **Check and train**: `python3 -m analysis report data/*.npz`, `python3 -m analysis train data/*.npz`.
@@ -103,7 +104,7 @@ grounded instrument while the pads touch skin. This is a research prototype, not
 |---|---|
 | `boards/neurband_c/` | main board: schematic generator (`gen_c_sch.py`), KiCad project, layout scripts |
 | `boards/neurband_c_flex/` | electrode flex: schematic + parametric PCB generator |
-| `mech/rev_c/` | FreeCAD scripts and STEP for the module, pods, strap path, bonding jigs and fit checks |
+| `mech/rev_c2/` | FreeCAD scripts and STEP for the two-piece case, spring-wing pods, bonding tray and fit checks (`mech/rev_c/` is the earlier three-piece case) |
 | `firmware_c/` | nRF52832 Zephyr firmware |
 | `host/` | BLE recorder and packet tests |
 | `analysis/` | quality gates, features, baseline models, collection prompts, Meta dataset reader |

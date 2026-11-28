@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Module tub",
+  "source": "tub.step",
+  "qty": 1,
+  "options": {
+    "process": "fdm",
+    "material": "pla",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 4.658,
+    "area_cm2": 50.73,
+    "size_x_mm": 44.36,
+    "size_y_mm": 36.0,
+    "size_z_mm": 10.89
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "3dp",
+  "name": "Pod with spring wings",
+  "source": "pod.step",
+  "qty": 6,
+  "options": {
+    "process": "fdm",
+    "material": "pla",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 0.809,
+    "area_cm2": 14.16,
+    "size_x_mm": 30.2,
+    "size_y_mm": 8.64,
+    "size_z_mm": 8.0
+  }
+}

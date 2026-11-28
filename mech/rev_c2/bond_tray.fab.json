@@ -1,0 +1,19 @@
+{
+  "kind": "3dp",
+  "name": "Bonding tray (tool)",
+  "source": "bond_tray.step",
+  "qty": 1,
+  "options": {
+    "process": "fdm",
+    "material": "pla",
+    "color": "black"
+  },
+  "features": {
+    "volume_cm3": 17.307,
+    "area_cm2": 165.37,
+    "size_x_mm": 144.0,
+    "size_y_mm": 45.63,
+    "size_z_mm": 7.9
+  },
+  "order": false
+}

@@ -77,7 +77,7 @@ The forward model shows that placement matters as much as channel count:
 | Schematic (generated) | `boards/neurband_c/gen_c_sch.py` → `neurband_c.kicad_sch` |
 | Main board | `boards/neurband_c/neurband_c.kicad_pcb`, [layout notes](../layout/main_c_layout.md) |
 | Electrode flex | `boards/neurband_c_flex/`, [layout notes](../layout/flex_c_layout.md) |
-| Mechanics | `mech/rev_c/`, [mechanical_c.md](../mech/mechanical_c.md) |
+| Mechanics | `mech/rev_c2/` ([housing notes](../../mech/rev_c2/README.md)); earlier housings in `mech/rev_c/` and [mechanical_c.md](../mech/mechanical_c.md) |
 | Firmware (Zephyr) | `firmware_c/`, [firmware_c.md](../firmware_c.md) |
 | BLE recorder | `host/neurband_ble.py` |
 | Analysis / models | `analysis/`, [science/README.md](../science/README.md) |
