@@ -18,7 +18,7 @@ from first principles to record data good enough to train gesture models, and ch
 | Power | Protected 302030 LiPo on two shelves over the board |
 | Module | 31 × 36 mm case, 44.4 mm across the lugs, 11.75 mm from the electrode pads to the top |
 | Strap | Tech-Protect Nylon Classic, QuickFit 22 (22 mm two-piece nylon, buckle; clips removed), two printed bars and six sliding pods |
-| Wear | Case on the underside of the wrist (palm side), hand end toward the hand. Wrists up to about 160 mm round with this strap; bigger wrists need a longer 22 mm two-piece strap |
+| Wear | Case on the underside of the wrist (palm side), hand end toward the hand. Wrists up to about 162 mm round with this strap; bigger wrists need a longer 22 mm two-piece strap |
 | Cost | ≈ $290–350 for a first build: 5 boards (2 assembled), 5 flexes, prints and off-the-shelf parts ([breakdown](docs/rev_c/cost.md)) |
 
 ## Earlier housing renders

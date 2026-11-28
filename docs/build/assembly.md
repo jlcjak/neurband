@@ -17,7 +17,7 @@ under the lid edge. The other end is the elbow end; the LED slit is there.
 | Pods | Six |
 | Bonding tray | One, reusable |
 | Protected 302030 cell, leads soldered to J2 | One |
-| Strap: Tech-Protect Nylon Classic, QuickFit 22 (22 mm two-piece nylon, buckle) | One, in two halves, with its QuickFit clips popped off so the sewn end loops are free. With this strap the band fits wrists up to about **160 mm** round; a bigger wrist needs a longer 22 mm two-piece strap |
+| Strap: Tech-Protect Nylon Classic, QuickFit 22 (22 mm two-piece nylon, buckle) | One, in two halves, with its QuickFit clips popped off so the sewn end loops are free. With this strap the band fits wrists up to about **162 mm** round; a bigger wrist needs a longer 22 mm two-piece strap |
 | Thin double-sided tape, 8 mm wide (see below) | About 250 mm. Not foam tape: the flex tail has no length to spare for it |
 
 **The tape used on the built band** is a thin double-sided thermal tape sold for LED strips: *Kafuty

@@ -10,7 +10,7 @@ stated" means the listing does not give that number in its text or photos.
 
 | Part | What was bought | Notes |
 |---|---|---|
-| Strap | Tech-Protect Nylon Classic, QuickFit 22: 22 mm, two-piece nylon with a buckle | Pop the two QuickFit clips off to expose the sewn loops; the printed bars go through them. Thickness taken as 1.85 mm. Fits wrists up to about 160 mm round; for a bigger wrist buy a longer 22 mm two-piece strap |
+| Strap | Tech-Protect Nylon Classic, QuickFit 22: 22 mm, two-piece nylon with a buckle | Pop the two QuickFit clips off to expose the sewn loops; the printed bars go through them. Thickness taken as 1.85 mm. Fits wrists up to about 162 mm round; for a bigger wrist buy a longer 22 mm two-piece strap |
 | Double-sided tape | Kafuty thermal tape, 8 mm x 25 m, double-sided, heat conductive (Amazon, about EUR 11) | Thin, not foam. 8 mm matches the pod pads. See the [assembly guide](assembly.md#tape-the-flex-on) |
 | Cell | Protected 302030 LiPo, about 20 x 32 x 3 mm, 4 mm at the protection board | |
 

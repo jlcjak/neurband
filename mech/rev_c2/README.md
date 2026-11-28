@@ -3,7 +3,7 @@
 Two printed case parts (`tub`, `lid`), two printed strap bars and six pods, for the fabricated rev C board,
 the eight-paddle flex, the 302030 cell and the 22 mm two-piece nylon strap. No foam, no glue, no screws:
 thin double-sided tape holds the flex (the built band uses Kafuty 8 mm double-sided thermal tape). The strap
-is the Tech-Protect Nylon Classic, QuickFit 22, with its clips removed; it fits wrists up to about 160 mm round, and a bigger wrist needs a longer 22 mm two-piece strap. The first set was printed on
+is the Tech-Protect Nylon Classic, QuickFit 22, with its clips removed; it fits wrists up to about 162 mm round, and a bigger wrist needs a longer 22 mm two-piece strap. The first set was printed on
 2026-11-28 and is worn with the case on the underside of the wrist; what is still only checked in CAD is
 listed under [Not verified](#not-verified).
 
